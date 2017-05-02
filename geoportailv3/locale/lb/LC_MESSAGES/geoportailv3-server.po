@@ -1,240 +1,137 @@
 # SOME DESCRIPTIVE TITLE
 # This file is distributed under the same license as the PACKAGE package.
 # Translators:
+# eRenaud Michaëlis <renaud.michaelis@act.etat.lu>, 2016
+# Jeff Konnen <jaykayone@gmail.com>, 2016
 # Patrick Weber <pweber@spatialbit.com>, 2015
 # Patrick Weber <pweber@spatialbit.com>, 2015
 msgid ""
 msgstr ""
-<<<<<<< HEAD
-"Project-Id-Version: portail\n"
-"PO-Revision-Date: 2017-01-30 16:15+0000\n"
-"Last-Translator: Jeff Konnen <jeff.konnen@act.etat.lu>\n"
-"Language-Team: Luxembourgish (http://www.transifex.com/geoportail/geoportailv3-lu/language/lb/)\n"
-=======
 "Project-Id-Version: gisgr\n"
-"PO-Revision-Date: 2016-09-19 14:03+0000\n"
+"PO-Revision-Date: 2017-04-11 07:09+0000\n"
 "Last-Translator: Jeff Konnen <jeff.konnen@act.etat.lu>\n"
-"Language-Team: Luxembourgish (http://www.transifex.com/geoportail/gisgr/"
-"language/lb/)\n"
-"Language: lb\n"
->>>>>>> changes for gisgr
+"Language-Team: Luxembourgish (http://www.transifex.com/geoportail/gisgr/language/lb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Lingua 3.8\n"
+"Language: lb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: geoportailv3/views/pag.py:120
+#: ./geoportailv3/views/pag.py:120
 #, python-format
 msgid "PAG webservice response ${email}"
-msgstr ""
+msgstr "Votre rapport est en train d'être généré.\n<br>Un email vous sera envoyé à l'adresse ${email} dès qu'il sera disponible"
 
-#: geoportailv3/views/pag.py:66
+#: ./geoportailv3/views/pag.py:66
 msgid "PAG Error during report generation"
-msgstr ""
+msgstr "Bonjour!\n<br>\nil y a eu un souci avec la génération de votre rapport.\nNous sommes désolés.\n<br>\nVeuillez réessayer plus tard\n<br>\n<br>\nMeilleures salutations\n\n<br>\nLe Géoportail."
 
-#: geoportailv3/views/pag.py:68
+#: ./geoportailv3/views/pag.py:68
 #, python-format
 msgid "PAG Mail the report link ${link}"
-msgstr ""
+msgstr "Bonjour!\n<br>\n<br>\nVotre rapport PAG est finalisé.\n<br>\n<br>\n<a href=\"${link}\">Cliquez-ici pour télécharger le résultat.</a>\n<br>\n<br>\nMeilleures salutations\n<br>\nL'équipe du géoportail et du Ministère de l'Intérieur"
 
-<<<<<<< HEAD
-#: ./geoportailv3/views/luxprintproxy.py:147
+#: ./geoportailv3/views/luxprintproxy.py:156
 msgid "Access constraints"
 msgstr "Zougangslimitatiounen"
 
 #: ./geoportailv3/models.py:27
-=======
-#: geoportailv3/models.py:26
->>>>>>> changes for gisgr
 msgid "Allowed measurement for a user"
-msgstr ""
+msgstr "Allowed measurement for a user"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:38
-=======
-#: geoportailv3/models.py:37
->>>>>>> changes for gisgr
 msgid "Internal WMS layer"
-msgstr ""
+msgstr "Internal WMS layer"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:39
-=======
-#: geoportailv3/models.py:38
->>>>>>> changes for gisgr
 msgid "Internal WMS layers"
-msgstr ""
+msgstr "Internal WMS layers"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:60
-=======
-#: geoportailv3/models.py:59
->>>>>>> changes for gisgr
 msgid "External WMS layer"
-msgstr ""
+msgstr "External WMS layer"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:61
-=======
-#: geoportailv3/models.py:60
->>>>>>> changes for gisgr
 msgid "External WMS layers"
-msgstr ""
+msgstr "External WMS layers"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:52
-=======
-#: geoportailv3/models.py:51
->>>>>>> changes for gisgr
 msgid "Url"
-msgstr ""
+msgstr "Url"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:53
 msgid "Layers"
 msgstr "Couchen"
 
 #: ./geoportailv3/models.py:54
-=======
-#: geoportailv3/models.py:52
-msgid "Layers"
-msgstr "Couchen"
-
-#: geoportailv3/models.py:53
->>>>>>> changes for gisgr
 msgid "Is a POI"
-msgstr ""
+msgstr "Is a POI"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:55
-=======
-#: geoportailv3/models.py:54
->>>>>>> changes for gisgr
 msgid "Collection ID"
-msgstr ""
+msgstr "Collection ID"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:56
-=======
-#: geoportailv3/models.py:55
->>>>>>> changes for gisgr
 msgid "REST url"
-msgstr ""
+msgstr "REST url"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:74
-=======
-#: geoportailv3/models.py:73
->>>>>>> changes for gisgr
 msgid "Category ID"
-msgstr ""
+msgstr "Category ID"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:87
-=======
-#: geoportailv3/models.py:84
->>>>>>> changes for gisgr
 msgid "Table name"
-msgstr ""
+msgstr "Table name"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:88
-=======
-#: geoportailv3/models.py:85
->>>>>>> changes for gisgr
 msgid "URL Rest"
-msgstr ""
+msgstr "URL Rest"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:89
-=======
-#: geoportailv3/models.py:86
->>>>>>> changes for gisgr
 msgid "Engine"
-msgstr ""
+msgstr "Engine"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:90
-=======
-#: geoportailv3/models.py:87
->>>>>>> changes for gisgr
 msgid "Layer"
-msgstr ""
+msgstr "Layer"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:91
-=======
-#: geoportailv3/models.py:88
->>>>>>> changes for gisgr
 msgid "Template file name"
-msgstr ""
+msgstr "Template file name"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:93
-=======
-#: geoportailv3/models.py:90
->>>>>>> changes for gisgr
 msgid "Is the template local or remote"
-msgstr ""
+msgstr "Is the template local or remote"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:94
-=======
-#: geoportailv3/models.py:91
->>>>>>> changes for gisgr
 msgid "Python function"
-msgstr ""
+msgstr "Python function"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:95
-=======
-#: geoportailv3/models.py:92
->>>>>>> changes for gisgr
 msgid "Role"
-msgstr ""
+msgstr "Role"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:96
-=======
-#: geoportailv3/models.py:93
->>>>>>> changes for gisgr
-msgid "Attributes to keep"
+msgid "Attributes to remove"
 msgstr ""
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:97
-=======
-#: geoportailv3/models.py:94
->>>>>>> changes for gisgr
 msgid "Id of the poi collection"
-msgstr ""
+msgstr "Id of the poi collection"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:98
-=======
-#: geoportailv3/models.py:95
->>>>>>> changes for gisgr
 msgid "Geometry column name"
-msgstr ""
+msgstr "Geometry column name"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:99
-=======
-#: geoportailv3/models.py:96
->>>>>>> changes for gisgr
 msgid "Order of columns"
-msgstr ""
+msgstr "Order of columns"
 
-<<<<<<< HEAD
 #: ./geoportailv3/models.py:100
 msgid "ID column name"
 msgstr "ID column name"
 
 #: ./geoportailv3/models.py:102
 msgid "Is a profile displayed in template ?"
-=======
-#: geoportailv3/models.py:97
-msgid "ID column name"
->>>>>>> changes for gisgr
 msgstr ""
