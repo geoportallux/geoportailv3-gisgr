@@ -208,12 +208,15 @@
         </li>
       </ul>
       <ul class="footer-navigation nav navbar-nav pull-right hidden-xs">
-        <li><a href ng-click="mainCtrl.openFeedback()" translate>Feedback</a></li>
-        <li><a ng-href="https://www.geoportail.lu/{{mainCtrl.lang}}/propos/" translate>A Propos</a></li>
-        <li><a ng-href="https://www.geoportail.lu/{{mainCtrl.lang}}/documentation/" translate>Aide</a></li>
-        <li><a ng-href="https://www.geoportail.lu/{{mainCtrl.lang}}/propos/contactez-nous/" translate>Contact</a></li>
-        <li><a ng-href="https://www.geoportail.lu/{{mainCtrl.lang}}/propos/mentions-legales/" translate>Legalites</a></li>
-        <li><a ng-href="http://www.act.public.lu/">ACT</a></li>
+        <li ng-show="mainCtrl.lang === 'fr'"><a target="_blank" ng-href="http://www.sig-gr.eu/fr/support/a-propos-du-site.html" translate>A Propos</a></li>
+        <li ng-show="mainCtrl.lang !== 'fr'"><a target="_blank" ng-href="http://www.sig-gr.eu/de/support/a-propos-du-site.html" translate>A Propos</a></li>
+        <li><a target="_blank" ng-href="https://www.geoportail.lu/{{mainCtrl.lang}}/documentation/" translate>Aide</a></li>
+        <li ng-show="mainCtrl.lang === 'fr'"><a target="_blank" ng-href="http://www.sig-gr.eu/fr/support/contact.html" translate>Contact</a></li>
+        <li ng-show="mainCtrl.lang !== 'fr'"><a target="_blank" ng-href="http://www.sig-gr.eu/de/support/contact.html" translate>Contact</a></li>
+        <li ng-show="mainCtrl.lang === 'fr'"><a target="_blank" ng-href="http://www.sig-gr.eu/fr/support/aspects-legaux.html" translate>Legalites</a></li>
+        <li ng-show="mainCtrl.lang !== 'fr'"><a target="_blank" ng-href="http://www.sig-gr.eu/de/support/aspects-legaux.html" translate>Legalites</a></li>
+        <li ng-show="mainCtrl.lang === 'fr'"><a target="_blank" ng-href="http://www.sig-gr.eu/fr.html">SIG-GR</a></li>
+        <li ng-show="mainCtrl.lang !== 'fr'"><a target="_blank" ng-href="http://www.sig-gr.eu/de.html">GIS-GR</a></li>
       </ul>
       <ul class="toolbox nav navbar-nav" ngeo-btn-group>
         <li class="draw icon" ng-class="mainCtrl.drawOpen ? 'active' : ''">
