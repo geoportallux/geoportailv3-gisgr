@@ -310,8 +310,9 @@ app.MainController = function(
   ngeoFeatureOverlayMgr.init(this.map_);
   appLayerPermalinkManager.init($scope, this.map_, this['selectedLayers']);
   this.appExport_.init(this.map_);
-
-  this.addLocationControl_(ngeoFeatureOverlayMgr);
+  if (this.window_.location.protocol === 'https:') {
+    this.addLocationControl_(ngeoFeatureOverlayMgr);
+  }
 
   this.manageUserRoleChange_($scope);
 
@@ -323,9 +324,14 @@ app.MainController = function(
                 (goog.array.find(bgLayers, function(layer) {
                   return layer.get('label') === appOverviewMapBaseLayer;
                 }));
+              var className = 'ol-overviewmap overviewmap-wo-location';
+              if (this.window_.location.protocol === 'https:') {
+                className = 'ol-overviewmap overviewmap-with-location ';
+              }
               this.map_.addControl(
                 new ol.control.OverviewMap(
                   {layers: [layer],
+                    className: className,
                     collapseLabel: '\u00BB',
                     label: '\u00AB'}));
             }
