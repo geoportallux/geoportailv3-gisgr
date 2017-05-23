@@ -23,6 +23,7 @@ app.Theme = function($window, ngeoLocation, appThemes) {
    * @type {Object}
    */
   this.piwikSiteIdLookup_ = {
+    'transport': 24,
     'main': 24
   };
 
@@ -123,6 +124,6 @@ app.Theme.prototype.themeInUrl = function(pathElements) {
  * @const
  * @private
  */
-app.Theme.DEFAULT_THEME_ = 'main';
+app.Theme.DEFAULT_THEME_ = 'transport';
 
 app.module.service('appTheme', app.Theme);
