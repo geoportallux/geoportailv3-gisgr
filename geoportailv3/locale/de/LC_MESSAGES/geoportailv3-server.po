@@ -7,7 +7,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gisgr\n"
-"PO-Revision-Date: 2017-04-11 07:09+0000\n"
+"PO-Revision-Date: 2017-09-22 15:24+0000\n"
 "Last-Translator: Jeff Konnen <jeff.konnen@act.etat.lu>\n"
 "Language-Team: German (http://www.transifex.com/geoportail/gisgr/language/de/)\n"
 "MIME-Version: 1.0\n"
@@ -55,7 +55,7 @@ msgstr "External WMS layer"
 msgid "External WMS layers"
 msgstr "External WMS layers"
 
-#: ./geoportailv3/models.py:52
+#: ./geoportailv3/models.py:52 ./geoportailv3/models.py:124
 msgid "Url"
 msgstr "Url"
 

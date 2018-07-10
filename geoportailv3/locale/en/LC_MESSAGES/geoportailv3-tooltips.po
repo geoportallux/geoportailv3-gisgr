@@ -8,12 +8,13 @@
 # Loubnabarra <loubna064@yahoo.fr>, 2017
 # Patrick Weber <pweber@spatialbit.com>, 2015
 # Patrick Weber <pweber@spatialbit.com>, 2015
-# Thierry Hengen <thierry.hengen@mat.etat.lu>, 2017
+# th222 <thierry.hengen@mat.etat.lu>, 2017-2018
+# th222 <thierry.hengen@mat.etat.lu>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: gisgr\n"
-"PO-Revision-Date: 2017-04-26 08:22+0000\n"
-"Last-Translator: Jeff Konnen <jeff.konnen@act.etat.lu>\n"
+"PO-Revision-Date: 2018-06-12 15:15+0000\n"
+"Last-Translator: th222 <thierry.hengen@mat.etat.lu>\n"
 "Language-Team: English (http://www.transifex.com/geoportail/gisgr/language/en/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,21 +22,105 @@ msgstr ""
 "Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: engineecadastre Layer:1787 RoleNone
+msgid "f_Killed_1000000_text"
+msgstr "Deaths per 1.000.000 inhabitants"
+
+#: engineecadastre Layer:1787 RoleNone
+msgid "f_name"
+msgstr "Name"
+
+#: engineecadastre Layer:1787 RoleNone
+msgid "f_region"
+msgstr "Region"
+
+#: engineecadastre Layer:1787 RoleNone
+msgid "f_en_entity"
+msgstr "Territorial entity"
+
+#: engineecadastre Layer:1787 RoleNone
+msgid "f_de_entity"
+msgstr ""
+
+#: engineecadastre Layer:1787 RoleNone
+msgid "f_Killed_total_text"
+msgstr "Traffic deaths: total number"
+
+#: engineecadastre Layer:1787 RoleNone
+msgid "f_Pop_2013_text"
+msgstr "Population 2013"
+
+#: engineecadastre Layer:1787 RoleNone
+msgid "f_fr_entity"
+msgstr ""
+
+#: engineecadastre Layer:1794 RoleNone
+msgid "f_Origin"
+msgstr "Origin"
+
+#: engineecadastre Layer:1794 RoleNone
+msgid "f_distance_km_txt"
+msgstr "Distance in km"
+
+#: engineecadastre Layer:1794 RoleNone
+msgid "f_destination"
+msgstr "Destination"
+
+#: engineecadastre Layer:1794 RoleNone
+msgid "f_speed_car_txt"
+msgstr "Linear distance speed in km/h"
+
+#: engineecadastre Layer:1794 RoleNone
+msgid "f_minutes_car_txt"
+msgstr "Travel time in minutes"
+
+#: engineecadastre Layer:1794 RoleNone
+msgid "f_de_category"
+msgstr ""
+
+#: engineecadastre Layer:1794 RoleNone
+msgid "f_fr_category"
+msgstr ""
+
+#: engineecadastre Layer:1794 RoleNone
+msgid "f_en_category"
+msgstr "Category"
+
+#: engineecadastre Layer:1799 RoleNone
+msgid "f_sau_ha_round"
+msgstr "Agricultural area in ha"
+
+#: engineecadastre Layer:1799 RoleNone
+msgid "f_Code"
+msgstr "Code"
+
+#: engineecadastre Layer:1799 RoleNone
+msgid "f_ugb_bovins_round"
+msgstr "Livestock units of cattle"
+
+#: engineecadastre Layer:1799 RoleNone
+msgid "f_year"
+msgstr "Reference year"
+
+#: engineecadastre Layer:1799 RoleNone
+msgid "f_ugb_bovins_ha_1dec"
+msgstr "Livestock units of cattle per ha of agricultural area"
+
 #: engineecadastre Layer:1596 RoleNone
 msgid "f_Puissance"
-msgstr "Installed capacity"
+msgstr ""
 
 #: engineecadastre Layer:1596 RoleNone
 msgid "f_Nom"
-msgstr "Name"
+msgstr ""
 
 #: engineecadastre Layer:1596 RoleNone
 msgid "f_FID"
-msgstr "FID"
+msgstr ""
 
 #: engineecadastre Layer:1596 RoleNone
 msgid "f_Nombre"
-msgstr "Number"
+msgstr ""
 
 #: engineecadastre Layer:1596 RoleNone
 msgid "f_Region"
@@ -43,38 +128,258 @@ msgstr "Region"
 
 #: engineecadastre Layer:1596 RoleNone
 msgid "f_Localite"
-msgstr "Locality"
-
-#: engineecadastre Layer:1648 RoleNone
-msgid "f_status"
-msgstr "Status"
-
-#: engineecadastre Layer:1648 RoleNone
-msgid "f_Shape_Length"
-msgstr "Shape Length"
-
-#: engineecadastre Layer:1648 RoleNone
-msgid "f_Shape_Area"
-msgstr "Shape Area"
-
-#: engineecadastre Layer:1648 RoleNone
-msgid "f_name"
-msgstr "Name"
-
-#: engineecadastre Layer:1648 RoleNone
-msgid "f_OBJECTID"
-msgstr "Object-ID"
-
-#: engineecadastre Layer:1648 RoleNone
-msgid "f_status_F"
 msgstr ""
 
-#: engineecadastre Layer:1648 RoleNone
-msgid "f_status_E"
-msgstr "Status"
+#: engineecadastre Layer:1705 RoleNone
+msgid "f_city"
+msgstr "City"
+
+#: engineecadastre Layer:1705 RoleNone
+msgid "f_capacity"
+msgstr "Capacity"
+
+#: engineecadastre Layer:1705 RoleNone
+msgid "f_change"
+msgstr "Change to bus lines"
+
+#: engineecadastre Layer:1788 RoleNone
+msgid "f_Total_0_14_years_text"
+msgstr "Accidents involving injury with children"
+
+#: engineecadastre Layer:1788 RoleNone
+msgid "f_Total_accidents_injured_text"
+msgstr "Accidents involving injury: total number"
+
+#: engineecadastre Layer:1788 RoleNone
+msgid "f_Part_0_14_years_text"
+msgstr "Rate of accidents involving injury with children"
+
+#: engineecadastre Layer:1800 RoleNone
+msgid "f_ugb_porcins_round"
+msgstr "Livestock units of pigs"
+
+#: engineecadastre Layer:1800 RoleNone
+msgid "f_ugb_porcins_ha_1dec"
+msgstr "Livestock units of pigs per ha of agricultural area"
+
+#: engineecadastre Layer:1706 RoleNone
+msgid "f_line"
+msgstr "Line"
+
+#: engineecadastre Layer:1707 RoleNone
+msgid "f_FR_type"
+msgstr ""
+
+#: engineecadastre Layer:1707 RoleNone
+msgid "f_EN_name"
+msgstr "Name"
+
+#: engineecadastre Layer:1707 RoleNone
+msgid "f_FR_scale"
+msgstr ""
+
+#: engineecadastre Layer:1707 RoleNone
+msgid "f_DE_name"
+msgstr ""
+
+#: engineecadastre Layer:1707 RoleNone
+msgid "f_DE_type"
+msgstr ""
+
+#: engineecadastre Layer:1707 RoleNone
+msgid "f_EN_scale"
+msgstr "Scope"
+
+#: engineecadastre Layer:1707 RoleNone
+msgid "f_FR_name"
+msgstr ""
+
+#: engineecadastre Layer:1707 RoleNone
+msgid "f_priority"
+msgstr "Priority"
+
+#: engineecadastre Layer:1707 RoleNone
+msgid "f_EN_type"
+msgstr "Type"
+
+#: engineecadastre Layer:1707 RoleNone
+msgid "f_DE_scale"
+msgstr ""
+
+#: engineecadastre Layer:1712 RoleNone
+msgid "f_Pop2010"
+msgstr "Population 2010"
+
+#: engineecadastre Layer:1712 RoleNone
+msgid "f_EvoPopPercent_2010_2040"
+msgstr "Percent change 2010-2040"
+
+#: engineecadastre Layer:1712 RoleNone
+msgid "f_entity"
+msgstr "Territorial entity"
+
+#: engineecadastre Layer:1712 RoleNone
+msgid "f_Pop2040"
+msgstr "Population 2040"
+
+#: engineecadastre Layer:1714 RoleNone
+msgid "f_regiom"
+msgstr "Region"
+
+#: engineecadastre Layer:1714 RoleNone
+msgid "f_Density2010"
+msgstr "Population density 2010 (inh. per km²)"
+
+#: engineecadastre Layer:1789 RoleNone
+msgid "f_Part_18_24_years_text"
+msgstr "Rate of accidents involving injury with young drivers"
+
+#: engineecadastre Layer:1789 RoleNone
+msgid "f_Total_18_24_years_text"
+msgstr "Accidents involving injury with young drivers"
+
+#: engineecadastre Layer:1795 RoleNone
+msgid "f_minutes_trains_txt"
+msgstr "Travel time in minutes"
+
+#: engineecadastre Layer:1795 RoleNone
+msgid "f_number_trains_txt"
+msgstr "Number of daily trains"
+
+#: engineecadastre Layer:1795 RoleNone
+msgid "f_changes_train_txt"
+msgstr "Number of changes"
+
+#: engineecadastre Layer:1795 RoleNone
+msgid "f_speed_trains_txt"
+msgstr "Linear distance speed in km/h"
+
+#: engineecadastre Layer:1795 RoleNone
+msgid "f_connexion"
+msgstr "Connection"
+
+#: engineecadastre Layer:1801 RoleNone
+msgid "f_PM2_5"
+msgstr "PM 2,5"
+
+#: engineecadastre Layer:1801 RoleNone
+msgid "f_code_EU"
+msgstr "EU code"
+
+#: engineecadastre Layer:1801 RoleNone
+msgid "f_CO"
+msgstr "CO"
+
+#: engineecadastre Layer:1801 RoleNone
+msgid "f_classification"
+msgstr "Classification"
+
+#: engineecadastre Layer:1801 RoleNone
+msgid "f_NO_"
+msgstr "NO"
+
+#: engineecadastre Layer:1801 RoleNone
+msgid "f_C6H5_CH3"
+msgstr "C6H5-CH3"
+
+#: engineecadastre Layer:1801 RoleNone
+msgid "f_O3"
+msgstr "O3"
+
+#: engineecadastre Layer:1801 RoleNone
+msgid "f_NO2"
+msgstr "NO2"
+
+#: engineecadastre Layer:1801 RoleNone
+msgid "f_THC_NM"
+msgstr "THC (NM)"
+
+#: engineecadastre Layer:1801 RoleNone
+msgid "f_PM10"
+msgstr "PM 10"
+
+#: engineecadastre Layer:1801 RoleNone
+msgid "f_area"
+msgstr "Area in ha"
+
+#: engineecadastre Layer:1801 RoleNone
+msgid "f_C6H6"
+msgstr "C6H6"
+
+#: engineecadastre Layer:1801 RoleNone
+msgid "f_SO2"
+msgstr "SO2"
+
+#: engineecadastre Layer:1801 RoleNone
+msgid "f_CH4"
+msgstr "CH4"
+
+#: engineecadastre Layer:1801 RoleNone
+msgid "f_NOX_NO2"
+msgstr "NOX as NO2"
+
+#: engineecadastre Layer:1747 RoleNone
+msgid "f_de_class_name"
+msgstr ""
+
+#: engineecadastre Layer:1747 RoleNone
+msgid "f_fr_class_name"
+msgstr ""
+
+#: engineecadastre Layer:1747 RoleNone
+msgid "f_en_class_name"
+msgstr "Dominating farm type"
+
+#: engineecadastre Layer:1718 RoleNone
+msgid "f_pop_tot_2013_2040_txt"
+msgstr "Change in total population 2013-2040"
+
+#: engineecadastre Layer:1753 RoleNone
+msgid "f_power_MW"
+msgstr "Power in MW"
+
+#: engineecadastre Layer:1753 RoleNone
+msgid "f_locality"
+msgstr "Locality"
+
+#: engineecadastre Layer:1753 RoleNone
+msgid "f_number"
+msgstr "Number"
+
+#: engineecadastre Layer:1790 RoleNone
+msgid "f_Total_65_plus_text"
+msgstr "Accidents involving injury with seniors"
+
+#: engineecadastre Layer:1790 RoleNone
+msgid "f_Part_65plus_text"
+msgstr "Rate of accidents involving injury with seniors"
+
+#: engineecadastre Layer:1763 RoleNone
+msgid "f_total_number"
+msgstr "Total number of students"
+
+#: engineecadastre Layer:1763 RoleNone
+msgid "f_number_college"
+msgstr "College students"
+
+#: engineecadastre Layer:1763 RoleNone
+msgid "f_number_university"
+msgstr "University students"
+
+#: engineecadastre Layer:1791 RoleNone
+msgid "f_Part_motocycle_text"
+msgstr "Rate of accidents involving injury with motorized two-wheel vehicles"
+
+#: engineecadastre Layer:1791 RoleNone
+msgid "f_Total_motocycle_text"
+msgstr "Accidents involving injury with motorized two-wheel vehicles"
+
+#: engineecadastre Layer:1756 RoleNone
+msgid "f_network"
+msgstr "Network"
 
 #: engineecadastre Layer:1648 RoleNone
-msgid "f_status_D"
+msgid "f_de_status"
 msgstr ""
 
 #: engineecadastre Layer:1648 RoleNone
@@ -82,96 +387,32 @@ msgid "f_foundation_year"
 msgstr "Founding year"
 
 #: engineecadastre Layer:1648 RoleNone
-msgid "f_link"
-msgstr "Link"
+msgid "f_en_status"
+msgstr "Status"
+
+#: engineecadastre Layer:1648 RoleNone
+msgid "f_fr_status"
+msgstr ""
 
 #: engineecadastre Layer:1648 RoleNone
 msgid "f_area_km2"
 msgstr "Area in km²"
 
-#: engineecadastre Layer:1649 RoleNone
-msgid "f_category"
-msgstr ""
-
-#: engineecadastre Layer:1649 RoleNone
-msgid "f_category_F"
-msgstr ""
-
-#: engineecadastre Layer:1649 RoleNone
-msgid "f_category_E"
-msgstr "Category"
-
-#: engineecadastre Layer:1649 RoleNone
-msgid "f_category_D"
-msgstr ""
-
-#: engineecadastre Layer:1679 RoleNone
-msgid "f_code_2000"
-msgstr "Code 2000"
-
-#: engineecadastre Layer:1680 RoleNone
-msgid "f_de_category"
-msgstr ""
-
-#: engineecadastre Layer:1680 RoleNone
-msgid "f_fr_category"
-msgstr ""
-
-#: engineecadastre Layer:1680 RoleNone
-msgid "f_code_2006"
-msgstr "Code 2006"
-
-#: engineecadastre Layer:1680 RoleNone
-msgid "f_en_category"
-msgstr "Category"
-
-#: engineecadastre Layer:1623 RoleNone
-msgid "f_entity_D"
-msgstr ""
-
-#: engineecadastre Layer:1623 RoleNone
-msgid "f_entity_E"
-msgstr "Territorial entity"
-
-#: engineecadastre Layer:1623 RoleNone
-msgid "f_entity_F"
-msgstr ""
-
-#: engineecadastre Layer:1623 RoleNone
-msgid "f_region"
-msgstr "Region"
-
-#: engineecadastre Layer:1623 RoleNone
-msgid "f_EvoPopPercent_1990_2000"
-msgstr "Percent change 1990-2000"
-
-#: engineecadastre Layer:1623 RoleNone
-msgid "f_Regroupement"
-msgstr ""
-
-#: engineecadastre Layer:1623 RoleNone
-msgid "f_Pop_2000"
-msgstr "Population 2000"
-
-#: engineecadastre Layer:1623 RoleNone
-msgid "f_Pop_1990"
-msgstr "Population 1990"
-
-#: engineecadastre Layer:1623 RoleNone
-msgid "f_EvoPop_1990_2000"
-msgstr "Absolute change 1990-2000"
+#: engineecadastre Layer:1648 RoleNone
+msgid "f_link"
+msgstr "Link"
 
 #: engine Layer:1598 RoleNone
 msgid "f_Unité territ. / territ. Einheit"
-msgstr "Territorial entity"
+msgstr ""
 
 #: engine Layer:1598 RoleNone
 msgid "f_Pop. / Bev. 2013"
-msgstr "Population 2013"
+msgstr ""
 
 #: engine Layer:1598 RoleNone
 msgid "f_Pop. / Bev. 2000-2013 (%)"
-msgstr "Percent change 2000-2013"
+msgstr ""
 
 #: engine Layer:1598 RoleNone
 msgid "f_Nom / Name"
@@ -179,7 +420,7 @@ msgstr "Name"
 
 #: engine Layer:1598 RoleNone
 msgid "f_Pop. / Bev. 2000"
-msgstr "Population 2000"
+msgstr ""
 
 #: engine Layer:1598 RoleNone
 msgid "f_Région / Region"
@@ -209,117 +450,37 @@ msgstr "City"
 msgid "f_Type / Typ"
 msgstr "Type"
 
-#: engineecadastre Layer:1640 RoleNone
-msgid "f_EvoPopPercent_2000_2010"
-msgstr "Percent change 2000-2010"
-
-#: engineecadastre Layer:1640 RoleNone
-msgid "f_EvoPop_2000_2010"
-msgstr "Absolute change 2000-2010"
-
-#: engineecadastre Layer:1640 RoleNone
-msgid "f_Pop_2010"
-msgstr "Population 2010"
-
-#: engineecadastre Layer:1639 RoleNone
-msgid "f_EvoPopPercent_1990_2008"
-msgstr "Percent change 1990-2008"
-
-#: engineecadastre Layer:1639 RoleNone
-msgid "f_Pop_2008"
-msgstr "Population 2008"
-
-#: engineecadastre Layer:1639 RoleNone
-msgid "f_EvoPop_1990_2008"
-msgstr "Population change 1990-2008"
-
-#: engineecadastre Layer:1644 RoleNone
-msgid "f_city"
-msgstr "City"
-
-#: engineecadastre Layer:1644 RoleNone
-msgid "f_stars"
-msgstr "Number of stars"
-
-#: engineecadastre Layer:1645 RoleNone
-msgid "f_en_name"
-msgstr "Name"
-
-#: engineecadastre Layer:1645 RoleNone
-msgid "f_fr_name"
+#: engineecadastre Layer:1680 RoleNone
+msgid "f_FR_category"
 msgstr ""
 
-#: engineecadastre Layer:1645 RoleNone
-msgid "f_de_name"
+#: engineecadastre Layer:1680 RoleNone
+msgid "f_EN_category"
+msgstr "Category"
+
+#: engineecadastre Layer:1680 RoleNone
+msgid "f_code_2006"
+msgstr "Code 2006"
+
+#: engineecadastre Layer:1680 RoleNone
+msgid "f_DE_category"
 msgstr ""
 
-#: engineecadastre Layer:1692 RoleNone
-msgid "f_unemployed_2008"
-msgstr "Young unemployed 2008"
+#: engineecadastre Layer:1623 RoleNone
+msgid "f_EvoPop_1990_2000"
+msgstr "Absolute change 1990-2000"
 
-#: engineecadastre Layer:1692 RoleNone
-msgid "f_unemployed_2015"
-msgstr "Young unemployed 2015"
+#: engineecadastre Layer:1623 RoleNone
+msgid "f_EvoPopPercent_1990_2000"
+msgstr "Percent change 1990-2000"
 
-#: engineecadastre Layer:1692 RoleNone
-msgid "f_change_2008_2015"
-msgstr "Percent change 2008-2015"
+#: engineecadastre Layer:1623 RoleNone
+msgid "f_Pop_2000"
+msgstr "Population 2000"
 
-#: engineecadastre Layer:1692 RoleNone
-msgid "f_Code_NUTS"
-msgstr "NUTS code"
-
-#: engineecadastre Layer:1692 RoleNone
-msgid "f_en_entity"
-msgstr "Territorial entity"
-
-#: engineecadastre Layer:1692 RoleNone
-msgid "f_de_entity"
-msgstr ""
-
-#: engineecadastre Layer:1692 RoleNone
-msgid "f_fr_entity"
-msgstr ""
-
-#: engineecadastre Layer:1683 RoleNone
-msgid "f_total_part"
-msgstr "Share in total number of sectoral commuters 2013"
-
-#: engineecadastre Layer:1683 RoleNone
-msgid "f_total_evo"
-msgstr "Percent change in commuters 2009-2013"
-
-#: engineecadastre Layer:1685 RoleNone
-msgid "f_part_86_10"
-msgstr "Share in total number of sectoral commuters 2013"
-
-#: engineecadastre Layer:1685 RoleNone
-msgid "f_evo_86_10"
-msgstr "Percent change in commuters 2009-2013"
-
-#: engineecadastre Layer:1686 RoleNone
-msgid "f_part_87_30"
-msgstr "Share in total number of sectoral commuters 2013"
-
-#: engineecadastre Layer:1686 RoleNone
-msgid "f_evo_87_30"
-msgstr "Percent change in commuters 2009-2013"
-
-#: engineecadastre Layer:1687 RoleNone
-msgid "f_evo_88_10"
-msgstr "Percent change in commuters 2009-2013"
-
-#: engineecadastre Layer:1687 RoleNone
-msgid "f_part_88_10"
-msgstr "Share in total number of sectoral commuters 2013"
-
-#: engineecadastre Layer:1688 RoleNone
-msgid "f_Share_commuters"
-msgstr "Share in total number of cross-border commuters 2013"
-
-#: engineecadastre Layer:1688 RoleNone
-msgid "f_Number_commuters"
-msgstr "Number of cross-border commuters 2013"
+#: engineecadastre Layer:1623 RoleNone
+msgid "f_Pop_1990"
+msgstr "Population 1990"
 
 #: engineecadastre Layer:1689 RoleNone
 msgid "f_de_entity1"
@@ -345,6 +506,30 @@ msgstr "Territorial entity"
 msgid "f_fr_entity1"
 msgstr ""
 
+#: engineecadastre Layer:1642 RoleNone
+msgid "f_code_2000"
+msgstr "Code 2000"
+
+#: engineecadastre Layer:1686 RoleNone
+msgid "f_part_87_30"
+msgstr "Share in total number of sectoral commuters 2013"
+
+#: engineecadastre Layer:1686 RoleNone
+msgid "f_evo_87_30"
+msgstr "Absolute change in commuters 2009-2013"
+
+#: engineecadastre Layer:1687 RoleNone
+msgid "f_evo_88_10"
+msgstr ""
+
+#: engineecadastre Layer:1687 RoleNone
+msgid "f_part_88_10"
+msgstr ""
+
+#: engineecadastre Layer:1644 RoleNone
+msgid "f_stars"
+msgstr "Number of stars"
+
 #: engineecadastre Layer:1690 RoleNone
 msgid "f_Jobs_2008"
 msgstr "Employees 2008"
@@ -357,9 +542,21 @@ msgstr "Employees 2013"
 msgid "f_Change_2008_2013"
 msgstr "Percent change 2008-2013"
 
+#: engineecadastre Layer:1688 RoleNone
+msgid "f_Share_commuters"
+msgstr "Share in the total number of cross-border commuters to Lux. 2013"
+
+#: engineecadastre Layer:1688 RoleNone
+msgid "f_Number_commuters"
+msgstr "Total number of cross-border commuters to Lux. 2013"
+
 #: engineecadastre Layer:1691 RoleNone
-msgid "f_OBJECTID_1"
-msgstr "Object-ID"
+msgid "f_unemployed_2008"
+msgstr "Young unemployed 2008"
+
+#: engineecadastre Layer:1691 RoleNone
+msgid "f_Code_NUTS"
+msgstr "NUTS code"
 
 #: engineecadastre Layer:1691 RoleNone
 msgid "f_change_2008_2012"
@@ -370,35 +567,427 @@ msgid "f_unemployed_2012"
 msgstr "Young unemployed 2012"
 
 #: engineecadastre Layer:1698 RoleNone
-msgid "f_DE_category"
-msgstr ""
-
-#: engineecadastre Layer:1698 RoleNone
-msgid "f_FR_category"
-msgstr ""
-
-#: engineecadastre Layer:1698 RoleNone
-msgid "f_EN_category"
-msgstr ""
-
-#: engineecadastre Layer:1698 RoleNone
-msgid "f_Area_Ha"
-msgstr ""
-
-#: engineecadastre Layer:1698 RoleNone
 msgid "f_code_12"
+msgstr "Code 2012"
+
+#: engineecadastre Layer:1709 RoleNone
+msgid "f_adoption"
+msgstr "Adoption"
+
+#: engineecadastre Layer:1706 RoleNone
+msgid "f_DE_frequency"
 msgstr ""
 
-#: engineecadastre Layer:1698 RoleNone
-msgid "f_ID"
+#: engineecadastre Layer:1706 RoleNone
+msgid "f_timetable"
+msgstr "Timetable"
+
+#: engineecadastre Layer:1706 RoleNone
+msgid "f_EN_frequency"
+msgstr "Frequency"
+
+#: engineecadastre Layer:1706 RoleNone
+msgid "f_FR_frequency"
+msgstr ""
+
+#: engineecadastre Layer:1715 RoleNone
+msgid "f_PopActif_Part_2012"
+msgstr "Share of population 20-64 years in %"
+
+#: engineecadastre Layer:1715 RoleNone
+msgid "f_PopActif_2012"
+msgstr "Population 20-64 years 2012"
+
+#: engineecadastre Layer:1705 RoleNone
+msgid "f_bus_line"
+msgstr "Bus line"
+
+#: engineecadastre Layer:1705 RoleNone
+msgid "f_EN_tariff"
+msgstr "Tariff"
+
+#: engineecadastre Layer:1705 RoleNone
+msgid "f_FR_tariff"
 msgstr ""
 
 #: engineecadastre Layer:1705 RoleNone
-msgid "f_capacity"
+msgid "f_DE_tariff"
 msgstr ""
 
+#: engineecadastre Layer:1639 RoleNone
+msgid "f_EvoPopPercent_1990_2008"
+msgstr "Percent change 1990-2008"
+
+#: engineecadastre Layer:1639 RoleNone
+msgid "f_Pop_2008"
+msgstr "Population 2008"
+
+#: engineecadastre Layer:1639 RoleNone
+msgid "f_EvoPop_1990_2008"
+msgstr "Percent change 1990-2008"
+
+#: engineecadastre Layer:1640 RoleNone
+msgid "f_EvoPopPercent_2000_2010"
+msgstr "Percent change 2000-2010"
+
+#: engineecadastre Layer:1640 RoleNone
+msgid "f_EvoPop_2000_2010"
+msgstr "Absolute change 2000-2010"
+
+#: engineecadastre Layer:1640 RoleNone
+msgid "f_Pop_2010"
+msgstr "Population 2010"
+
+#: engineecadastre Layer:1713 RoleNone
+msgid "f_Pop2013"
+msgstr "Population 2013"
+
+#: engineecadastre Layer:1713 RoleNone
+msgid "f_PopDensity2013"
+msgstr "Population density 2013 (inh. per km²)"
+
 #: engineecadastre Layer:1705 RoleNone
-msgid "f_change"
+msgid "f_operator"
+msgstr "Operator"
+
+#: engineecadastre Layer:1708 RoleNone
+msgid "f_train"
+msgstr "Train"
+
+#: engineecadastre Layer:1708 RoleNone
+msgid "f_OBJECTID_12"
+msgstr "Object ID"
+
+#: engineecadastre Layer:1709 RoleNone
+msgid "f_DE_status"
+msgstr ""
+
+#: engineecadastre Layer:1709 RoleNone
+msgid "f_FR_status"
+msgstr ""
+
+#: engineecadastre Layer:1709 RoleNone
+msgid "f_EN_status"
+msgstr "Status"
+
+#: engineecadastre Layer:1709 RoleNone
+msgid "f_EN_publication"
+msgstr "Publication"
+
+#: engineecadastre Layer:1709 RoleNone
+msgid "f_FR_publication"
+msgstr ""
+
+#: engineecadastre Layer:1709 RoleNone
+msgid "f_DE_publication"
+msgstr ""
+
+#: engineecadastre Layer:1692 RoleNone
+msgid "f_unemployed_2015"
+msgstr "Young unemployed 2015"
+
+#: engineecadastre Layer:1692 RoleNone
+msgid "f_change_2008_2015"
+msgstr "Percent change 2008-2015"
+
+#: engineecadastre Layer:1685 RoleNone
+msgid "f_part_86_10"
+msgstr "Share in total number of sectoral commuters 2013"
+
+#: engineecadastre Layer:1685 RoleNone
+msgid "f_evo_86_10"
+msgstr "Absolute change in commuters 2009-2013"
+
+#: engineecadastre Layer:1683 RoleNone
+msgid "f_total_part"
+msgstr "Share in total number of sectoral commuters 2013"
+
+#: engineecadastre Layer:1683 RoleNone
+msgid "f_total_evo"
+msgstr "Percent change in commuters 2009-2013"
+
+#: engineecadastre Layer:1646 RoleNone
+msgid "f_fr_Age_6_to_9"
+msgstr ""
+
+#: engineecadastre Layer:1646 RoleNone
+msgid "f_de_Age_6_to_9"
+msgstr ""
+
+#: engineecadastre Layer:1646 RoleNone
+msgid "f_de_Age_10_to_15"
+msgstr ""
+
+#: engineecadastre Layer:1646 RoleNone
+msgid "f_de_name"
+msgstr ""
+
+#: engineecadastre Layer:1646 RoleNone
+msgid "f_fr_Age_10_to_15"
+msgstr ""
+
+#: engineecadastre Layer:1646 RoleNone
+msgid "f_en_Age_6_to_9"
+msgstr "6-9 years"
+
+#: engineecadastre Layer:1646 RoleNone
+msgid "f_en_name"
+msgstr "Name"
+
+#: engineecadastre Layer:1646 RoleNone
+msgid "f_fr_Age_16_to_19"
+msgstr ""
+
+#: engineecadastre Layer:1646 RoleNone
+msgid "f_en_Age_10_to_15"
+msgstr "10-15 years"
+
+#: engineecadastre Layer:1646 RoleNone
+msgid "f_fr_name"
+msgstr "Nom"
+
+#: engineecadastre Layer:1646 RoleNone
+msgid "f_en_Age_16_to_19"
+msgstr "16-19 years"
+
+#: engineecadastre Layer:1646 RoleNone
+msgid "f_de_Age_16_to_19"
+msgstr ""
+
+#: engineecadastre Layer:1720 RoleNone
+msgid "f_pop_20_64_2013_2040_txt"
+msgstr "Change in pop. 20-64 years 2013-2040"
+
+#: engineecadastre Layer:1723 RoleNone
+msgid "f_Change_2000_2015"
+msgstr "Population change 2000-2015"
+
+#: engineecadastre Layer:1723 RoleNone
+msgid "f_Pop_2015"
+msgstr "Population 2015"
+
+#: engineecadastre Layer:1725 RoleNone
+msgid "f_Change_2000_2013"
+msgstr "Population change 2000-2013"
+
+#: engineecadastre Layer:1725 RoleNone
+msgid "f_Pop_2013"
+msgstr "Population 2013"
+
+#: engineecadastre Layer:1726 RoleNone
+msgid "f_evo_20_64_1999_2014_txt"
+msgstr "Population change 20-64 years 1999-2014"
+
+#: engineecadastre Layer:1726 RoleNone
+msgid "f_pop_20_64_2014_txt"
+msgstr "Population 20-64 years 2014"
+
+#: engineecadastre Layer:1726 RoleNone
+msgid "f_pop_20_64_1999_txt"
+msgstr "Population 20-64 years 1999"
+
+#: engineecadastre Layer:1729 RoleNone
+msgid "f_Evo_percent_1990_2000_txt"
+msgstr "Percent change 1990-2000"
+
+#: engineecadastre Layer:1732 RoleNone
+msgid "f_Density_2015"
+msgstr "Population density (inh. per km²)"
+
+#: engineecadastre Layer:1733 RoleNone
+msgid "f_Pop_2010_txt"
+msgstr "Population 2010"
+
+#: engineecadastre Layer:1733 RoleNone
+msgid "f_Density_2010_txt"
+msgstr "Population density 2010"
+
+#: engineecadastre Layer:1737 RoleNone
+msgid "f_OBJECTID_1"
+msgstr "Object-ID"
+
+#: engineecadastre Layer:1737 RoleNone
+msgid "f_Pop_2007_txt"
+msgstr "Population 2007"
+
+#: engineecadastre Layer:1737 RoleNone
+msgid "f_Density_2007_txt"
+msgstr "Population density 2007"
+
+#: engineecadastre Layer:1754 RoleNone
+msgid "f_part_20_64_2014_txt"
+msgstr "Share of population 20-64 years in %"
+
+#: engineecadastre Layer:1750 RoleNone
+msgid "f_fr_type"
+msgstr ""
+
+#: engineecadastre Layer:1750 RoleNone
+msgid "f_code"
+msgstr "Code"
+
+#: engineecadastre Layer:1750 RoleNone
+msgid "f_de_type"
+msgstr ""
+
+#: engineecadastre Layer:1750 RoleNone
+msgid "f_Creation_date"
+msgstr "Creation date"
+
+#: engineecadastre Layer:1750 RoleNone
+msgid "f_en_type"
+msgstr "Type"
+
+#: engineecadastre Layer:1756 RoleNone
+msgid "f_en_network"
+msgstr "Network"
+
+#: engineecadastre Layer:1756 RoleNone
+msgid "f_de_network"
+msgstr ""
+
+#: engineecadastre Layer:1756 RoleNone
+msgid "f_fr_network"
+msgstr ""
+
+#: engineecadastre Layer:1752 RoleNone
+msgid "f_MW_PV"
+msgstr "MW photovoltaics"
+
+#: engineecadastre Layer:1752 RoleNone
+msgid "f_MW_Hydro"
+msgstr "MW hydropower"
+
+#: engineecadastre Layer:1752 RoleNone
+msgid "f_MW_total"
+msgstr "MW total"
+
+#: engineecadastre Layer:1752 RoleNone
+msgid "f_MW_biogas"
+msgstr "MW bioenergy"
+
+#: engineecadastre Layer:1752 RoleNone
+msgid "f_MW_windpower"
+msgstr "MW windpower"
+
+#: engineecadastre Layer:1721 RoleNone
+msgid "f_pop_20_64_2010_2040_txt"
+msgstr ""
+
+#: engineecadastre Layer:1727 RoleNone
+msgid "f_c_Unite_Einheit"
+msgstr "Territorial entity"
+
+#: engineecadastre Layer:1727 RoleNone
+msgid "f_f_pop_actif_1999"
+msgstr "Population 20-64 years 1999"
+
+#: engineecadastre Layer:1727 RoleNone
+msgid "f_k_part_pop_actif_2012"
+msgstr "Share pop. 20-64 years 2012 (in %)"
+
+#: engineecadastre Layer:1727 RoleNone
+msgid "f_b_Region"
+msgstr "Region"
+
+#: engineecadastre Layer:1727 RoleNone
+msgid "f_e_Evo_pop_actif_1999_2012"
+msgstr "Population change 20-64 years 1999-2014 (in %)"
+
+#: engineecadastre Layer:1727 RoleNone
+msgid "f_a_Nom_Name"
+msgstr "Name"
+
+#: engineecadastre Layer:1727 RoleNone
+msgid "f_g_pop_actif_2012"
+msgstr "Population 20-64 years 2012"
+
+#: engineecadastre Layer:1728 RoleNone
+msgid "f_Evo_percent_2000_2010_txt"
+msgstr "Percent change 2000-2010"
+
+#: engineecadastre Layer:1730 RoleNone
+msgid "f_Evo_percent_1990_2008_txt"
+msgstr "Percent change 1990-2008"
+
+#: engineecadastre Layer:1751 RoleNone
+msgid "f_area_ha_txt"
+msgstr "Area in ha"
+
+#: engineecadastre Layer:1750 RoleNone
+msgid "f_area_ha"
+msgstr "Area in ha"
+
+#: engineecadastre Layer:1750 RoleNone
+msgid "f_en_zone"
+msgstr "Zone"
+
+#: engineecadastre Layer:1750 RoleNone
+msgid "f_creation_year"
+msgstr "Creation year"
+
+#: engineecadastre Layer:1750 RoleNone
+msgid "f_de_zone"
+msgstr ""
+
+#: engineecadastre Layer:1750 RoleNone
+msgid "f_fr_zone"
+msgstr ""
+
+#: engineecadastre Layer:1751 RoleNone
+msgid "f_lenght_km_txt"
+msgstr "Length in km"
+
+#: engineecadastre Layer:1760 RoleNone
+msgid "f_courses_Master"
+msgstr "Courses Master"
+
+#: engineecadastre Layer:1760 RoleNone
+msgid "f_courses_Bachelor"
+msgstr "Courses Bachelor"
+
+#: engineecadastre Layer:1760 RoleNone
+msgid "f_courses_total"
+msgstr "Total number of courses"
+
+#: engineecadastre Layer:1760 RoleNone
+msgid "f_university"
+msgstr "University"
+
+#: engineecadastre Layer:1760 RoleNone
+msgid "f_courses_other"
+msgstr "Other courses"
+
+#: engineecadastre Layer:1761 RoleNone
+msgid "f_students_Bachelor"
+msgstr "Bachelor students"
+
+#: engineecadastre Layer:1761 RoleNone
+msgid "f_students_other"
+msgstr "Other students"
+
+#: engineecadastre Layer:1761 RoleNone
+msgid "f_students_Master"
+msgstr "Master students"
+
+#: engineecadastre Layer:1761 RoleNone
+msgid "f_students_total"
+msgstr "Total number of students"
+
+#: engineecadastre Layer:1758 RoleNone
+msgid "f_population"
+msgstr "Population"
+
+#: engineecadastre Layer:1758 RoleNone
+msgid "f_en_orientation"
+msgstr "Orientation"
+
+#: engineecadastre Layer:1758 RoleNone
+msgid "f_de_orientation"
+msgstr ""
+
+#: engineecadastre Layer:1758 RoleNone
+msgid "f_fr_orientation"
 msgstr ""
 
 #: engineecadastre Layer:1704 RoleNone
@@ -407,11 +996,7 @@ msgstr ""
 
 #: engineecadastre Layer:1704 RoleNone
 msgid "f_parking_places"
-msgstr ""
-
-#: engineecadastre Layer:1704 RoleNone
-msgid "f_DE_status"
-msgstr ""
+msgstr "Parking spaces"
 
 #: engineecadastre Layer:1704 RoleNone
 msgid "f_DE_marking_lighting"
@@ -419,15 +1004,15 @@ msgstr ""
 
 #: engineecadastre Layer:1704 RoleNone
 msgid "f_EN_services"
-msgstr ""
+msgstr "Services"
 
 #: engineecadastre Layer:1704 RoleNone
 msgid "f_EN_saturation"
-msgstr ""
+msgstr "Saturation"
 
 #: engineecadastre Layer:1704 RoleNone
 msgid "f_EN_marking_lighting"
-msgstr ""
+msgstr "Marking and lighting"
 
 #: engineecadastre Layer:1704 RoleNone
 msgid "f_FR_saturation"
@@ -451,11 +1036,11 @@ msgstr ""
 
 #: engineecadastre Layer:1704 RoleNone
 msgid "f_EN_Access"
-msgstr ""
+msgstr "Access"
 
 #: engineecadastre Layer:1704 RoleNone
 msgid "f_EN_project_owner"
-msgstr ""
+msgstr "Project owner"
 
 #: engineecadastre Layer:1704 RoleNone
 msgid "f_FR_marking_lighting"
@@ -466,125 +1051,105 @@ msgid "f_DE_services"
 msgstr ""
 
 #: engineecadastre Layer:1704 RoleNone
-msgid "f_EN_status"
-msgstr ""
-
-#: engineecadastre Layer:1704 RoleNone
-msgid "f_FR_status"
-msgstr ""
-
-#: engineecadastre Layer:1704 RoleNone
 msgid "f_FR_Access"
 msgstr ""
 
 #: engineecadastre Layer:1704 RoleNone
 msgid "f_road"
-msgstr ""
+msgstr "Access road"
 
-#: engineecadastre Layer:1705 RoleNone
-msgid "f_bus_line"
-msgstr ""
+#: engineecadastre Layer:1762 RoleNone
+msgid "f_Destination"
+msgstr "Destination"
 
-#: engineecadastre Layer:1705 RoleNone
-msgid "f_EN_tariff"
-msgstr ""
+#: engineecadastre Layer:1762 RoleNone
+msgid "f_Number_students"
+msgstr "Number of students"
 
-#: engineecadastre Layer:1705 RoleNone
-msgid "f_FR_tariff"
-msgstr ""
+#: engineecadastre Layer:1770 RoleNone
+msgid "f_address"
+msgstr "Address"
 
-#: engineecadastre Layer:1705 RoleNone
-msgid "f_DE_tariff"
-msgstr ""
+#: engineecadastre Layer:1759 RoleNone
+msgid "f_courses_social_sciences"
+msgstr "Courses social sciences, business and law"
 
-#: engineecadastre Layer:1705 RoleNone
-msgid "f_timetable"
-msgstr ""
+#: engineecadastre Layer:1759 RoleNone
+msgid "f_courses_services"
+msgstr "Courses services"
 
-#: engineecadastre Layer:1705 RoleNone
-msgid "f_DE_frequency"
-msgstr ""
+#: engineecadastre Layer:1759 RoleNone
+msgid "f_courses_agriculture"
+msgstr "Courses agriculture"
 
-#: engineecadastre Layer:1705 RoleNone
-msgid "f_operator"
-msgstr ""
+#: engineecadastre Layer:1759 RoleNone
+msgid "f_courses_education"
+msgstr "Courses education"
 
-#: engineecadastre Layer:1705 RoleNone
-msgid "f_EN_frequency"
-msgstr ""
+#: engineecadastre Layer:1759 RoleNone
+msgid "f_courses_health"
+msgstr "Courses health and welfare"
 
-#: engineecadastre Layer:1705 RoleNone
-msgid "f_line"
-msgstr ""
+#: engineecadastre Layer:1759 RoleNone
+msgid "f_courses_humanities"
+msgstr "Courses humanities and arts"
 
-#: engineecadastre Layer:1705 RoleNone
-msgid "f_FR_frequency"
-msgstr ""
+#: engineecadastre Layer:1759 RoleNone
+msgid "f_courses_ISCED_total"
+msgstr "Total number of courses"
 
-#: engineecadastre Layer:1707 RoleNone
-msgid "f_FR_type"
-msgstr ""
+#: engineecadastre Layer:1759 RoleNone
+msgid "f_courses_engineering"
+msgstr "Courses engineering, manufacturing and construction"
 
-#: engineecadastre Layer:1707 RoleNone
-msgid "f_EN_name"
-msgstr ""
+#: engineecadastre Layer:1759 RoleNone
+msgid "f_courses_science"
+msgstr "Courses science"
 
-#: engineecadastre Layer:1707 RoleNone
-msgid "f_FR_scale"
-msgstr ""
+#: engineecadastre Layer:1762 RoleNone
+msgid "f_total_Erasmus"
+msgstr "Total number of Erasmus students 2008-2012"
 
-#: engineecadastre Layer:1707 RoleNone
-msgid "f_DE_name"
-msgstr ""
+#: engineecadastre Layer:1762 RoleNone
+msgid "f_outgoing_Erasmus"
+msgstr "Outgoing Erasmus students"
 
-#: engineecadastre Layer:1707 RoleNone
-msgid "f_DE_type"
-msgstr ""
+#: engineecadastre Layer:1762 RoleNone
+msgid "f_incoming_Erasmus"
+msgstr "Incoming Erasmus students"
 
-#: engineecadastre Layer:1707 RoleNone
-msgid "f_EN_scale"
-msgstr ""
+#: engineecadastre Layer:1770 RoleNone
+msgid "f_accomodati"
+msgstr "Accomodation"
 
-#: engineecadastre Layer:1707 RoleNone
-msgid "f_FR_name"
-msgstr ""
+#: engineecadastre Layer:1770 RoleNone
+msgid "f_cultural_h"
+msgstr "Culture and history"
 
-#: engineecadastre Layer:1707 RoleNone
-msgid "f_priority"
-msgstr ""
+#: engineecadastre Layer:1770 RoleNone
+msgid "f_ecological"
+msgstr "Ecology"
 
-#: engineecadastre Layer:1707 RoleNone
-msgid "f_EN_type"
-msgstr ""
+#: engineecadastre Layer:1770 RoleNone
+msgid "f_economic"
+msgstr "Economy"
 
-#: engineecadastre Layer:1707 RoleNone
-msgid "f_DE_scale"
-msgstr ""
+#: engineecadastre Layer:1770 RoleNone
+msgid "f_socio_poli"
+msgstr "Society and politics"
 
-#: engineecadastre Layer:1708 RoleNone
-msgid "f_train"
-msgstr ""
+#: engineecadastre Layer:1792 RoleNone
+msgid "f_Part_trucks_text"
+msgstr "Rate of accidents involving injury with commercial transport vehicles"
 
-#: engineecadastre Layer:1708 RoleNone
-msgid "f_OBJECTID_12"
-msgstr ""
+#: engineecadastre Layer:1792 RoleNone
+msgid "f_Total_trucks_text"
+msgstr "Accidents involving injury with commercial transport vehicles"
 
-#: engineecadastre Layer:1708 RoleNone
-msgid "f_number"
-msgstr ""
+#: engineecadastre Layer:1798 RoleNone
+msgid "f_ugb_total_round"
+msgstr "Livestock units of cattle and pigs"
 
-#: engineecadastre Layer:1709 RoleNone
-msgid "f_EN_publication"
-msgstr ""
-
-#: engineecadastre Layer:1709 RoleNone
-msgid "f_FR_publication"
-msgstr ""
-
-#: engineecadastre Layer:1709 RoleNone
-msgid "f_DE_publication"
-msgstr ""
-
-#: engineecadastre Layer:1709 RoleNone
-msgid "f_adoption"
-msgstr ""
+#: engineecadastre Layer:1798 RoleNone
+msgid "f_UGB_SAU_1dec"
+msgstr "Livestock units of cattle and pigs per ha of agricultural area"

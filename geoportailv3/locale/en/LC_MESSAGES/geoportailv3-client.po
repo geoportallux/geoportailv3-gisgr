@@ -6,14 +6,16 @@
 # Jeff Konnen <jaykayone@gmail.com>, 2015
 # Jeff Konnen <jaykayone@gmail.com>, 2017
 # Loubnabarra <loubna064@yahoo.fr>, 2017
+# mt111 <marco.tholl@mat.etat.lu>, 2017
 # Patrick Weber <pweber@spatialbit.com>, 2015
 # Patrick Weber <pweber@spatialbit.com>, 2015
-# Thierry Hengen <thierry.hengen@mat.etat.lu>, 2017
+# th222 <thierry.hengen@mat.etat.lu>, 2017-2018
+# th222 <thierry.hengen@mat.etat.lu>, 2017
 msgid ""
 msgstr ""
 "Project-Id-Version: gisgr\n"
-"PO-Revision-Date: 2017-04-27 14:37+0000\n"
-"Last-Translator: Jeff Konnen <jaykayone@gmail.com>\n"
+"PO-Revision-Date: 2018-06-12 15:14+0000\n"
+"Last-Translator: th222 <thierry.hengen@mat.etat.lu>\n"
 "Language-Team: English (http://www.transifex.com/geoportail/gisgr/language/en/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,7 +63,7 @@ msgid ""
 "feature and show more information."
 msgstr "A <em>short click</em> (tap on mobile) on a map feature will select the feature and show more information."
 
-#: geoportailv3/templates/index.html:212
+#: geoportailv3/templates/index.html:212 geoportailv3/templates/index.html:213
 msgid "A Propos"
 msgstr "About Us"
 
@@ -133,7 +135,7 @@ msgstr "Closest addess"
 msgid "Affaire"
 msgstr "Case"
 
-#: geoportailv3/templates/index.html:213
+#: geoportailv3/templates/index.html:214
 msgid "Aide"
 msgstr "Help"
 
@@ -378,7 +380,7 @@ msgid "Constitution de dossier de mesurage"
 msgstr "Create surveying dossier"
 
 #: geoportailv3/static/js/layerinfo/popup.html:23
-#: geoportailv3/templates/index.html:214
+#: geoportailv3/templates/index.html:215 geoportailv3/templates/index.html:216
 msgid "Contact"
 msgstr "Contact"
 
@@ -482,7 +484,7 @@ msgstr "Service description"
 msgid "Description du service :"
 msgstr "Service description"
 
-#: geoportailv3/templates/index.html:220
+#: geoportailv3/templates/index.html:224
 msgid "Dessin"
 msgstr "Draw"
 
@@ -698,7 +700,7 @@ msgstr "Import symbol"
 msgid "Impossible de contacter ce WMS"
 msgstr "Not possible to contact WMS Server"
 
-#: geoportailv3/templates/index.html:235
+#: geoportailv3/templates/index.html:239
 msgid "Imprimer"
 msgstr "Print"
 
@@ -739,7 +741,7 @@ msgstr "Layers"
 msgid "Le géoportail national du Grand-Duché du Luxembourg"
 msgstr "The official geoportal for the Grand-Duchy of Luxembourg"
 
-#: geoportailv3/templates/index.html:215
+#: geoportailv3/templates/index.html:217 geoportailv3/templates/index.html:218
 msgid "Legalites"
 msgstr "T & C"
 
@@ -873,7 +875,7 @@ msgstr "Surveying Dossier"
 msgid "Mesurage non disponible"
 msgstr "Measurement unavailable"
 
-#: geoportailv3/templates/index.html:228
+#: geoportailv3/templates/index.html:232
 msgid "Mesurer"
 msgstr "Measure"
 
@@ -986,7 +988,7 @@ msgstr "Open a map"
 msgid "Ouvrir une carte existante"
 msgstr "Open an exsisting map"
 
-#: geoportailv3/templates/index.html:241
+#: geoportailv3/templates/index.html:245
 msgid "Partager"
 msgstr "Share"
 
@@ -2056,11 +2058,11 @@ msgstr "Transport"
 msgid "emwelt"
 msgstr "Environment"
 
-#: lu_ext_wms.1617
+#: lu_ext_wms.1617 theme.1716
 msgid "Test"
 msgstr ""
 
-#: lu_int_wms.1619
+#: lu_int_wms.1619 theme.1774
 msgid "Test2"
 msgstr ""
 
@@ -2130,7 +2132,7 @@ msgstr "Nature parks 2015"
 
 #: lu_int_wms.1649
 msgid "watercourse"
-msgstr "Watercourse"
+msgstr "Watercourses"
 
 #: group.1650
 msgid "démogroupe"
@@ -2176,10 +2178,6 @@ msgstr "Population density"
 msgid "Evolution de la population"
 msgstr "Population change"
 
-#: group.1665
-msgid "Projection de la population"
-msgstr "Population projection"
-
 #: group.1666
 msgid "Population en âge de travailler"
 msgstr "Working age population"
@@ -2208,6 +2206,10 @@ msgstr "Change in number of young unemployed 2008-2012"
 msgid "Unemployed_2008_2015"
 msgstr "Change in number of young unemployed 2008-2015"
 
+#: lu_int_wms.1720
+msgid "Projection of population 20-64 years 2013-2040"
+msgstr "Projection of population 20-64 years 2013-2040"
+
 #: group.1659
 msgid "Culture et tourisme"
 msgstr "Culture and tourism"
@@ -2230,68 +2232,416 @@ msgstr "Youth unemployment"
 
 #: lu_int_wms.1698
 msgid "CORINE_Land_Cover_2012"
-msgstr ""
+msgstr "Corine Land Cover 2012"
 
 #: theme.1699
 msgid "transport"
-msgstr ""
+msgstr "Transport"
 
 #: group.1700
 msgid "Covoiturage"
-msgstr ""
+msgstr "Carpooling"
 
 #: group.1701
 msgid "Lignes de bus et ferroviaires transfrontalières"
-msgstr ""
+msgstr "Cross-border bus and railway lines"
 
 #: group.1702
 msgid "Projets de transport prioritaires"
-msgstr ""
+msgstr "Priority transport projects"
 
 #: group.1703
 msgid "Infrastructures de transport"
-msgstr ""
+msgstr "Transport infrastructure"
 
 #: lu_int_wms.1704
 msgid "Carpool_parking"
-msgstr ""
+msgstr "Carpool parking lots 2016"
 
 #: lu_int_wms.1705
 msgid "Cross_border_bus_lines_09_2015"
-msgstr ""
+msgstr "Cross-border bus lines 09/2015"
 
 #: lu_int_wms.1706
 msgid "Cross_border_railway_lines_09_2015"
-msgstr ""
+msgstr "Cross-border railway lines 09/2015"
 
 #: lu_int_wms.1707
 msgid "Priority_transport_projects"
-msgstr ""
+msgstr "Priority transport projects"
 
 #: lu_int_wms.1708
 msgid "Transport_infrastructure"
-msgstr ""
+msgstr "Transport infrastructure"
 
 #: lu_int_wms.1709
 msgid "Intercommunal_spatial_planning_08_2015"
-msgstr ""
+msgstr "Intercommunal spatial planning documents 08/2015"
 
 #: group.1711
 msgid "Documents d’aménagement du territoire"
-msgstr ""
+msgstr "Spatial planning documents"
+
+#: lu_int_wms.1721
+msgid "Projection of population 20-64 years 2010-2040"
+msgstr "Projection of population 20-64 years 2010-2040"
 
 #: theme.1710
 msgid "amenagement"
-msgstr ""
+msgstr "Spatial planning"
 
 #: theme.1658
 msgid "culture_et_tourisme"
 msgstr "Culture and tourism"
 
+#: group.1722
+msgid "Evolution de la population_test"
+msgstr "Population change"
+
 #: theme.1677
 msgid "occupation_des_sols"
-msgstr ""
+msgstr "Land cover"
 
 #: theme.1682
 msgid "marche_du_travail"
+msgstr "Labour market"
+
+#: lu_int_wms.1712
+msgid "Pop_TerrAggr_Evo_2010_2040"
+msgstr "Projection of total population 2010-2040"
+
+#: lu_int_wms.1713
+msgid "Pop_Density_TerrAggr_2013"
+msgstr "Population density 2013"
+
+#: lu_int_wms.1714
+msgid "Pop_Com_2010"
+msgstr "Total population 2010 by municipality"
+
+#: lu_int_wms.1715
+msgid "Pop_Actif_Part_2012"
+msgstr "Population share of 20-64 year olds in 2012 (% of total pop.) "
+
+#: lu_int_wms.1718
+msgid "Projection of total population 2013-2040"
+msgstr "Projection of total population 2013-2040"
+
+#: lu_int_wms.1723
+msgid "Population change 2000-2015"
+msgstr "Population change 2000-2015"
+
+#: lu_int_wms.1725
+msgid "Population change 2000-2013"
+msgstr "Population change 2000-2013"
+
+#: lu_int_wms.1726
+msgid "Population change 20-64 years 1999-2014"
+msgstr "Population change 20-64 years 1999-2014"
+
+#: lu_int_wms.1727
+msgid "Population change 20-64 years 1999-2012"
+msgstr "Population change 20-64 years 1999-2012"
+
+#: lu_int_wms.1728
+msgid "Population change FUA 2000-2010"
+msgstr "Population change FUA 2000-2010"
+
+#: lu_int_wms.1729
+msgid "Population change FUA 1990-2000"
+msgstr "Population change FUA 1990-2000"
+
+#: lu_int_wms.1730
+msgid "Population change FUA 1990-2008"
+msgstr "Population change FUA 1990-2008"
+
+#: group.1731
+msgid "Densité de population_test"
+msgstr "Population density"
+
+#: lu_int_wms.1732
+msgid "Population density 2015"
+msgstr "Population density 2015"
+
+#: lu_int_wms.1733
+msgid "Population density 2010"
+msgstr "Population density 2010"
+
+#: lu_int_wms.1734
+msgid "Population density 2007"
+msgstr "Population density 2007"
+
+#: group.1735
+msgid "Population totale_test"
+msgstr "Total population"
+
+#: lu_int_wms.1736
+msgid "Total population 2010 by aggregated areas"
+msgstr "Total population 2010 by aggregated areas"
+
+#: lu_int_wms.1737
+msgid "Total population 2007 by aggregated areas"
+msgstr "Total population 2007 by aggregated areas"
+
+#: lu_int_wms.1738
+msgid "Total population 2007 by municipality"
+msgstr "Total population 2007 by municipality"
+
+#: group.1739
+msgid "Orientation technico-économique"
+msgstr "Dominating type of farming"
+
+#: group.1740
+msgid "Limites administratives"
+msgstr "Admininistrative entities"
+
+#: group.1743
+msgid "Population en âge de travailler_test"
+msgstr "Working age population"
+
+#: lu_int_wms.1747
+msgid "Dominating type of farming"
+msgstr "Type of farming"
+
+#: lu_int_wms.1748
+msgid "Administrative entities 08/2015"
+msgstr "Administrative entities 08/2015"
+
+#: lu_int_wms.1749
+msgid ""
+"Administrative entities in the Greater Region and Upper Rhine conference "
+"2016"
+msgstr "Administrative entities in the Greater Region and Upper Rhine conference 2016"
+
+#: lu_int_wms.1750
+msgid "International protected natural areas"
+msgstr "International protected natural areas 2015"
+
+#: lu_int_wms.1751
+msgid "National protected natural areas"
+msgstr "National protected natural areas 2015"
+
+#: lu_int_wms.1752
+msgid "Renewable energy 2015/2016"
+msgstr "Renewable energy 2015/2016"
+
+#: lu_int_wms.1753
+msgid "Wind farms 31.12.2013"
+msgstr "Wind farms 31.12.2013"
+
+#: lu_int_wms.1754
+msgid "Population share 20-64 years 2014"
+msgstr "Population share of 20-64 year olds in 2014 (% of total pop.) "
+
+#: lu_int_wms.1755
+msgid "Central locations partners"
+msgstr "Central locations partners"
+
+#: lu_int_wms.1756
+msgid "Cross-border city networks"
+msgstr "Cross-border city networks"
+
+#: lu_int_wms.1757
+msgid "Major middle centres and FUAs"
+msgstr "Major middle centres and FUAs"
+
+#: lu_int_wms.1758
+msgid "Metropolitan dimension"
+msgstr "Metropolitan dimension"
+
+#: lu_int_wms.1759
+msgid "UniGR range of courses 2012"
+msgstr "UniGR range of courses 2012"
+
+#: lu_int_wms.1760
+msgid "UniGR courses per diploma type 2012"
+msgstr "UniGR courses per diploma type 2012"
+
+#: lu_int_wms.1761
+msgid "UniGR students per type of degree 2011/2012"
+msgstr "UniGR students per type of degree 2011/2012: "
+
+#: lu_int_wms.1762
+msgid "UniGR Erasmus mobility 2008-2012"
+msgstr "UniGR Erasmus mobility 2008-2012"
+
+#: lu_int_wms.1763
+msgid "Tertiary students 2012"
+msgstr "Tertiary students"
+
+#: group.1719
+msgid "Projection de la population_test"
+msgstr "Population project"
+
+#: group.1665
+msgid "Projection de la population"
+msgstr "Population projection"
+
+#: theme.1764
+msgid "agriculture"
+msgstr "Agriculture"
+
+#: theme.1765
+msgid "administration"
+msgstr "Administration"
+
+#: group.1741
+msgid "Sites naturels protégés"
+msgstr "Protected natural areas"
+
+#: theme.1766
+msgid "energie"
+msgstr "Energy"
+
+#: group.1742
+msgid "Energies renouvelables"
+msgstr "Renewable energies"
+
+#: group.1744
+msgid "Schéma du développement territorial de la Grande Région"
+msgstr "Spatial development concept of the Greater Region"
+
+#: group.1745
+msgid "Université de la Grande Région"
+msgstr "University of the Greater Region"
+
+#: group.1746
+msgid "Nombre d’étudiants"
+msgstr "Student number"
+
+#: theme.1767
+msgid "enseignement_superieur"
+msgstr "Higher education"
+
+#: group.1769
+msgid "Test_WMS"
+msgstr "Education for sustainable development"
+
+#: lu_int_wms.1768
+msgid "Abeilles dans des lieux de formation"
+msgstr "Bees at educational institutions"
+
+#: lu_int_wms.1770
+msgid "Bildungspartner BNE"
+msgstr "Educational partners for sustainable development "
+
+#: lu_ext_wms.1773 l_wmts.1781
+msgid "topplus"
+msgstr "Europe"
+
+#: theme.1776
+msgid "formation"
+msgstr "Education and training"
+
+#: lu_int_wms.1771
+msgid "TopPlus-Web-Open Color"
+msgstr "Europe"
+
+#: lu_int_wms.1777
+msgid "TopPlus-Web-Open Grey"
+msgstr "Europe - grey"
+
+#: group.1775
+msgid "TopPlus-Web-Open"
+msgstr "Europe"
+
+#: lu_int_wms.1778
+msgid "Georhena"
 msgstr ""
+
+#: group.1779
+msgid "GeoRhena"
+msgstr ""
+
+#: theme.1780
+msgid "Test3"
+msgstr ""
+
+#: lu_int_wms.1782
+msgid "GIS-GR_LVermGeo"
+msgstr ""
+
+#: theme.1783
+msgid "LVermGeo"
+msgstr ""
+
+#: group.1784
+msgid "LVermGeo_RP"
+msgstr ""
+
+#: group.1786
+msgid "Sécurité routière"
+msgstr "Road safety"
+
+#: lu_int_wms.1787
+msgid ""
+"Accidents de la route 2012-2016: nombre de tués par 1.000.000 habitants"
+msgstr "Road traffic accidents 2012-2016: deaths per 1.000.000 inhabitants"
+
+#: theme.1785
+msgid "securite_et_prevention"
+msgstr "Security and prevention"
+
+#: lu_int_wms.1788
+msgid "Accidents de la route 2012-2016 impliquant un enfant"
+msgstr "Road traffic accidents 2012-2016 involving children"
+
+#: lu_int_wms.1789
+msgid "Accidents de la route 2012-2016 impliquant un jeune conducteur"
+msgstr "Road traffic accidents 2012-2016 involving young drivers"
+
+#: lu_int_wms.1790
+msgid "Accidents de la route 2012-2016 impliquant une personne âgée "
+msgstr "Road traffic accidents 2012-2016 involving seniors"
+
+#: lu_int_wms.1791
+msgid "Accidents de la route 2012-2016 impliquant un deux-roues motorisé"
+msgstr "Road traffic accidents 2012-2016 involving motorized two-wheel vehicles"
+
+#: lu_int_wms.1792
+msgid "Accidents de la route 2012-2016 impliquant un transport commercial "
+msgstr "Road traffic accidents 2012-2016 involving commercial transport vehicles"
+
+#: group.1793
+msgid "Accessibilité des pôles supérieurs"
+msgstr " Accessibility of the major centres"
+
+#: lu_int_wms.1794
+msgid ""
+"Qualité de connexion du transport individuel motorisé aux heures de pointe"
+msgstr "Connection quality of the motorized private transport during the rush hour"
+
+#: lu_int_wms.1795
+msgid "Qualité de connexion des liaisons suprarégionales ferroviaires"
+msgstr "Quality of the supra-regional rail connections"
+
+#: lu_int_wms.1796
+msgid "Qualité de connexion des liaisons intrarégionales ferroviaires"
+msgstr "Quality of the intraregional rail connections"
+
+#: group.1797
+msgid "Densité de bovins et porcins"
+msgstr "Cattle and pig density"
+
+#: lu_int_wms.1798
+msgid "Densité de bovins et porcins par surface agricole utile"
+msgstr "Cattle and pig density per agricultural area"
+
+#: lu_int_wms.1799
+msgid "Densité de bovins par surface agricole utile"
+msgstr "Cattle density per agricultural area"
+
+#: lu_int_wms.1800
+msgid "Densité de porcins par surface agricole utile"
+msgstr "Pig density per agricultural area"
+
+#: lu_int_wms.1801
+msgid "Stations de mesure de la qualité de l’air"
+msgstr "Air quality measurement stations"
+
+#: theme.1802
+msgid "air_quality"
+msgstr "Air quality"
+
+#: group.1803
+msgid "air quality"
+msgstr "Air quality"
