@@ -62,7 +62,7 @@ def get_user_from_request(request):
         # 0 means 'Tous publics'
         roletheme = 0
         with cm.connection() as conn:
-            result = conn.search_s('ou=portail,dc=act,dc=lu',
+            result = conn.search_s('ou=gisgr,dc=act,dc=lu',
                                    ldap.SCOPE_SUBTREE, '(login=%s)' % username)
             if len(result) == 1:
                 if 'roleTheme' in result[0][1]:
