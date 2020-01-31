@@ -4,7 +4,7 @@
     <title>geoportail.lu API v3 samples</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel="stylesheet" type="text/css" href="theme.css">
-    <script src="//apiv3.geoportail.lu/apiv3loader.js"  type="text/javascript"></script>
+    <script src="/apiv3loader.js"  type="text/javascript"></script>
 </head>
 <body>
     <div class='titlebar'><h1>API Samples</h1></div>
@@ -25,6 +25,24 @@ var map = new lux.Map({
         </div>
         <div class='map' id='map1'></div>
     </div>
+<div class='sample'>
+    <a name="example1a"/>
+        <div class='description' id='desc1'>
+        <h2>Basic example with print</h2>
+        Print the current map : <button onclick="map1a.print();">Print the current map</button>
+        <pre>
+var map1a = new lux.Map({
+  target: 'map1a',
+  bgLayer: 'basemap_2015_global',
+  zoom: 18,
+  position: [75977, 75099]
+});
+&lt;button onclick="map1a.print();"&gt;Print the current map&lt;/button&gt;
+        </pre>
+
+        </div>
+        <div class='map' id='map1a'></div>
+</div>
     <div class='sample'>
     <a name="example1b"/>
         <div class='description' id='desc1b'>
@@ -361,8 +379,8 @@ var map6 = new lux.Map({
         <a name="example7"/>
         <div class='description' id='desc7'>
         <h2>Example with Search in div</h2>
-        This is a basic example with a search widget inside a div
-        
+        This is a basic example with a search widget inside a div.
+        The search by coordinates is enabled.
         <pre>
 var map7 = new lux.Map({
   target: 'map7',
@@ -370,7 +388,8 @@ var map7 = new lux.Map({
   zoom: 12,
   position: [76825, 75133],
   search      : {
-    target : 'search7'
+    target : 'search7',
+    dataSets : ['Adresse', 'Coordinates']
   }
 });
 
@@ -534,7 +553,7 @@ var map12 = new lux.Map({
   zoom: 17
 });
 
-lux.geocode({
+lux.util.geocode({
   num: 54,
   street: 'avenue gaston diderich',
   zip: 1420,
@@ -570,7 +589,7 @@ var map13 = new lux.Map({
 
 map13.on('click', function(evt) {
   var coordinate = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:2169');
-  lux.reverseGeocode(coordinate, function(address) {
+  lux.util.reverseGeocode(coordinate, function(address) {
     var html = [address.number, address.street, address.postal_code + ' ' + address.locality] .join(', ');
     document.getElementById('address').innerHTML = html;
   });
@@ -717,7 +736,7 @@ map17.on('click', function(evt) {
 
 <script type='text/javascript'>
 
-lux.setPopupSize([400, 150]);
+lux.util.setPopupSize([400, 150]);
 
 var map1 = new lux.Map({
   target: 'map1',
@@ -727,6 +746,13 @@ var map1 = new lux.Map({
   zoom: 18,
   position: [   75977 , 75099 ]
 
+});
+
+var map1a = new lux.Map({
+  target: 'map1a',
+  bgLayer: 'basemap_2015_global',
+  zoom: 18,
+  position: [75977, 75099]
 });
 
 var map1b = new lux.Map({
@@ -929,7 +955,8 @@ var map7 = new lux.Map({
   zoom: 12,
   position: [76825, 75133],
   search      : {
-    target : 'search7'
+    target : 'search7',
+    dataSets : ['Adresse', 'Coordinates']
   }
 });
 
@@ -1008,7 +1035,7 @@ var map12 = new lux.Map({
   zoom: 17
 });
 
-lux.geocode({
+lux.util.geocode({
   num: 54,
   street: 'avenue gaston diderich',
   zip: 1420,
@@ -1031,7 +1058,7 @@ var map13 = new lux.Map({
 
 map13.on('click', function(evt) {
   var coordinate = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:2169');
-  lux.reverseGeocode(coordinate, function(address) {
+  lux.util.reverseGeocode(coordinate, function(address) {
     var html = [address.number, address.street, address.postal_code + ' ' + address.locality] .join(', ');
     document.getElementById('address').innerHTML = html;
   });

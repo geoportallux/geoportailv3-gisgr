@@ -1,0 +1,23 @@
+## -*- coding: utf-8 -*-
+<%
+    settings = request.registry.settings
+    proxy_wms_url = settings.get('proxy_wms_url')
+    node_modules_path = settings.get('node_modules_path')
+    closure_library_path = settings.get('closure_library_path')
+    hasSC = ('sc' in request.params)
+%>\
+
+(function() {
+  document.write('<link rel="stylesheet" type="text/css" href="'
+          + "${request.static_url('geoportailv3:static/build/apiv3.css')}" + '" />');
+  document.write('<scr' + 'ipt type="text/javascript" src="'
+          + "${request.static_url('geoportailv3:static/build/apiv3.js')}" + '"></scr' + 'ipt>');
+  document.write('<scr' + 'ipt type="text/javascript">'
+          + "lux.util.setBaseUrl('${request.route_url('home')}', '${request.scheme}');" + '</scr' + 'ipt>');
+  document.write('<scr' + 'ipt type="text/javascript">'
+          + "lux.util.setI18nUrl('${request.static_url('geoportailv3:static/build/locale/xx/geoportailv3.json')}');" + '</scr' + 'ipt>');
+% if hasSC:
+  document.write('<scr' + 'ipt type="text/javascript">'
+          + "lux.util.setWmtsCrossOrigin(null);" + '</scr' + 'ipt>');
+% endif
+})();

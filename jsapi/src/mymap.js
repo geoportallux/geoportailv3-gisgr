@@ -1,21 +1,36 @@
-goog.provide('lux.MyMap');
-
-goog.require('goog.dom');
-goog.require('goog.dom.query');
-goog.require('goog.dom.classlist');
-goog.require('goog.color');
-goog.require('goog.events');
-goog.require('ngeo.interaction.Measure');
-goog.require('ngeo.profile');
-goog.require('ol.format.GeoJSON');
-goog.require('ol.interaction.Select');
-goog.require('ol.layer.Vector');
-goog.require('ol.style.Fill');
-goog.require('ol.style.Icon');
-goog.require('ol.style.RegularShape');
-goog.require('ol.style.Style');
-goog.require('ol.style.Stroke');
-goog.require('ol.style.Text');
+/**
+ * @module lux.MyMap
+ */
+import luxUtil from './util.js';
+import ngeoInteractionMeasure from 'ngeo/interaction/Measure.js';
+import ngeoProfileD3Elevation from 'ngeo/profile/d3Elevation.js';
+import olFormatGeoJSON from 'ol/format/GeoJSON.js';
+import olInteractionSelect from 'ol/interaction/Select.js';
+import olLayerVector from 'ol/layer/Vector.js';
+import olStyleFill from 'ol/style/Fill.js';
+import olStyleIcon from 'ol/style/Icon.js';
+import olStyleRegularShape from 'ol/style/RegularShape.js';
+import olStyleStyle from 'ol/style/Style.js';
+import olStyleStroke from 'ol/style/Stroke.js';
+import olStyleText from 'ol/style/Text.js';
+import olSourceVector from 'ol/source/Vector.js';
+import olFormatKML from 'ol/format/KML.js';
+import olFormatGPX from 'ol/format/GPX.js';
+import olStyleCircle from 'ol/style/Circle.js';
+import olEvents from 'ol/events.js';
+import olObj from 'ol/obj.js';
+import olOverlay from 'ol/Overlay.js';
+import olEventsEventType from 'ol/events/EventType.js';
+import olGeomLineString from 'ol/geom/LineString.js';
+import olGeomPolygon from 'ol/geom/Polygon.js';
+import olGeomMultiPoint from 'ol/geom/MultiPoint.js';
+import olGeomPoint from 'ol/geom/Point.js';
+import olGeomGeometryType from 'ol/geom/GeometryType.js';
+import olMapBrowserEventType from 'ol/MapBrowserEventType.js';
+import olGeomGeometryLayout from 'ol/geom/GeometryLayout.js';
+import olFeature from 'ol/Feature.js';
+import olExtent from 'ol/extent.js';
+import olGeomMultiLineString from 'ol/geom/MultiLineString.js';
 
 /**
  * @classdesc
@@ -25,14 +40,14 @@ goog.require('ol.style.Text');
  * @param {luxx.MyMapOptions} options The options.
  * @api stable
  */
-lux.MyMap = function(options) {
+const exports = function(options) {
 
   /**
    * @type {string}
    * @private
    */
   this.id_ = options.mapId;
-  goog.asserts.assert(this.id_ != undefined, 'mapId must be defined');
+  console.assert(this.id_ != undefined, 'mapId must be defined');
 
 
   /**
@@ -55,7 +70,7 @@ lux.MyMap = function(options) {
 
   this.profile_ = null;
 
-  this.featureOverlay_ = new ol.source.Vector();
+  this.featureOverlay_ = new olSourceVector();
 
   /**
    * @type {ol.geom.LineString}
@@ -97,16 +112,24 @@ lux.MyMap = function(options) {
    * @private
    * @type {ol.format.KML}
    */
-  this.kmlFormat_ = new ol.format.KML();
+  this.kmlFormat_ = new olFormatKML();
 
   /**
    * @private
    * @type {ol.format.GPX}
    */
-  this.gpxFormat_ = new ol.format.GPX();
+  this.gpxFormat_ = new olFormatGPX();
 
-  this.mymapsSymbolUrl_ = [lux.mymapsUrl, 'symbol/'].join('/');
-  this.arrowUrl_ = [lux.mymapsUrl, 'getarrow'].join('/');
+  this.mymapsSymbolUrl_ = [luxUtil.mymapsUrl, 'symbol/'].join('/');
+  this.arrowUrl_ = [luxUtil.mymapsUrl, 'getarrow'].join('/');
+  this.exportGpxUrl_ = [luxUtil.mymapsUrl, 'exportgpxkml'].join('/');
+  this.exportCsvUrl_ = luxUtil.exportCsvUrl;
+
+  /**
+   * @private
+   * @type {ol.source.Vector}
+   */
+  this.sourceFeatures_;
 };
 
 /**
@@ -115,7 +138,7 @@ lux.MyMap = function(options) {
  * @export
  * @api
  */
-lux.MyMap.prototype.setMap = function(map) {
+exports.prototype.setMap = function(map) {
 
   /**
    * @type {lux.Map}
@@ -123,21 +146,21 @@ lux.MyMap.prototype.setMap = function(map) {
    */
   this.map_ = map;
 
-  var layer = new ol.layer.Vector({
+  var layer = new olLayerVector({
     source: this.featureOverlay_
   });
 
   layer.setStyle([
-    new ol.style.Style({
-      image: new ol.style.Circle({
+    new olStyleStyle({
+      image: new olStyleCircle({
         radius: 6,
-        fill: new ol.style.Fill({color: '#ff0000'})
+        fill: new olStyleFill({color: '#ff0000'})
       })
     }),
-    new ol.style.Style({
-      image: new ol.style.Circle({
+    new olStyleStyle({
+      image: new olStyleCircle({
         radius: 5,
-        fill: new ol.style.Fill({color: '#ffffff'})
+        fill: new olStyleFill({color: '#ffffff'})
       })
     })]);
   layer.setMap(this.map_);
@@ -151,16 +174,16 @@ lux.MyMap.prototype.setMap = function(map) {
  * Load the features.
  * @private
  */
-lux.MyMap.prototype.loadFeatures_ = function() {
+exports.prototype.loadFeatures_ = function() {
 
-  var url = [lux.mymapsUrl, 'features', this.id_].join('/');
+  var url = [luxUtil.mymapsUrl, 'features', this.id_].join('/');
   fetch(url).then(function(resp) {
     return resp.json();
   }).then(function(json) {
-    var format = new ol.format.GeoJSON();
-    var source = new ol.source.Vector();
-    var vector = new ol.layer.Vector({
-      source: source
+    var format = new olFormatGeoJSON();
+    this.sourceFeatures_ = new olSourceVector();
+    var vector = new olLayerVector({
+      source: this.sourceFeatures_
     });
     this.map_.addLayer(vector);
     var features = format.readFeatures(json, {
@@ -174,16 +197,16 @@ lux.MyMap.prototype.loadFeatures_ = function() {
     features.forEach(function(feature) {
       feature.setStyle(featureStyleFunction);
     });
-    source.addFeatures(features);
+    this.sourceFeatures_.addFeatures(features);
 
     var size = /** @type {Array<number>} */ (this.map_.getSize());
-    this.map_.getView().fit(source.getExtent(), {size: size});
+    this.map_.getView().fit(this.sourceFeatures_.getExtent(), {size: size});
 
-    this.selectInteraction_ = new ol.interaction.Select({
+    this.selectInteraction_ = new olInteractionSelect({
       layers: [vector]
     });
     this.map_.addInteraction(this.selectInteraction_);
-    ol.events.listen(
+    olEvents.listen(
       this.selectInteraction_,
       'select',
       this.onFeatureSelected_, this);
@@ -194,7 +217,7 @@ lux.MyMap.prototype.loadFeatures_ = function() {
  * @param {ol.interaction.Select.Event} event The select event.
  * @private
  */
-lux.MyMap.prototype.onFeatureSelected_ = function(event) {
+exports.prototype.onFeatureSelected_ = function(event) {
   var features = event.selected;
 
   if (this.popup_) {
@@ -208,33 +231,33 @@ lux.MyMap.prototype.onFeatureSelected_ = function(event) {
   var feature = features[0];
   var properties = feature.getProperties();
 
-  var content = goog.dom.createElement(goog.dom.TagName.DIV);
-  var title = goog.dom.createElement(goog.dom.TagName.H3);
+  var content = document.createElement('DIV');
+  var title = document.createElement('H3');
   title.innerHTML = properties['name'];
-  goog.dom.append(content, title);
+  content.appendChild(title);
 
-  var description = goog.dom.createDom(goog.dom.TagName.P, {
-    html: properties.description
-  });
-  goog.dom.append(content, description);
-
-  if (properties.thumbnail) {
-    var link = goog.dom.createDom(goog.dom.TagName.A, {
-      href: lux.baseUrl + properties.image,
-      target: '_blank'
-    });
-    var thumb = goog.dom.createDom(goog.dom.TagName.IMG, {
-      src: lux.baseUrl + properties.thumbnail
-    });
-    goog.dom.append(link, thumb);
-    goog.dom.append(content, link);
+  if (properties.description) {
+    var description = document.createElement('P');
+    description.appendChild(properties.description);
   }
+  if (properties.thumbnail) {
+    var link = document.createElement('A');
+    link.setAttribute('href', luxUtil.baseUrl + properties.image);
+    link.setAttribute('target', '_blank');
 
-  goog.dom.append(content, this.getMeasures(feature));
+    var thumb = document.createElement('IMG');
+    thumb.setAttribute('src', luxUtil.baseUrl + properties.thumbnail);
 
-  var element = lux.buildPopupLayout(content, function() {});
+    link.appendChild(thumb);
+    content.appendChild(link);
+  }
+  this.getMeasures(feature).forEach(function(element) {
+    content.appendChild(element);
+  });
 
-  this.popup_ = new ol.Overlay({
+  var element = luxUtil.buildPopupLayout(content, function() {});
+
+  this.popup_ = new olOverlay({
     element: element,
     positioning: 'bottom-center',
     offset: [0, -20],
@@ -243,7 +266,7 @@ lux.MyMap.prototype.onFeatureSelected_ = function(event) {
   });
 
   var closeBtn = element.querySelectorAll('.lux-popup-close')[0];
-  ol.events.listen(closeBtn, ol.events.EventType.CLICK, function() {
+  olEvents.listen(closeBtn, olEventsEventType.CLICK, function() {
     this.map_.removeOverlay(this.popup_);
     this.popup_ = null;
     this.selectInteraction_.getFeatures().clear();
@@ -258,19 +281,19 @@ lux.MyMap.prototype.onFeatureSelected_ = function(event) {
  * @return {ol.FeatureStyleFunction} The Function to style.
  * @private
  */
-lux.MyMap.prototype.createStyleFunction_ = function(curMap) {
+exports.prototype.createStyleFunction_ = function(curMap) {
 
   var styles = [];
 
-  var vertexStyle = new ol.style.Style({
-    image: new ol.style.RegularShape({
+  var vertexStyle = new olStyleStyle({
+    image: new olStyleRegularShape({
       radius: 6,
       points: 4,
       angle: Math.PI / 4,
-      fill: new ol.style.Fill({
+      fill: new olStyleFill({
         color: [255, 255, 255, 0.5]
       }),
-      stroke: new ol.style.Stroke({
+      stroke: new olStyleStroke({
         color: [0, 0, 0, 1]
       })
     }),
@@ -278,19 +301,19 @@ lux.MyMap.prototype.createStyleFunction_ = function(curMap) {
       var geom = feature.getGeometry();
 
       var coordinates;
-      if (geom instanceof ol.geom.LineString) {
+      if (geom instanceof olGeomLineString) {
         coordinates = geom.getCoordinates();
-        return new ol.geom.MultiPoint(coordinates);
-      } else if (geom instanceof ol.geom.Polygon) {
+        return new olGeomMultiPoint(coordinates);
+      } else if (geom instanceof olGeomPolygon) {
         coordinates = geom.getCoordinates()[0];
-        return new ol.geom.MultiPoint(coordinates);
+        return new olGeomMultiPoint(coordinates);
       } else {
         return geom;
       }
     }
   });
 
-  var fillStyle = new ol.style.Fill();
+  var fillStyle = new olStyleFill();
   var symbolUrl = this.mymapsSymbolUrl_;
   var arrowUrl = this.arrowUrl_;
   return function(resolution) {
@@ -302,24 +325,29 @@ lux.MyMap.prototype.createStyleFunction_ = function(curMap) {
       styles.push(vertexStyle);
     }
 
-    // goog.asserts.assert(goog.isDef(this.get('__style__'));
     var color = this.get('color') || '#FF0000';
-    var rgbColor = goog.color.hexToRgb(color);
+    var r = parseInt(color.substr(1, 2), 16);
+    var g = parseInt(color.substr(3, 2), 16);
+    var b = parseInt(color.substr(5, 2), 16);
+    var rgbColor = [r, g, b];
     var opacity = this.get('opacity');
-    if (!goog.isDef(opacity)) {
+    if (opacity === undefined) {
       opacity = 1;
     }
-    var rgbaColor = goog.array.clone(rgbColor);
+    var rgbaColor = rgbColor.slice(0);
     rgbColor.push(1);
     rgbaColor.push(opacity);
 
     fillStyle.setColor(rgbaColor);
-    if (this.getGeometry().getType() === ol.geom.GeometryType.LINE_STRING &&
+    if (this.getGeometry().getType() === olGeomGeometryType.LINE_STRING &&
         this.get('showOrientation') === true) {
       var prevArrow, distance;
-
+      var arrowColor = this.get('arrowcolor');
+      if (arrowColor === undefined || arrowColor === null) {
+        arrowColor = color;
+      }
       this.getGeometry().forEachSegment(function(start, end) {
-        var arrowPoint = new ol.geom.Point(
+        var arrowPoint = new olGeomPoint(
             [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2]);
         var dx = end[0] - start[0];
         var dy = end[1] - start[1];
@@ -332,11 +360,11 @@ lux.MyMap.prototype.createStyleFunction_ = function(curMap) {
           distance = Math.sqrt(w * w + h * h);
         }
         if (!prevArrow || distance > 600) {
-          var coloredArrowUrl = arrowUrl + '?color=' + color.replace('#', '');
+          var coloredArrowUrl = arrowUrl + '?color=' + arrowColor.replace('#', '');
           // arrows
-          styles.push(new ol.style.Style({
+          styles.push(new olStyleStyle({
             geometry: arrowPoint,
-            image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+            image: new olStyleIcon(/** @type {olx.style.IconOptions} */ ({
               rotation: Math.PI / 2 - Math.atan2(dy, dx),
               src: coloredArrowUrl
             }))
@@ -365,7 +393,7 @@ lux.MyMap.prototype.createStyleFunction_ = function(curMap) {
       if (!this.get('__editable__') && this.get('__selected__')) {
         featureStroke = featureStroke + 3;
       }
-      stroke = new ol.style.Stroke({
+      stroke = new olStyleStroke({
         color: rgbColor,
         width: featureStroke,
         lineDash: lineDash
@@ -378,7 +406,7 @@ lux.MyMap.prototype.createStyleFunction_ = function(curMap) {
     }
     var imageOptions = {
       fill: fillStyle,
-      stroke: new ol.style.Stroke({
+      stroke: new olStyleStroke({
         color: rgbColor,
         width: featureSize / 7
       }),
@@ -386,12 +414,12 @@ lux.MyMap.prototype.createStyleFunction_ = function(curMap) {
     };
     var image = null;
     if (this.get('symbolId')) {
-      goog.object.extend(imageOptions, {
+      olObj.assign(imageOptions, {
         src: symbolUrl + this.get('symbolId'),
         scale: featureSize / 100,
         rotation: this.get('angle')
       });
-      image = new ol.style.Icon(imageOptions);
+      image = new olStyleIcon(imageOptions);
     } else {
       var shape = this.get('shape');
       if (!shape) {
@@ -399,62 +427,62 @@ lux.MyMap.prototype.createStyleFunction_ = function(curMap) {
         shape = 'circle';
       }
       if (shape === 'circle') {
-        image = new ol.style.Circle(imageOptions);
+        image = new olStyleCircle(imageOptions);
       } else if (shape === 'square') {
-        goog.object.extend(imageOptions, ({
+        olObj.assign(imageOptions, ({
           points: 4,
           angle: Math.PI / 4,
           rotation: this.get('angle')
         }));
-        image = new ol.style.RegularShape(
+        image = new olStyleRegularShape(
             /** @type {olx.style.RegularShapeOptions} */ (imageOptions));
       } else if (shape === 'triangle') {
-        goog.object.extend(imageOptions, ({
+        olObj.assign(imageOptions, ({
           points: 3,
           angle: 0,
           rotation: this.get('angle')
         }));
-        image = new ol.style.RegularShape(
+        image = new olStyleRegularShape(
             /** @type {olx.style.RegularShapeOptions} */ (imageOptions));
       } else if (shape === 'star') {
-        goog.object.extend(imageOptions, ({
+        olObj.assign(imageOptions, ({
           points: 5,
           angle: Math.PI / 4,
           rotation: this.get('angle'),
           radius2: featureSize
         }));
-        image = new ol.style.RegularShape(
+        image = new olStyleRegularShape(
             /** @type {olx.style.RegularShapeOptions} */ (imageOptions));
       } else if (this.get('shape') == 'cross') {
-        goog.object.extend(imageOptions, ({
+        olObj.assign(imageOptions, ({
           points: 4,
           angle: 0,
           rotation: this.get('angle'),
           radius2: 0
         }));
-        image = new ol.style.RegularShape(
+        image = new olStyleRegularShape(
             /** @type {olx.style.RegularShapeOptions} */ (imageOptions));
       }
     }
 
     if (this.get('isLabel')) {
-      return [new ol.style.Style({
-        text: new ol.style.Text(/** @type {olx.style.TextOptions} */ ({
+      return [new olStyleStyle({
+        text: new olStyleText(/** @type {olx.style.TextOptions} */ ({
           text: this.get('name'),
           textAlign: 'start',
           font: 'normal ' + featureSize + 'px Sans-serif',
           rotation: this.get('angle'),
-          fill: new ol.style.Fill({
+          fill: new olStyleFill({
             color: rgbColor
           }),
-          stroke: new ol.style.Stroke({
+          stroke: new olStyleStroke({
             color: [255, 255, 255],
             width: 2
           })
         }))
       })];
     } else {
-      styles.push(new ol.style.Style({
+      styles.push(new olStyleStyle({
         image: image,
         fill: fillStyle,
         stroke: stroke
@@ -469,133 +497,135 @@ lux.MyMap.prototype.createStyleFunction_ = function(curMap) {
  * @param {ol.Feature} feature The feature.
  * @return {Array<Element>} The formatted measure.
  */
-lux.MyMap.prototype.getMeasures = function(feature) {
+exports.prototype.getMeasures = function(feature) {
   var elements = [];
   var geom = feature.getGeometry();
-  if (geom.getType() === ol.geom.GeometryType.POLYGON ||
-      geom.getType() === ol.geom.GeometryType.LINE_STRING) {
-    var lengthEl = goog.dom.createDom(goog.dom.TagName.P);
+  var projection = this.map_.getView().getProjection();
+  console.assert(projection);
+  if (geom.getType() === olGeomGeometryType.POLYGON ||
+      geom.getType() === olGeomGeometryType.LINE_STRING) {
+    var lengthEl = document.createElement('P');
 
-    goog.asserts.assert(geom instanceof ol.geom.LineString ||
-        geom instanceof ol.geom.Polygon);
+    console.assert(geom instanceof olGeomLineString ||
+        geom instanceof olGeomPolygon);
 
-    var coordinates = (geom.getType() === ol.geom.GeometryType.POLYGON) ?
-      geom.getCoordinates()[0] : geom.getCoordinates();
-    var length = ngeo.interaction.Measure.getFormattedLength(
-      new ol.geom.LineString(coordinates),
-      this.map_.getView().getProjection(),
+    var coordinates = (geom.getType() === olGeomGeometryType.POLYGON) ?
+      /** @type{ol.geom.Polygon}*/(geom).getCoordinates()[0] : /** @type{ol.geom.LineString}*/(geom).getCoordinates();
+    var length = ngeoInteractionMeasure.getFormattedLength(
+      new olGeomLineString(coordinates),
+      /** @type{!ol.proj.Projection} */(projection),
       undefined,
       function(measure) {
         return measure.toString();
       }
     );
-    goog.dom.setTextContent(lengthEl, lux.translate('Length:') + ' ' + length);
+    lengthEl.appendChild(document.createTextNode(luxUtil.translate('Length:') + ' ' + length));
     elements.push(lengthEl);
   }
-  if (geom.getType() === ol.geom.GeometryType.POLYGON) {
-    var areaEl = goog.dom.createDom(goog.dom.TagName.P);
+  if (geom.getType() === olGeomGeometryType.POLYGON) {
+    var areaEl = document.createElement('P');
 
-    goog.asserts.assert(geom instanceof ol.geom.Polygon);
+    console.assert(geom instanceof olGeomPolygon);
 
-    var area = ngeo.interaction.Measure.getFormattedArea(
-      geom,
-      this.map_.getView().getProjection(),
+    var area = ngeoInteractionMeasure.getFormattedArea(
+      /** @type{!ol.geom.Polygon} */(geom),
+      /** @type{!ol.proj.Projection} */(projection),
       undefined,
       function(measure) {
         return measure.toString();
       }
     );
-    goog.dom.setTextContent(areaEl, lux.translate('Area:') + ' ' + area);
+    areaEl.appendChild(document.createTextNode(luxUtil.translate('Area:') + ' ' + area));
     elements.push(areaEl);
   }
-  if (geom.getType() === ol.geom.GeometryType.POLYGON &&
+  if (geom.getType() === olGeomGeometryType.POLYGON &&
       !!feature.get('isCircle')) {
-    var radiusEl = goog.dom.createDom(goog.dom.TagName.P);
-    goog.asserts.assert(geom instanceof ol.geom.Polygon);
-    var center = ol.extent.getCenter(geom.getExtent());
-    var line = new ol.geom.LineString([center, geom.getLastCoordinate()]);
-    var radius = ngeo.interaction.Measure.getFormattedLength(
+    var radiusEl = document.createElement('P');
+    console.assert(geom instanceof olGeomPolygon);
+    var center = olExtent.getCenter(geom.getExtent());
+    var line = new olGeomLineString([center, /** @type{ol.geom.Polygon} */(geom).getLastCoordinate()]);
+    var radius = ngeoInteractionMeasure.getFormattedLength(
       line,
-      this.map_.getView().getProjection(),
+      /** @type{!ol.proj.Projection} */(projection),
       undefined,
       function(measure) {
         return measure.toString();
       }
     );
-    goog.dom.setTextContent(radiusEl, lux.translate('Rayon:') + ' ' + radius);
+    radiusEl.appendChild(document.createTextNode(luxUtil.translate('Rayon:') + ' ' + radius));
     elements.push(radiusEl);
   }
-  if (geom.getType() === ol.geom.GeometryType.POINT &&
+  if (geom.getType() === olGeomGeometryType.POINT &&
       !feature.get('isLabel')) {
-    var elevationEl = goog.dom.createDom(goog.dom.TagName.P);
+    var elevationEl = document.createElement('P');
 
-    goog.asserts.assert(geom instanceof ol.geom.Point);
+    console.assert(geom instanceof olGeomPoint);
 
-    goog.dom.setTextContent(elevationEl, 'N/A');
-    lux.getElevation(geom.getCoordinates()).then(
+    elevationEl.appendChild(document.createTextNode('N/A'));
+    luxUtil.getElevation(/** @type{!ol.geom.Point} */ (geom).getCoordinates()).then(
       function(json) {
         if (json['dhm'] > 0) {
-          goog.dom.setTextContent(elevationEl,
-              lux.translate('Elevation') + ': ' +
-              parseInt(json['dhm'] / 100, 0).toString() + ' m');
+          elevationEl.appendChild(document.createTextNode(luxUtil.translate('Elevation') + ': ' +
+              parseInt(json['dhm'], 0).toString() + ' m'));
         }
       }
     );
     elements.push(elevationEl);
   }
 
-  var links = goog.dom.createDom(goog.dom.TagName.P);
-  goog.dom.classlist.add(links, 'lux-popup-links');
+  var links = document.createElement('P');
+  links.classList.add('lux-popup-links');
 
-  var link = goog.dom.createDom(goog.dom.TagName.A, {
-    href: 'javascript:void(0);'
-  });
-  goog.dom.setTextContent(link, lux.translate('Zoom to'));
-  goog.dom.append(links, link);
-  goog.events.listen(link, goog.events.EventType.CLICK, function() {
+  var link = document.createElement('A');
+  link.setAttribute('href', 'javascript:void(0);');
+  link.appendChild(document.createTextNode(luxUtil.translate('Zoom to')));
+  links.appendChild(link);
+  olEvents.listen(link, olEventsEventType.CLICK, function() {
     var size = /** @type {Array<number>} */ (this.map_.getSize());
     var extent = /** @type {Array<number>} */ (geom.getExtent());
     this.map_.getView().fit(extent, {size: size});
   }.bind(this));
 
   if (this.profileContainer_ &&
-      geom.getType() === ol.geom.GeometryType.LINE_STRING) {
-    goog.asserts.assert(geom instanceof ol.geom.LineString);
-    link = goog.dom.createDom(goog.dom.TagName.A, {
-      href: 'javascript:void(0);'
-    });
-    goog.dom.setTextContent(link, lux.translate('Profile'));
-    goog.dom.append(links, link);
-    goog.events.listen(link, goog.events.EventType.CLICK, function() {
-      goog.asserts.assert(geom instanceof ol.geom.LineString);
-      goog.asserts.assert(this.profileContainer_ instanceof Element);
-      this.loadProfile(geom, this.profileContainer_, true);
+      geom.getType() === olGeomGeometryType.LINE_STRING) {
+    console.assert(geom instanceof olGeomLineString);
+    link = document.createElement('A');
+    link.setAttribute('href', 'javascript:void(0);');
+    link.appendChild(document.createTextNode(luxUtil.translate('Profile')));
+    links.appendChild(link);
+
+    olEvents.listen(link, olEventsEventType.CLICK, function() {
+      console.assert(geom instanceof olGeomLineString);
+      console.assert(this.profileContainer_ instanceof Element);
+      this.loadProfile(
+        /** @type{ol.geom.LineString} */ (geom),
+        /** @type{Element} */ (this.profileContainer_), true);
       var closeBtn = this.profileContainer_.querySelectorAll(
         '.lux-profile-header .lux-profile-close')[0];
       closeBtn.style.display = 'block';
-      ol.events.listen(closeBtn, ol.events.EventType.CLICK, function() {
+      olEvents.listen(closeBtn, olEventsEventType.CLICK, function() {
         this.hideProfile_();
       }.bind(this));
     }.bind(this));
 
   }
 
-  link = goog.dom.createDom(goog.dom.TagName.A, {
-    href: 'javascript:void(0);'
-  });
-  goog.dom.setTextContent(link, lux.translate('Exporter KMl'));
-  goog.dom.append(links, link);
-  goog.events.listen(link, goog.events.EventType.CLICK, function() {
-    this.exportKml_(feature);
+  link = document.createElement('A');
+  link.setAttribute('href', 'javascript:void(0);');
+  link.appendChild(document.createTextNode(luxUtil.translate('Exporter KMl')));
+
+  links.appendChild(link);
+  olEvents.listen(link, olEventsEventType.CLICK, function() {
+    this.exportKml_(feature, undefined);
   }.bind(this));
 
-  link = goog.dom.createDom(goog.dom.TagName.A, {
-    href: 'javascript:void(0);'
-  });
-  goog.dom.setTextContent(link, lux.translate('Exporter GPX'));
-  goog.dom.append(links, link);
-  goog.events.listen(link, goog.events.EventType.CLICK, function() {
-    this.exportGpx_(feature);
+  link = document.createElement('A');
+  link.setAttribute('href', 'javascript:void(0);');
+  link.appendChild(document.createTextNode(luxUtil.translate('Exporter GPX')));
+
+  links.appendChild(link);
+  olEvents.listen(link, olEventsEventType.CLICK, function() {
+    this.exportGpx_(feature, undefined);
   }.bind(this));
 
   elements.push(links);
@@ -608,38 +638,40 @@ lux.MyMap.prototype.getMeasures = function(feature) {
  *     not.
  * @private
  */
-lux.MyMap.prototype.initProfile_ = function(target, opt_addCloseBtn) {
-  goog.dom.removeChildren(target);
-  goog.dom.classlist.add(target, 'lux-profile');
+exports.prototype.initProfile_ = function(target, opt_addCloseBtn) {
+  while (target.firstChild) {
+    target.removeChild(target.firstChild);
+  }
 
-  var header = goog.dom.createDom(goog.dom.TagName.DIV, {
-    'class': 'lux-profile-header'
-  });
+  target.classList.add('lux-profile');
+
+  var header = document.createElement('DIV');
+  header.setAttribute('class', 'lux-profile-header');
+
   if (opt_addCloseBtn) {
-    var closeBtn = goog.dom.createDom(goog.dom.TagName.BUTTON, {
-      'class': 'lux-profile-close'
-    });
+    var closeBtn = document.createElement('BUTTON');
+    closeBtn.setAttribute('class', 'lux-profile-close');
+
     closeBtn.innerHTML = '&times;';
     header.appendChild(closeBtn);
   }
 
-  var metadata = goog.dom.createDom(goog.dom.TagName.SPAN, {
-    'class': 'lux-profile-metadata'
-  });
+  var metadata = document.createElement('SPAN');
+  metadata.setAttribute('class', 'lux-profile-metadata');
+
   header.appendChild(metadata);
 
-  var exportCSV = goog.dom.createDom(goog.dom.TagName.BUTTON);
-  exportCSV.innerHTML = lux.translate('Export csv');
-  ol.events.listen(exportCSV, ol.events.EventType.CLICK, function() {
+  var exportCSV = document.createElement('BUTTON');
+  exportCSV.innerHTML = luxUtil.translate('Export csv');
+  olEvents.listen(exportCSV, olEventsEventType.CLICK, function() {
     this.exportCSV_();
   }.bind(this));
   header.appendChild(exportCSV);
 
   target.appendChild(header);
 
-  var content = goog.dom.createDom(goog.dom.TagName.DIV, {
-    'class': 'lux-profile-content'
-  });
+  var content = document.createElement('DIV');
+  content.setAttribute('class', 'lux-profile-content');
   target.appendChild(content);
 
   this.selection_ = d3.select(content);
@@ -650,7 +682,7 @@ lux.MyMap.prototype.initProfile_ = function(target, opt_addCloseBtn) {
    */
   var z = function(item) {
     if ('values' in item && 'dhm' in item['values']) {
-      return parseFloat((item['values']['dhm'] / 100).toPrecision(5));
+      return parseFloat((item['values']['dhm']).toPrecision(5));
     }
     return 0;
   };
@@ -666,12 +698,12 @@ lux.MyMap.prototype.initProfile_ = function(target, opt_addCloseBtn) {
     return 0;
   };
 
-  ol.events.listen(this.map_, ol.MapBrowserEventType.POINTERMOVE,
+  olEvents.listen(this.map_, olMapBrowserEventType.POINTERMOVE,
       /**
        * @param {ol.MapBrowserPointerEvent} evt Map browser event.
        */
       function(evt) {
-        if (evt.dragging || goog.isNull(this.line_)) {
+        if (evt.dragging || (this.line_ === null)) {
           return;
         }
         var coordinate = this.map_.getEventCoordinate(evt.originalEvent);
@@ -685,7 +717,7 @@ lux.MyMap.prototype.initProfile_ = function(target, opt_addCloseBtn) {
     }
   };
 
-  this.profile_ = ngeo.profile({
+  this.profile_ = ngeoProfileD3Elevation({
     linesConfiguration: linesConfiguration,
     distanceExtractor: dist,
     hoverCallback: this.profileHoverCallback_.bind(this),
@@ -700,14 +732,14 @@ lux.MyMap.prototype.initProfile_ = function(target, opt_addCloseBtn) {
  * Clears the data in the profile and hide it.
  * @private
  */
-lux.MyMap.prototype.hideProfile_ = function() {
+exports.prototype.hideProfile_ = function() {
   if (!this.profileContainer_) {
     return;
   }
 
   this.selection_.datum(null).call(this.profile_);
   this.line_ = null;
-  goog.dom.classlist.remove(this.profileContainer_, 'lux-profile-active');
+  this.profileContainer_.classList.remove('lux-profile-active');
 };
 
 /**
@@ -719,24 +751,24 @@ lux.MyMap.prototype.hideProfile_ = function() {
  * @export
  * @api
  */
-lux.MyMap.prototype.loadProfile = function(geom, target, opt_addCloseBtn) {
-  if (goog.isString(target)) {
+exports.prototype.loadProfile = function(geom, target, opt_addCloseBtn) {
+  if (typeof target === 'string') {
     target = document.getElementById(target);
   }
   this.profileContainer_ = target;
   this.initProfile_(target, opt_addCloseBtn);
 
-  goog.asserts.assert(geom instanceof ol.geom.LineString,
+  console.assert(geom instanceof olGeomLineString,
       'geometry should be a linestring');
 
-  goog.dom.classlist.add(target, 'lux-profile-active');
+  target.classList.add('lux-profile-active');
 
   var encOpt = {
     dataProjection: 'EPSG:2169',
     featureProjection: 'EPSG:3857'
   };
   var params = {
-    'geom': new ol.format.GeoJSON().writeGeometry(geom, encOpt),
+    'geom': new olFormatGeoJSON().writeGeometry(geom, encOpt),
     'nbPoints': 100,
     'layer': 'dhm',
     'id': null
@@ -760,7 +792,7 @@ lux.MyMap.prototype.loadProfile = function(geom, target, opt_addCloseBtn) {
     body: body
   });
 
-  fetch(lux.profileUrl, request
+  fetch(luxUtil.profileUrl, request
   ).then(function(resp) {
     return resp.json();
   }).then(function(data) {
@@ -774,15 +806,15 @@ lux.MyMap.prototype.loadProfile = function(geom, target, opt_addCloseBtn) {
     var lastElevation;
     var i;
     var len = data.profile.length;
-    var lineString = new ol.geom.LineString([], ol.geom.GeometryLayout.XYM);
+    var lineString = new olGeomLineString([], olGeomGeometryLayout.XYM);
     for (i = 0; i < len; i++) {
       var p = data.profile[i];
-      p = new ol.geom.Point([p['x'], p['y']]);
+      p = new olGeomPoint([p['x'], p['y']]);
       p.transform('EPSG:2169', this.map_.getView().getProjection());
       lineString.appendCoordinate(
           p.getCoordinates().concat(data.profile[i]['dist']));
 
-      var curElevation = (data.profile[i]['values']['dhm']) / 100;
+      var curElevation = (data.profile[i]['values']['dhm']);
       if (lastElevation !== undefined) {
         var elevation = curElevation - lastElevation;
         cumulativeElevation = cumulativeElevation + elevation;
@@ -808,28 +840,28 @@ lux.MyMap.prototype.loadProfile = function(geom, target, opt_addCloseBtn) {
 /**
  * @private
  */
-lux.MyMap.prototype.exportCSV_ = function() {
+exports.prototype.exportCSV_ = function() {
   var csv = 'dist,MNT,y,x\n';
   this.selection_.datum().forEach(function(item) {
     csv += item['dist'] + ',' +
-          (item['values']['dhm']) / 100 + ',' +
+          (item['values']['dhm']) + ',' +
           item['x'] + ',' +
           item['y'] + '\n';
   });
 
-  var csvInput = goog.dom.createElement(goog.dom.TagName.INPUT);
+  var csvInput = document.createElement('INPUT');
   csvInput.type = 'hidden';
   csvInput.name = 'csv';
   csvInput.value = csv;
 
-  var nameInput = goog.dom.createElement(goog.dom.TagName.INPUT);
+  var nameInput = document.createElement('INPUT');
   nameInput.type = 'hidden';
   nameInput.name = 'name';
   nameInput.value = 'mnt';
 
-  var form = goog.dom.createElement(goog.dom.TagName.FORM);
+  var form = document.createElement('FORM');
   form.method = 'POST';
-  form.action = '//maps.geoportail.lu/main/wsgi/profile/echocsv';
+  form.action = this.exportCsvUrl_;
   form.appendChild(nameInput);
   form.appendChild(csvInput);
   document.body.appendChild(form);
@@ -842,12 +874,11 @@ lux.MyMap.prototype.exportCSV_ = function() {
  * Creates a new measure tooltip
  * @private
  */
-lux.MyMap.prototype.createMeasureTooltip_ = function() {
+exports.prototype.createMeasureTooltip_ = function() {
   this.removeMeasureTooltip_();
-  this.measureTooltipElement_ = goog.dom.createDom(goog.dom.TagName.DIV);
-  goog.dom.classlist.addAll(this.measureTooltipElement_,
-      ['lux-tooltip', 'lux-tooltip-measure']);
-  this.measureTooltip_ = new ol.Overlay({
+  this.measureTooltipElement_ = document.createElement('DIV');
+  this.measureTooltipElement_.classList.add('lux-tooltip', 'lux-tooltip-measure');
+  this.measureTooltip_ = new olOverlay({
     element: this.measureTooltipElement_,
     offset: [0, -15],
     positioning: 'bottom-center'
@@ -859,8 +890,8 @@ lux.MyMap.prototype.createMeasureTooltip_ = function() {
  * Destroy the measure tooltip
  * @private
  */
-lux.MyMap.prototype.removeMeasureTooltip_ = function() {
-  if (!goog.isNull(this.measureTooltipElement_)) {
+exports.prototype.removeMeasureTooltip_ = function() {
+  if (this.measureTooltipElement_ !== null) {
     this.measureTooltipElement_.parentNode.removeChild(
         this.measureTooltipElement_);
     this.measureTooltipElement_ = null;
@@ -876,11 +907,11 @@ lux.MyMap.prototype.removeMeasureTooltip_ = function() {
  * @param {string} yUnits The y unit.
  * @private
  */
-lux.MyMap.prototype.profileHoverCallback_ = function(point, dist, xUnits, elevation, yUnits) {
+exports.prototype.profileHoverCallback_ = function(point, dist, xUnits, elevation, yUnits) {
   this.featureOverlay_.clear();
-  var curPoint = new ol.geom.Point([point['x'], point['y']]);
+  var curPoint = new olGeomPoint([point['x'], point['y']]);
   curPoint.transform('EPSG:2169', this.map_.getView().getProjection());
-  var positionFeature = new ol.Feature({
+  var positionFeature = new olFeature({
     geometry: curPoint
   });
   this.featureOverlay_.addFeature(positionFeature);
@@ -900,7 +931,7 @@ lux.MyMap.prototype.profileHoverCallback_ = function(point, dist, xUnits, elevat
  * @return {string} The formatted distance.
  * @private
  */
-lux.MyMap.prototype.formatDistance_ = function(dist, units) {
+exports.prototype.formatDistance_ = function(dist, units) {
   return parseFloat(dist.toPrecision(3)) + ' ' + units;
 };
 
@@ -912,7 +943,7 @@ lux.MyMap.prototype.formatDistance_ = function(dist, units) {
  * @return {string} The elevation text.
  * @private
  */
-lux.MyMap.prototype.formatElevation_ = function(elevation, units) {
+exports.prototype.formatElevation_ = function(elevation, units) {
   return parseFloat(elevation.toPrecision(4)) + ' ' + units;
 };
 
@@ -923,7 +954,7 @@ lux.MyMap.prototype.formatElevation_ = function(elevation, units) {
  * @return {string} the elevation gain text.
  * @private
  */
-lux.MyMap.prototype.formatElevationGain_ =
+exports.prototype.formatElevationGain_ =
     function(elevation, units) {
       return parseFloat(parseInt(elevation, 10)) + ' ' + units;
     };
@@ -933,7 +964,7 @@ lux.MyMap.prototype.formatElevationGain_ =
  * @param {ol.geom.Geometry|undefined} geom The geometry to snap to.
  * @private
  */
-lux.MyMap.prototype.snapToGeometry_ = function(coordinate, geom) {
+exports.prototype.snapToGeometry_ = function(coordinate, geom) {
   var closestPoint = geom.getClosestPoint(coordinate);
   // compute distance to line in pixels
   var dx = closestPoint[0] - coordinate[0];
@@ -949,30 +980,62 @@ lux.MyMap.prototype.snapToGeometry_ = function(coordinate, geom) {
   }
 };
 
+/**
+ * Export the mymaps as a KML file.
+ * @param {string | undefined} filename The filename.
+ * @export
+ */
+exports.prototype.exportMymapsAsKml = function(filename) {
+  this.exportKml_(this.sourceFeatures_.getFeatures(), filename);
+};
 
 /**
  * Export a KML file
- * @param {ol.Feature} feature The feature to export.
+ * @param {ol.Feature | Array.<ol.Feature>} feature The feature to export.
+ * @param {string | undefined} filename The filename.
  * @private
  */
-lux.MyMap.prototype.exportKml_ = function(feature) {
-  var kml = this.kmlFormat_.writeFeatures([feature], {
+exports.prototype.exportKml_ = function(feature, filename) {
+  var features = feature;
+  if (features instanceof olFeature) {
+    features = [feature];
+  }
+  if (filename === undefined) {
+    filename = /** @type {string} */(features[0].get('name'));
+  }
+  var kml = this.kmlFormat_.writeFeatures(features, {
     dataProjection: 'EPSG:4326',
     featureProjection: this.map_.getView().getProjection()
   });
   this.exportFeatures_(kml, 'kml',
-      this.sanitizeFilename_(/** @type {string} */(feature.get('name'))));
+      this.sanitizeFilename_(filename));
 };
 
+/**
+ * Export the mymaps as a Gpx file.
+ * @param {string | undefined} filename The filename.
+ * @export
+ */
+exports.prototype.exportMymapsAsGpx = function(filename) {
+  this.exportGpx_(this.sourceFeatures_.getFeatures(), filename);
+};
 
 /**
  * Export a Gpx file.
- * @param {ol.Feature} feature The feature to export.
+ * @param {ol.Feature | Array.<ol.Feature>} feature The feature to export.
+ * @param {string | undefined} filename The filename.
  * @private
  */
-lux.MyMap.prototype.exportGpx_ = function(feature) {
+exports.prototype.exportGpx_ = function(feature, filename) {
   // LineString geometries, and tracks from MultiLineString
-  var explodedFeatures = this.exploseFeature_([feature]);
+  var features = feature;
+  if (features instanceof olFeature) {
+    features = [feature];
+  }
+  if (filename === undefined) {
+    filename = /** @type {string} */(features[0].get('name'));
+  }
+  var explodedFeatures = this.exploseFeature_(features);
   explodedFeatures = this.changeLineToMultiline_(explodedFeatures);
   var gpx = this.gpxFormat_.writeFeatures(
     this.orderFeaturesForGpx_(explodedFeatures),
@@ -980,13 +1043,8 @@ lux.MyMap.prototype.exportGpx_ = function(feature) {
       dataProjection: 'EPSG:4326',
       featureProjection: this.map_.getView().getProjection()
     });
-  gpx = gpx.replace('<gpx ',
-      '<gpx xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"' +
-      ' version="1.1" ' +
-      'xsi:schemaLocation="http://www.topografix.com/GPX/1/1 ' +
-      'http://www.topografix.com/GPX/1/1/gpx.xsd" creator="geoportail.lu" ');
   this.exportFeatures_(gpx, 'gpx',
-      this.sanitizeFilename_(/** @type {string} */(feature.get('name'))));
+      this.sanitizeFilename_(filename));
 };
 
 
@@ -996,26 +1054,26 @@ lux.MyMap.prototype.exportGpx_ = function(feature) {
  * @param {string} filename File name for the exported document.
  * @private
  */
-lux.MyMap.prototype.exportFeatures_ = function(doc, format, filename) {
+exports.prototype.exportFeatures_ = function(doc, format, filename) {
 
-  var formatInput = goog.dom.createElement(goog.dom.TagName.INPUT);
+  var formatInput = document.createElement('INPUT');
   formatInput.type = 'hidden';
   formatInput.name = 'format';
   formatInput.value = format;
 
-  var nameInput = goog.dom.createElement(goog.dom.TagName.INPUT);
+  var nameInput = document.createElement('INPUT');
   nameInput.type = 'hidden';
   nameInput.name = 'name';
   nameInput.value = filename;
 
-  var docInput = goog.dom.createElement(goog.dom.TagName.INPUT);
+  var docInput = document.createElement('INPUT');
   docInput.type = 'hidden';
   docInput.name = 'doc';
   docInput.value = doc;
 
-  var form = goog.dom.createElement(goog.dom.TagName.FORM);
+  var form = document.createElement('FORM');
   form.method = 'POST';
-  form.action = '//maps.geoportail.lu/main/wsgi/mymaps/exportgpxkml';
+  form.action = this.exportGpxUrl_;
   form.appendChild(formatInput);
   form.appendChild(nameInput);
   form.appendChild(docInput);
@@ -1030,7 +1088,7 @@ lux.MyMap.prototype.exportFeatures_ = function(doc, format, filename) {
  * @return {string} The sanitized string.
  * @private
  */
-lux.MyMap.prototype.sanitizeFilename_ = function(name) {
+exports.prototype.sanitizeFilename_ = function(name) {
   name = name.replace(/\s+/g, '_'); // Replace white space with _.
   return name.replace(/[^a-z0-9\-\_]/gi, ''); // Strip any special charactere.
 };
@@ -1043,24 +1101,24 @@ lux.MyMap.prototype.sanitizeFilename_ = function(name) {
  * @return {Array.<ol.Feature>} The exploded features.
  * @private
  */
-lux.MyMap.prototype.exploseFeature_ = function(features) {
+exports.prototype.exploseFeature_ = function(features) {
   var explodedFeatures = [];
-  goog.array.forEach(features, function(feature) {
+  features.forEach(function(feature) {
     switch (feature.getGeometry().getType()) {
-      case ol.geom.GeometryType.GEOMETRY_COLLECTION:
+      case olGeomGeometryType.GEOMETRY_COLLECTION:
         var geomCollection = /** @type {ol.geom.GeometryCollection} */
             (feature.getGeometry());
-        goog.array.forEach(geomCollection.getGeometriesArray(),
+        geomCollection.getGeometriesArray().forEach(
             function(curGeom) {
               var newFeature = feature.clone();
               newFeature.setGeometry(curGeom);
               explodedFeatures.push(newFeature);
             });
         break;
-      case ol.geom.GeometryType.MULTI_LINE_STRING:
+      case olGeomGeometryType.MULTI_LINE_STRING:
         var multiLineString = /** @type {ol.geom.MultiLineString} */
             (feature.getGeometry());
-        goog.array.forEach(multiLineString.getLineStrings(),
+        multiLineString.getLineStrings().forEach(
             function(curGeom) {
               var newFeature = feature.clone();
               newFeature.setGeometry(curGeom);
@@ -1083,15 +1141,15 @@ lux.MyMap.prototype.exploseFeature_ = function(features) {
  * @return {Array.<ol.Feature>} The changed features.
  * @private
  */
-lux.MyMap.prototype.changeLineToMultiline_ = function(features) {
+exports.prototype.changeLineToMultiline_ = function(features) {
   var changedFeatures = [];
-  goog.array.forEach(features, function(feature) {
+  features.forEach(function(feature) {
     switch (feature.getGeometry().getType()) {
-      case ol.geom.GeometryType.LINE_STRING:
+      case olGeomGeometryType.LINE_STRING:
         var geom = /** @type {ol.geom.LineString} */ (feature.getGeometry());
         var multilineFeature = feature.clone();
         multilineFeature.setGeometry(
-            new ol.geom.MultiLineString([geom.getCoordinates()]));
+            new olGeomMultiLineString([geom.getCoordinates()]));
         changedFeatures.push(multilineFeature);
         break;
       default :
@@ -1114,17 +1172,17 @@ lux.MyMap.prototype.changeLineToMultiline_ = function(features) {
  * @return {Array.<ol.Feature>} The sorted features.
  * @private
  */
-lux.MyMap.prototype.orderFeaturesForGpx_ = function(features) {
+exports.prototype.orderFeaturesForGpx_ = function(features) {
 
   var points = [];
   var lines = [];
   var others = [];
-  goog.array.forEach(features, function(feature) {
+  features.forEach(function(feature) {
     switch (feature.getGeometry().getType()) {
-      case ol.geom.GeometryType.POINT:
+      case olGeomGeometryType.POINT:
         points.push(feature);
         break;
-      case ol.geom.GeometryType.LINE_STRING:
+      case olGeomGeometryType.LINE_STRING:
         lines.push(feature);
         break;
       default :
@@ -1135,3 +1193,6 @@ lux.MyMap.prototype.orderFeaturesForGpx_ = function(features) {
 
   return points.concat(lines, others);
 };
+
+
+export default exports;

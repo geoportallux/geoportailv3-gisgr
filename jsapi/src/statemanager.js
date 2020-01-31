@@ -1,11 +1,16 @@
-goog.provide('lux.StateManager');
-
+/**
+ * @module lux.StateManager
+ */
+import luxUtil from './util.js';
+import olCollectionEventType from 'ol/CollectionEventType.js';
+import olEvents from 'ol/events.js';
+import olObj from 'ol/obj.js';
 
 /**
  * @classdesc
  * @constructor
  */
-lux.StateManager = function() {
+const exports = function() {
 
   /**
    * @type {lux.Map}
@@ -16,12 +21,18 @@ lux.StateManager = function() {
    * @type {luxx.State}
    */
   this.state_ = {};
+
+  /**
+   * @type {string}
+   * @private
+   */
+  this.url_ = '';
 };
 
 /**
  * @param {lux.Map} map The map.
  */
-lux.StateManager.prototype.setMap = function(map) {
+exports.prototype.setMap = function(map) {
   this.map_ = map;
   var view = map.getView();
 
@@ -38,15 +49,15 @@ lux.StateManager.prototype.setMap = function(map) {
   // make sure the state is updated the first time
   onViewUpdate.call(this);
 
-  ol.events.listen(view, 'propertychange',
-      lux.debounce(onViewUpdate, 250).bind(this));
+  olEvents.listen(view, 'propertychange',
+      luxUtil.debounce(onViewUpdate, 250).bind(this));
 
   var layersListenerKeys = [];
 
   function onLayersUpdate() {
     // remove any listener on visibility change
     layersListenerKeys.forEach(function(key) {
-      ol.events.unlistenByKey(key);
+      olEvents.unlistenByKey(key);
     });
     layersListenerKeys.length = 0;
 
@@ -60,11 +71,18 @@ lux.StateManager.prototype.setMap = function(map) {
       } else {
         layers.unshift(layer.get('id'));
         opacities.unshift(layer.get('visible') ? layer.getOpacity() : 0);
-        layersListenerKeys[layer.get('id')] = ol.events.listen(
+        layersListenerKeys[layer.get('id')] = olEvents.listen(
           layer,
           'change:visible',
           onLayersUpdate,
           this);
+      }
+      if (layer.get('metadata') !== undefined &&
+          layer.get('metadata')['attribution'] !== undefined) {
+        var source = layer.getSource();
+        source.setAttributions(
+          layer.get('metadata')['attribution']
+        );
       }
     }.bind(this));
     object['layers'] = layers.join('-');
@@ -72,16 +90,16 @@ lux.StateManager.prototype.setMap = function(map) {
     this.updateState(object);
   }
 
-  ol.events.listen(map.getLayers(), ol.CollectionEventType.ADD,
+  olEvents.listen(map.getLayers(), olCollectionEventType.ADD,
     onLayersUpdate, this);
-  ol.events.listen(map.getLayers(), ol.CollectionEventType.REMOVE,
+  olEvents.listen(map.getLayers(), olCollectionEventType.REMOVE,
     onLayersUpdate, this);
 };
 
 /**
  * @param {string} id The mymap id.
  */
-lux.StateManager.prototype.setMyMap = function(id) {
+exports.prototype.setMyMap = function(id) {
   this.updateState({'map_id': id});
 };
 
@@ -89,19 +107,34 @@ lux.StateManager.prototype.setMyMap = function(id) {
  * Updates the attribution logo href.
  * @param {luxx.State} object The params to update.
  */
-lux.StateManager.prototype.updateState = function(object) {
-  goog.object.extend(this.state_, object);
+exports.prototype.updateState = function(object) {
+  if (this.state_ !== null) {
+    olObj.assign(this.state_, object);
 
-  goog.asserts.assertObject(this.state_);
+    console.assert(this.state_ instanceof Object);
 
-  var el = this.map_.getTargetElement();
-  var logo = el.querySelectorAll('.ol-attribution a')[0];
-  if (logo) {
-    logo.href = '//map.geoportail.lu/theme/main?';
-    logo.href += Object.keys(this.state_).map(function(key) {
+    var el = this.map_.getTargetElement();
+    var logo = el.querySelectorAll('.ol-attribution a')[0];
+
+    this.url_ = 'https://map.geoportail.lu/theme/main?';
+    this.url_ += Object.keys(this.state_).map(function(key) {
       return key + '=' + encodeURIComponent(this.state_[key]);
     }.bind(this)).join('&');
-    logo.href += '&version=3';
-    logo.target = '_blank';
+    this.url_ += '&version=3';
+
+    if (logo) {
+      logo.href = this.url_;
+      logo.target = '_blank';
+    }
   }
 };
+
+/**
+ * @return {string} the url to the map
+ */
+exports.prototype.getUrl = function() {
+  return this.url_;
+};
+
+
+export default exports;

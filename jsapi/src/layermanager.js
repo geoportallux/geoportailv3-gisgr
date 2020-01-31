@@ -1,8 +1,11 @@
-goog.provide('lux.LayerManager');
-
-goog.require('goog.dom');
-goog.require('goog.dom.classlist');
-goog.require('ol.control.Control');
+/**
+ * @module lux.LayerManager
+ */
+import luxUtil from './util.js';
+import olBase from 'ol.js';
+import olControlControl from 'ol/control/Control.js';
+import olEvents from 'ol/events.js';
+import olCollectionEventType from 'ol/CollectionEventType.js';
 
 /**
  * @constructor
@@ -10,31 +13,30 @@ goog.require('ol.control.Control');
  * @param {olx.control.ControlOptions} options Layer manager options.
  * @export
  */
-lux.LayerManager = function(options) {
-  var element = goog.dom.createDom('UL');
+const exports = function(options) {
+  var element = document.createElement('UL');
   element.classList.add('lux-layer-manager');
 
-  ol.control.Control.call(this, {
+  olControlControl.call(this, {
     element: element,
     target: options.target
   });
 };
 
-goog.inherits(lux.LayerManager, ol.control.Control);
+olBase.inherits(exports, olControlControl);
 
 
 /**
- * Set the map instance the control is associated with.
- * @param {ol.Map} map The map instance.
+ * @inheritDoc
  */
-lux.LayerManager.prototype.setMap = function(map) {
-  ol.control.Control.prototype.setMap.call(this, map);
+exports.prototype.setMap = function(map) {
+  olControlControl.prototype.setMap.call(this, map);
   if (map) {
     var layers = map.getLayers();
     this.listenerKeys.push(
-        ol.events.listen(layers, ol.CollectionEventType.ADD,
+        olEvents.listen(layers, olCollectionEventType.ADD,
             this.update, this),
-        ol.events.listen(layers, ol.CollectionEventType.REMOVE,
+        olEvents.listen(layers, olCollectionEventType.REMOVE,
             this.update, this)
     );
     this.update();
@@ -45,8 +47,10 @@ lux.LayerManager.prototype.setMap = function(map) {
 /**
  * Update the component adequately.
  */
-lux.LayerManager.prototype.update = function() {
-  goog.dom.removeChildren(this.element);
+exports.prototype.update = function() {
+  while (this.element.firstChild) {
+    this.element.removeChild(this.element.firstChild);
+  }
   // get the layers list in reverse order and with background excluded
   var layers = this.getMap().getLayers().getArray().slice(1).reverse();
   layers.forEach(function(layer) {
@@ -55,8 +59,9 @@ lux.LayerManager.prototype.update = function() {
     var label = document.createElement('label');
     var name = /** @type {string} */ (layer.get('name'));
 
-    if (lux.i18n[name] !== undefined) {
-      label.innerHTML = lux.i18n[name];
+    if (luxUtil.lang in luxUtil.languages &&
+        luxUtil.languages[luxUtil.lang][name] !== undefined) {
+      label.innerHTML = luxUtil.languages[luxUtil.lang][name];
     } else {
       label.innerHTML = name;
     }
@@ -74,3 +79,6 @@ lux.LayerManager.prototype.update = function() {
     this.element.appendChild(li);
   }, this);
 };
+
+
+export default exports;

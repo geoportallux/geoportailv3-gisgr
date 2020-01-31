@@ -10,6 +10,13 @@ var luxx;
 luxx.MapOptions;
 
 /**
+ * Function called when the objects are initialized.
+ * @type {function()|undefined}
+ * @api
+ */
+luxx.MapOptions.prototype.callback;
+
+/**
  * Identifier of background layer. Default to `basemap_2015_global`.
  * @type {string|undefined}
  * @api
@@ -108,6 +115,13 @@ luxx.MapOptions.prototype.positionSrs;
 luxx.MapOptions.prototype.queryableLayers;
 
 /**
+ * The search configuration.
+ * @type {luxx.SearchOption|undefined}
+ * @api
+ */
+luxx.MapOptions.prototype.search;
+
+/**
  * If set to true, it displays the feature information in a popup or
  * in popupTarget element.
  * @type {boolean|undefined}
@@ -122,7 +136,6 @@ luxx.MapOptions.prototype.showLayerInfoPopup;
  * @api
  */
 luxx.MapOptions.prototype.target;
-
 /**
  * The map's view.
  * @type {ol.View|undefined}
@@ -137,6 +150,35 @@ luxx.MapOptions.prototype.view;
  */
 luxx.MapOptions.prototype.zoom;
 
+/**
+ * Object literal with config options for the search.
+ * @typedef {Object}
+ */
+luxx.SearchOption;
+
+/**
+ * The container for the map, either the element itself or the `id` of the
+ * element.
+ * @type {Element|string}
+ * @api
+ */
+luxx.SearchOption.prototype.target;
+
+/**
+ * A dataSets Array of layer used as search sources. Default is Adresse.
+ * Possible values are 'Adresse' and 'Coordinates'.
+ * @type {Array<string>|undefined}
+ * @api
+ */
+luxx.SearchOption.prototype.dataSets;
+
+/**
+ * The function to be called when an entry is selected.
+ * The default function center the map on the selection and add an overlay.
+ * @type {function(Event, String, Element)|undefined}
+ * @api
+ */
+luxx.SearchOption.prototype.onSelect;
 
 /**
  * Object literal with config options for the maker.
@@ -144,6 +186,14 @@ luxx.MapOptions.prototype.zoom;
  */
 luxx.MarkerOptions;
 
+/**
+ * Allow to deactivate popup when clicking on a transparent part of the marker.
+ * This property is experimental. The marker should come from the same source
+ * as the page, or the image server has to set the following  header
+ * Access-Control-Allow-Origin "*"
+ * @type {boolean|undefined}
+ */
+luxx.MarkerOptions.prototype.noPopupOnTransparency;
 
 /**
  * Position of the marker. If not set, the marker is displayed at the center of
@@ -190,7 +240,6 @@ luxx.MarkerOptions.prototype.positioning;
  * @type {string|undefined}
  */
 luxx.MarkerOptions.prototype.html;
-
 
 /**
  * If set, the popup is displayed when clicking the marker.
@@ -337,12 +386,14 @@ luxx.FeaturesOptions;
 /**
  * Comma-separated list of ids.
  * @type {Array<string>}
+ * @api
  */
 luxx.FeaturesOptions.prototype.ids;
 
 /**
  * Layer identifier
  * @type {string|number}
+ * @api
  */
 luxx.FeaturesOptions.prototype.layer;
 
@@ -350,14 +401,30 @@ luxx.FeaturesOptions.prototype.layer;
  * The container for the feature popup, either the element itself or
  * the `id` of the element.
  * @type {Element|string}
+ * @api
  */
 luxx.FeaturesOptions.prototype.target;
 
 /**
  * If set, the popup is displayed when clicking the feature.
  * @type {boolean|undefined}
+ * @api
  */
 luxx.FeaturesOptions.prototype.click;
+
+/**
+ * If set to true, a marker is shown. Default is true.
+ * @type {boolean|undefined}
+ * @api
+ */
+luxx.FeaturesOptions.prototype.showMarker;
+
+/**
+ * The maximal zoom level to use when zooming on a feature. Default is 17.
+ * @type {number|undefined}
+ * @api
+ */
+luxx.FeaturesOptions.prototype.maxZoom;
 
 /**
  * Object literal with config options for the vector (GPX/KML) layer.
@@ -366,33 +433,53 @@ luxx.FeaturesOptions.prototype.click;
 luxx.VectorOptions;
 
 /**
+ * True if map should fit to the vector. Default and undefined are true.
+ * @type {boolean | undefined}
+ * @api
+ */
+luxx.VectorOptions.prototype.fit;
+
+
+/**
  * Interval after which to reload the vector layer (in seconds).
  * @type {number | undefined}
+ * @api
  */
 luxx.VectorOptions.prototype.reloadInterval;
 
 /**
  * The style function.
  * @type {ol.StyleFunction | undefined}
+ * @api
  */
 luxx.VectorOptions.prototype.style;
 
 /**
  * The layer name.
  * @type {string | undefined}
+ * @api
  */
 luxx.VectorOptions.prototype.name;
 
 /**
  * If set, the popup is displayed when clicking the feature.
  * @type {boolean | undefined}
+ * @api
  */
 luxx.VectorOptions.prototype.click;
+
+/**
+ * If set, and if click is true then the function is called with the feature as parameter.
+ * @type {function() | undefined}
+ * @api
+ */
+luxx.VectorOptions.prototype.onClick;
 
 /**
  * The container for the feature popup, either the element itself or
  * the `id` of the element.
  * @type {Element|string|undefined}
+ * @api
  */
 luxx.VectorOptions.prototype.target;
 

@@ -1,12 +1,14 @@
-<p>The Geoportail.lu V3 API is a web delivered service platform delivering both data and functionality, enabling geographical information to be viewed on a map.
-Just as with the geoportail.lu web service, the Geoportail.lu V3 API enables the integration in external web pages of the geoportail functionalities.
+<p>The Geoportail.lu V3 API is a web delivered service platform delivering both data and functionality, enabling geographical information to be shown on a map.
+The Geoportail.lu V3 API enables the integration of geoportail functionalities in external web pages.
 Although the options for data processing are limited compared with “real” office GIS software, some targeted queries and analyses are possible.</p>
 <p><i>Important Note: For access to the Geoportail.lu V3 API on your own servers, you will need to request access to the ACT, specifying the server address you wish to grant access too.</i>
-For any assistance as well as for request access, please contact our support here : <a href="mailto:support.geoportail@act.etat.lu">support.geoportail@act.etat.lu</a></p>
+For any assistance as well as for request access, please contact our support here : <a href="mailto:support@geoportail.lu">support@geoportail.lu</a></p>
 <p>To help the developers, some examples and use cases are available on our <a href="./examples/">demo page</a></p>
-<p>The catalog of public layers is available on the <a href="./examples/iterate_layers_api.html">List of layers page.</a></p>
+<p>A catalog of public layers is available on the <a href="./examples/iterate_layers_api.html">List of layers page.</a></p>
+<p>A catalog of public mymaps is available on the <a href="./examples/public_mymaps.html">List of public Mymaps page.</a></p>
 <p>The Geoportail.lu V3 API is built on top of the <a href="//openlayers.org/en/latest/apidoc/">OpenLayers 3 API</a>.
 The Geoportail.lu V3 offers classes, methods, and properties to ease the build of geographical applications using luxembourg data.</p>
+<p>Feel free to visit our <a href="https://github.com/Geoportail-Luxembourg/geoportailv3/tree/master/jsapi">Github repository</a> to have a look on our source code.</p>
 <p>All the needed resources are loaded by including the following js script.</p>
 <pre>
 &lt;script src="//apiv3.geoportail.lu/apiv3loader.js"  type="text/javascript"&gt;&lt;/script&gt;
