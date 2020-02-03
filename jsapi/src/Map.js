@@ -1246,11 +1246,6 @@ exports.prototype.matchCoordinate_ = function(searchString) {
   var results = [];
   var format = new olFormatGeoJSON();
   var re = {
-    'EPSG:2169': {
-      regex: /(\d{4,6}[\,\.]?\d{0,3})\s*([E|N])?\W*(\d{4,6}[\,\.]?\d{0,3})\s*([E|N])?/,
-      label: 'LUREF',
-      epsgCode: 'EPSG:2169'
-    },
     'EPSG:4326': {
       regex:
       /(\d{1,2}[\,\.]\d{1,6})\d*\s?(latitude|lat|N|longitude|long|lon|E|east|est)?\W*(\d{1,2}[\,\.]\d{1,6})\d*\s?(longitude|long|lon|E|latitude|lat|N|north|nord)?/i,

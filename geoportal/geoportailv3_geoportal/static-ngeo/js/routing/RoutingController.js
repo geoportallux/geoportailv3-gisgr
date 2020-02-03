@@ -920,11 +920,6 @@ exports.prototype.matchCoordinate_ =
       searchString = searchString.replace(/,/gi, '.');
       var results = [];
       var re = {
-        'EPSG:2169': {
-          regex: /(\d{4,6}[\,\.]?\d{0,3})\s*([E|N])?\W*(\d{4,6}[\,\.]?\d{0,3})\s*([E|N])?/,
-          label: 'LUREF',
-          epsgCode: 'EPSG:2169'
-        },
         'EPSG:4326': {
           regex:
           /(\d{1,2}[\,\.]\d{1,6})\d*\s?(latitude|lat|N|longitude|long|lon|E|east|est)?\W*(\d{1,2}[\,\.]\d{1,6})\d*\s?(longitude|long|lon|E|latitude|lat|N|north|nord)?/i,
@@ -957,7 +952,7 @@ exports.prototype.matchCoordinate_ =
            * @type {number | undefined}
            */
           var northing = undefined;
-          if (epsgKey === 'EPSG:4326' || epsgKey === 'EPSG:2169') {
+          if (epsgKey === 'EPSG:4326') {
             if ((m[2] !== undefined && m[2] !== null) && (m[4] !== undefined && m[4] !== null)) {
               if (arrayIncludes(northArray, m[2].toUpperCase()) &&
               arrayIncludes(eastArray, m[4].toUpperCase())) {
