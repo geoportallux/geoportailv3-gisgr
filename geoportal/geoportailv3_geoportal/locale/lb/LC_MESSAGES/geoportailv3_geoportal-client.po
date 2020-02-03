@@ -4063,7 +4063,7 @@ msgid "bglayers"
 msgstr "Hannergrondlayer"
 
 #: l_wmts.529
-msgid "topogr_global"
+msgid "topogg"
 msgstr "Topografesch Kaart"
 
 #: l_wmts.530

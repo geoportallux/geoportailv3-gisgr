@@ -134,7 +134,7 @@ const exports = function(appStateManager,
  */
 exports.V2_BGLAYER_TO_V3_ = {
   'webbasemap': 'basemap_2015_global',
-  'pixelmaps-color': 'topogr_global',
+  'pixelmaps-color': 'topogg',
   'pixelmaps-gray': 'topo_bw_jpeg',
   'streets': 'streets_jpeg',
   'voidlayer': 'blank'
@@ -547,7 +547,7 @@ exports.prototype.initBgLayers_ = function() {
           if (this.appTheme_.getCurrentTheme() === 'tourisme') {
             stateBgLayerLabel = 'topo_bw_jpeg';
           } else {
-            stateBgLayerLabel = 'topogr_global';
+            stateBgLayerLabel = 'topogg';
           }
         }
         stateBgLayerOpacity = 0;

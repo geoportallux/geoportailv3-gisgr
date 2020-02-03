@@ -311,7 +311,7 @@ const exports = function($http, $q, $rootScope, mymapsMapsUrl, mymapsUrl, appSta
    * The BG Layer of the mymap.
    * @type {string}
    */
-  this.mapBgLayer = 'topogr_global';
+  this.mapBgLayer = 'topogg';
 
   /**
    * The theme of the mymap.
@@ -403,7 +403,7 @@ const exports = function($http, $q, $rootScope, mymapsMapsUrl, mymapsUrl, appSta
    */
   this.V2_BGLAYER_TO_V3_ = {
     'webbasemap': 'basemap_2015_global',
-    'pixelmaps-color': 'topogr_global',
+    'pixelmaps-color': 'topogg',
     'pixelmaps-gray': 'topo_bw_jpeg',
     'streets': 'streets_jpeg',
     'voidlayer': 'blank',
@@ -576,7 +576,7 @@ exports.prototype.clear = function() {
   this.mapOwner = '';
   this.mapCategoryId = null;
   this.mapIsPublic = false;
-  this.mapBgLayer = 'topogr_global';
+  this.mapBgLayer = 'topogg';
   this.mapBgOpacity = 1;
   this.mapLayers = [];
   this.mapLayersOpacities = [];
@@ -891,7 +891,7 @@ exports.prototype.setMapInformation_ = function(mapinformation) {
     if (this.mapTheme === 'tourisme') {
       this.mapBgLayer = 'topo_bw_jpeg';
     } else {
-      this.mapBgLayer = 'topogr_global';
+      this.mapBgLayer = 'topogg';
     }
     mapinformation['bg_layer'] = this.mapBgLayer;
   }

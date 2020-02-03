@@ -4064,7 +4064,7 @@ msgid "bglayers"
 msgstr "Arrière-fonds"
 
 #: l_wmts.529
-msgid "topogr_global"
+msgid "topogg"
 msgstr "Carte topographique"
 
 #: l_wmts.530

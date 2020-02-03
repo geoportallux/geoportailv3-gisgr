@@ -875,7 +875,7 @@
     },
     "655": {
         "style": "default",
-        "name": "topogr_global",
+        "name": "topogg",
         "url": "http://wmts.geoportail.lu/mapproxy_4_v3/wmts/1.0.0/WMTSCapabilities.xml",
         "matrixSet": "GLOBAL_WEB_MERCATOR",
         "dimensions": {},
