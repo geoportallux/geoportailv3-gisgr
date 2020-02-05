@@ -424,6 +424,12 @@ const MainController = function(
   this.tiles3dUrl_ = tiles3dUrl;
 
   /**
+   * @private
+   * @type {string}
+   */
+  this.enable3DMode_ = enable3DMode;
+
+  /**
    * @type {ngeo.offline.NetworkStatus}
    * @export
    */
