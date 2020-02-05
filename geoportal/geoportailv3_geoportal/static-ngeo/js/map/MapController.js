@@ -16,6 +16,7 @@ import {getTransform, transform} from 'ol/proj.js';
 /**
  * @param {app.StateManager} appStateManager State manager service.
  * @param {ngeox.miscDebounce} ngeoDebounce ngeo debounce service.
+ * @param {boolean} enable3DMode Enable 3D mode.
  * @constructor
  * @ngInject
  */
