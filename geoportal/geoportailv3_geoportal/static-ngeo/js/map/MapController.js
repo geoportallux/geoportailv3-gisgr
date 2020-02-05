@@ -20,8 +20,14 @@ import {getTransform, transform} from 'ol/proj.js';
  * @constructor
  * @ngInject
  */
-const exports = function(appStateManager, ngeoDebounce) {
+const exports = function(appStateManager, ngeoDebounce, enable3DMode) {
   var lurefToWebMercatorFn = getTransform('EPSG:2169', 'EPSG:3857');
+
+  /**
+   * @private
+   * @type {boolean}
+   */
+  this.enable3DMode_ = enable3DMode;
 
   /** @type {ol.Map} */
   var map = this['map'];
