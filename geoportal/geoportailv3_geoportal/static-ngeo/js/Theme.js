@@ -155,7 +155,7 @@ exports.prototype.themeInUrl = function(pathElements) {
  * @const
  * @private
  */
-exports.DEFAULT_THEME_ = 'main';
+exports.DEFAULT_THEME_ = 'transport';
 
 appModule.service('appTheme', exports);
 
