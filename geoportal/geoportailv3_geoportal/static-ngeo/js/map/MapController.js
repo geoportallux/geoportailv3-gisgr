@@ -27,7 +27,7 @@ const exports = function(appStateManager, ngeoDebounce, enable3DMode) {
    * @private
    * @type {boolean}
    */
-  this.enable3DMode_ = enable3DMode;
+  this.enable3DMode = enable3DMode;
 
   /** @type {ol.Map} */
   var map = this['map'];

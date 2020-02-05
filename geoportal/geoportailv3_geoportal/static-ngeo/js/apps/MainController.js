@@ -427,7 +427,7 @@ const MainController = function(
    * @private
    * @type {string}
    */
-  this.enable3DMode_ = enable3DMode;
+  this.enable3DMode = enable3DMode;
 
   /**
    * @type {ngeo.offline.NetworkStatus}
