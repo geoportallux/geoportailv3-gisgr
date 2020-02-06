@@ -16,7 +16,6 @@ import {getTransform, transform} from 'ol/proj.js';
 /**
  * @param {app.StateManager} appStateManager State manager service.
  * @param {ngeox.miscDebounce} ngeoDebounce ngeo debounce service.
- * @param {boolean} enable3DMode Enable 3D mode.
  * @constructor
  * @ngInject
  */
@@ -100,6 +99,7 @@ exports.V2_ZOOM_TO_V3_ZOOM_ = {
 /**
  * @param {app.StateManager} appStateManager Application state manager.
  * @param {ol.View} view Map view.
+ * @param {boolean} enable3DMode Enable 3D mode.
  * @private
  */
 exports.updateState_ = function(appStateManager, view) {
