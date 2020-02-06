@@ -661,7 +661,7 @@ const MainController = function(
   this.loadThemes_().then(function() {
     this.appThemes_.getBgLayers().then(
           function(bgLayers) {
-            if (appOverviewMapShow) {
+            if (appOverviewMapShow || true) {
               var layer = /** @type {ol.layer.Base} */
                 (bgLayers.find(function(layer) {
                   return layer.get('label') === appOverviewMapBaseLayer;

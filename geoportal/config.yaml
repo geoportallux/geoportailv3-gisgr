@@ -343,7 +343,7 @@ vars:
       constants:
         appAuthtktCookieName: auth_tkt_main
         appExcludeThemeLayerSearch: []
-        appOverviewMapBaseLayer: basemap_2015_global
+        appOverviewMapBaseLayer: topogg
         appOverviewMapShow: true
         showAnfLink: false
         showAgeLink: '{AGE_SHOW_LINK}'
