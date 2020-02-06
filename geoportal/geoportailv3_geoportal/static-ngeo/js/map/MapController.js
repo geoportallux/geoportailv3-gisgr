@@ -22,6 +22,11 @@ import {getTransform, transform} from 'ol/proj.js';
  */
 const exports = function(appStateManager, ngeoDebounce, enable3DMode) {
   var lurefToWebMercatorFn = getTransform('EPSG:2169', 'EPSG:3857');
+  /**
+   * @type {boolean}
+   * @export
+   */
+  this.enable3DMode = enable3DMode;
 
   /**
    * @type {boolean}
