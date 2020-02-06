@@ -661,16 +661,19 @@ const MainController = function(
   this.loadThemes_().then(function() {
     this.appThemes_.getBgLayers().then(
           function(bgLayers) {
-            if (appOverviewMapShow || true) {
+            if (appOverviewMapShow) {
               var layer = /** @type {ol.layer.Base} */
                 (bgLayers.find(function(layer) {
                   return layer.get('label') === appOverviewMapBaseLayer;
                 }));
               this.map_.addControl(
                 new olControlOverviewMap(
-                  {layers: [layer],
+                  {
+                    className: 'ol-overviewmap',
+                    layers: [layer],
                     collapseLabel: '\u00BB',
-                    label: '\u00AB'}));
+                    label: '\u00AB'
+                  }));
             }
           }.bind(this));
     this['ageLayers'].splice(0, this['ageLayers'].length);
