@@ -16,11 +16,18 @@ import {getTransform, transform} from 'ol/proj.js';
 /**
  * @param {app.StateManager} appStateManager State manager service.
  * @param {ngeox.miscDebounce} ngeoDebounce ngeo debounce service.
+ * @param {boolean} enable3DMode Enable 3D mode.
  * @constructor
  * @ngInject
  */
-const exports = function(appStateManager, ngeoDebounce) {
+const exports = function(appStateManager, ngeoDebounce, enable3DMode) {
   var lurefToWebMercatorFn = getTransform('EPSG:2169', 'EPSG:3857');
+
+  /**
+   * @type {boolean}
+   * @export
+   */
+  this.enable3DMode = enable3DMode;
 
   /** @type {ol.Map} */
   var map = this['map'];
@@ -99,7 +106,6 @@ exports.V2_ZOOM_TO_V3_ZOOM_ = {
 /**
  * @param {app.StateManager} appStateManager Application state manager.
  * @param {ol.View} view Map view.
- * @param {boolean} enable3DMode Enable 3D mode.
  * @private
  */
 exports.updateState_ = function(appStateManager, view) {
