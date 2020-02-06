@@ -23,8 +23,6 @@ import {getTransform, transform} from 'ol/proj.js';
 const exports = function(appStateManager, ngeoDebounce) {
   var lurefToWebMercatorFn = getTransform('EPSG:2169', 'EPSG:3857');
 
-  /** @type {boolean} */
-  var enable3DMode = this['enable3DMode'];
   /** @type {ol.Map} */
   var map = this['map'];
   var view = map.getView();
@@ -76,7 +74,6 @@ const exports = function(appStateManager, ngeoDebounce) {
     }
   });
 };
-
 
 /**
  * @const
