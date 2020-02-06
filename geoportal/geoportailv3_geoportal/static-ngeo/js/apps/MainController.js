@@ -220,7 +220,8 @@ import '../../less/geoportailv3.less'
  * @param {ngeo.olcs.Service} ngeoOlcsService The service.
  * @param {Array<string>} tiles3dLayers 3D tiles layers.
  * @param {string} tiles3dUrl 3D tiles server url.
- * @param {boolean} enable3DMode Enable 3D mode.
+ * @param {boolean} enable3DMode Enable 3D mode. 
+ * @param {boolean} enableOfflineDownload Enable offline download. 
  * @param {ngeo.offline.NetworkStatus} ngeoNetworkStatus ngeo network status service.
  * @param {ngeo.offline.Mode} ngeoOfflineMode Offline mode manager.
  * @param {string} ageLayerIds ID of AGE layers.
@@ -242,7 +243,7 @@ const MainController = function(
     ngeoLocation, appExport, appGetDevice,
     appOverviewMapShow, showCruesLink, showAnfLink, appOverviewMapBaseLayer, appNotify, $window,
     appSelectedFeatures, $locale, appRouting, $document, cesiumURL,
-    $rootScope, ngeoOlcsService, tiles3dLayers, tiles3dUrl, enable3DMode, ngeoNetworkStatus, ngeoOfflineMode,
+    $rootScope, ngeoOlcsService, tiles3dLayers, tiles3dUrl, enable3DMode, enableOfflineDownload, ngeoNetworkStatus, ngeoOfflineMode,
     ageLayerIds, showAgeLink, appGetLayerForCatalogNode,
     showCruesRoles, ageCruesLayerIds, appOfflineDownloader, appOfflineRestorer, appMymapsOffline) {
 
@@ -425,10 +426,15 @@ const MainController = function(
 
   /**
    * @private
-   * @type {string}
+   * @type {boolean}
    */
-  // this.enable3DMode = enable3DMode;
-  this.enable3DMode_ = enable3DMode;
+  this.enable3DMode = enable3DMode;
+
+    /**
+   * @private
+   * @type {boolean}
+   */
+  this.enableOfflineDownload = enableOfflineDownload;
 
   /**
    * @type {ngeo.offline.NetworkStatus}

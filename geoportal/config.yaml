@@ -80,6 +80,7 @@ environment:
 - {name: CASIPO_BCC_ADDRESS}
 - {name: AUTHTKT_TIMEOUT}
 - {name: ENABLE_3D_MODE}
+- {name: ENABLE_OFFLINE_DOWNLOAD}
 
 interpreted: {}
 no_interpreted: []
@@ -368,6 +369,7 @@ vars:
         tiles3dLayers: [buildings25d, buildings3d, bridges3d]
         tiles3dUrl: https://3dtiles.geoportail.lu/3dtiles/
         enable3DMode: '{ENABLE_3D_MODE}'
+        enableOfflineDownload: '{ENABLE_OFFLINE_DOWNLOAD}'
         proxyWmsUrl: https://wmsproxy.geoportail.lu/ogcproxywms
       fulltextsearch_params: {
         assetsBaseUrl: 'geoportailv3_geoportal:static-ngeo/',
