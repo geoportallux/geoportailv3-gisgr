@@ -24,7 +24,7 @@ const exports = function(appStateManager, ngeoDebounce, enable3DMode) {
   var lurefToWebMercatorFn = getTransform('EPSG:2169', 'EPSG:3857');
 
   /** @type {boolean} */
-  this['enable3DMode'] = enable3DMode;
+  // this['enable3DMode'] = enable3DMode;
   /** @type {ol.Map} */
   var map = this['map'];
   var view = map.getView();

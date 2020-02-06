@@ -19,7 +19,8 @@ import appModule from '../module.js';
 const exports = function(appMapTemplateUrl) {
   return {
     scope: {
-      'map': '=appMapMap'
+      'map': '=appMapMap',
+      'enable3DMode': enable3DMode
     },
     bindToController: true,
     controller: 'AppMapController',
