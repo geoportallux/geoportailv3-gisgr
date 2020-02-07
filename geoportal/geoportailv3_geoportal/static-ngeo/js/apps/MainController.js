@@ -665,13 +665,18 @@ const MainController = function(
 
   this.manageUserRoleChange_($scope);
   this.loadThemes_().then(function() {
+    console.log("Load Themes:");
+    
     this.appThemes_.getBgLayers().then(
           function(bgLayers) {
+            console.log("Get BG Layers:");
             if (appOverviewMapShow) {
+              console.log("AppOverviewMapShow true");
               var layer = /** @type {ol.layer.Base} */
                 (bgLayers.find(function(layer) {
                   return layer.get('label') === appOverviewMapBaseLayer;
                 }));
+                console.log(layer.get('label'));
               this.map_.addControl(
                 new olControlOverviewMap(
                   {
