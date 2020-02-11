@@ -42,7 +42,7 @@
 				<textElement textAlignment="Right">
 					<font fontName="DejaVu Sans" size="30"/>
 				</textElement>
-				<text><![CDATA[map.geoportail.lu]]></text>
+				<text><![CDATA[map.gis-gr.eu]]></text>
 			</staticText>
 			<subreport>
 				<reportElement x="0" y="55" width="1558" height="2175" uuid="fa145068-76a5-4834-98ed-ce65b1976b3d">
@@ -67,7 +67,7 @@
 			</textField>
 			<image scaleImage="RetainShape">
 				<reportElement x="0" y="0" width="230" height="51" uuid="70bbdaea-7cb7-4c97-b3ad-fd38c75a98ad"/>
-				<imageExpression><![CDATA["LOGO_ACT.png"]]></imageExpression>
+				<imageExpression><![CDATA["LOGO_GISGR.png"]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement x="1233" y="29" width="325" height="30" uuid="f8a42822-0e3d-4802-ad70-024f9cc6677c"/>

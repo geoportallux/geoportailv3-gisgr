@@ -351,7 +351,7 @@ class LuxPrintProxy(PrintProxy):
             is_pdf = json.loads(job.spec)["format"] == "pdf"
             print_title = attributes.get("name")
             if print_title is None or len(print_title) == 0:
-                print_title = "map_geoportal_lu"
+                print_title = "map_gis_gr_eu"
             print_title = re.sub(r" ", "_", print_title)
             print_title = re.sub(r"[^a-zA-Z0-9\-\_]", "", print_title)
 
