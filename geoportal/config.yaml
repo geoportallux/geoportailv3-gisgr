@@ -79,6 +79,7 @@ environment:
 - {name: CASIPO_SMTP_SERVER}
 - {name: CASIPO_BCC_ADDRESS}
 - {name: AUTHTKT_TIMEOUT}
+- {name: PROXYWMSURL, default: 'https://wmsproxy.geoportail.lu/ogcproxywms'}
 - {name: ENABLE_3D_MODE}
 - {name: ENABLE_OFFLINE_DOWNLOAD}
 
@@ -370,7 +371,7 @@ vars:
         tiles3dUrl: https://3dtiles.geoportail.lu/3dtiles/
         enable3DMode: '{ENABLE_3D_MODE}'
         enableOfflineDownload: '{ENABLE_OFFLINE_DOWNLOAD}'
-        proxyWmsUrl: https://wmsproxy.geoportail.lu/ogcproxywms
+        proxyWmsUrl: '{PROXYWMSURL}'
       fulltextsearch_params: {
         assetsBaseUrl: 'geoportailv3_geoportal:static-ngeo/',
         authenticationBaseUrl: base, fulltextsearchUrl: fulltextsearch, gmfLayersUrl: layers_root,
