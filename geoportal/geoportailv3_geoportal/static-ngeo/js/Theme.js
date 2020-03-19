@@ -22,21 +22,8 @@ const exports = function($window, ngeoLocation, appThemes) {
    * @type {Object}
    */
   this.piwikSiteIdLookup_ = {
-    'eau': 6,
-    'tourisme': 7,
-    'emwelt': 8,
-    'agriculture': 9,
-    'prof': 10,
-    'go': 11,
-    'm': 12,
-    'at': 16,
-    'map': 18,
-    'main': 18,
-    'pag': 19,
-    'cadastre_hertzien': 25,
-    'atlas_demographique': 29,
-    'urban_farming': 30,
-    'logement': 32
+    'transport': 24,
+    'main': 24
   };
 
   /**
