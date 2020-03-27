@@ -4,6 +4,7 @@ import httplib2shim
 httplib2shim.patch()
 import distutils.core
 from pyramid.config import Configurator
+from pyramid.events import NewRequest
 from c2cgeoportal_geoportal import locale_negotiator, add_interface, \
     INTERFACE_TYPE_NGEO, INTERFACE_TYPE_NGEO_CATALOGUE, set_user_validator
 # from c2cgeoportal_geoportal.lib.authentication import create_authentication
@@ -78,6 +79,9 @@ def main(global_config, **settings):
         locale_negotiator=locale_negotiator,
         authentication_policy=create_authentication(settings)
     )
+    if os.environ.get('ALLOW_CORS', '0') == '1':
+        config.add_subscriber(add_cors_headers_response_callback, NewRequest)
+
     if os.environ.get('DEBUG_TOOLBAR', '0') == '1':
         config.get_settings()['debugtoolbar.hosts'] = ['0.0.0.0/0']
         config.include('pyramid_debugtoolbar')
@@ -417,7 +421,10 @@ def main(global_config, **settings):
     config.add_route('getremotetemplate', '/getremotetemplate')
     config.add_route('isthemeprivate', '/isthemeprivate')
     config.add_route('download_resource', '/downloadresource')
-
+    config.add_route('upload_vt_style', '/uploadvtstyle')
+    config.add_route('delete_vt_style', '/deletevtstyle')
+    config.add_static_view('proj/{version}', path='geoportailv3_geoportal:jsapi/')
+    
     # Appcache manifest
     config.add_route(
         'appcache',

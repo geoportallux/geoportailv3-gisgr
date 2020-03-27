@@ -5,10 +5,11 @@ from c2cgeoportal_geoportal.views.entry import Entry
 from pyramid.i18n import make_localizer, TranslationStringFactory
 from pyramid.interfaces import ITranslationDirectories
 from pyramid.threadlocal import get_current_registry
+from pyramid.renderers import render
 from c2cgeoportal_commons import models
 from c2cgeoportal_commons.models import main, static
 from c2cgeoportal_geoportal.lib import get_url2
-
+from pyramid.response import Response
 
 log = logging.getLogger(__name__)
 
@@ -118,10 +119,25 @@ class JsapiEntry(Entry):
         # get background layers
         group, errors = self._get_group(None, u'background', None, u'main', 2)
         self._extract_layers(group, layers, True)
+        all_errors = set()
+        for id in layers:
+            url = None
+            if 'ogcServer' in layers[id]:
+                if 'source for' in layers[id]['ogcServer']:
+                    for ogc_server in models.DBSession.query(main.OGCServer).filter(main.OGCServer.name == layers[id]['ogcServer']).all():
+                        # required to do every time to validate the url.
+                        if ogc_server.auth != main.OGCSERVER_AUTH_NOAUTH:
+                            url = self.request.route_url("mapserverproxy", _query={"ogcserver": ogc_server.name})
+                        else:
+                            url = get_url2(
+                                "The OGC server '{}'".format(ogc_server.name),
+                                ogc_server.url, self.request, errors=all_errors
+                            )
+                    layers[id]['url'] = url
+
         return layers
 
-    @view_config(route_name='jsapiloader',
-                 renderer='geoportailv3:templates/api/apiv3loader.js')
+    @view_config(route_name='jsapiloader')
     def apiloader(self):
         config = self.settings
         referrer = config["referrer"]
@@ -135,11 +151,14 @@ class JsapiEntry(Entry):
             cookie_domain = referrer["cookie_domain"]
             self.request.response.set_cookie(
                 cookie_name, value=cookie_value, domain=cookie_domain)
-
-        return {}
+        result = render('geoportailv3_geoportal:templates/api/apiv3loader.js',{},
+                request=self.request)
+        response = Response(result)
+        response.content_type = 'application/javascript'
+        return response
 
     @view_config(route_name='jsapiexample',
-                 renderer='geoportailv3:templates/api/apiv3example.html')
+                 renderer='geoportailv3_geoportal:templates/api/apiv3example.html')
     def apiexample(self):
         return {}
     def _extract_layers_with_path(self, node, layers, came_from):

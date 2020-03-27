@@ -1,6 +1,6 @@
-@import (inline) '../../../node_modules/openlayers/css/ol.css';
-@import (inline) '../../../node_modules/js-autocomplete/auto-complete.css';
-@import "../../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import (inline) '/app/apiv3/node_modules/openlayers/css/ol.css';
+@import (inline) '/app/apiv3/node_modules/js-autocomplete/auto-complete.css';
+@import "/app/apiv3/node_modules/bootstrap/less/mixins/vendor-prefixes.less";
 
 @bg: #fff;
 @border: 1px solid #8394a0;
@@ -21,7 +21,7 @@
 @font: DINNextLTPro-Condensed,Arial,sans-serif;
 
 @font-face {
-  @baseurl: '//map.geoportail.lu/main/wsgi/proj/api/webfonts';
+  @baseurl: 'https://apiv3.geoportail.lu/proj/apiv3/webfonts';
   font-family: DINNextLTPro-Condensed;
   src:url('@{baseurl}/28867F_0_0.eot');
   src:url('@{baseurl}/28867F_0_0.eot?#iefix') format('embedded-opentype'),url('@{baseurl}/28867F_0_0.woff') format('woff'),url('@{baseurl}/28867F_0_0.ttf') format('truetype');
@@ -36,9 +36,6 @@
   }
   .ol-attribution li {
     display: block;
-  }
-  .ol-collapsed {
-      display: none
   }
   .ol-attribution.ol-uncollapsible {
     height: auto;

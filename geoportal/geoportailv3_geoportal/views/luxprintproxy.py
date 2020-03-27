@@ -221,7 +221,15 @@ class LuxPrintProxy(PrintProxy):
 
         job = LuxPrintJob()
         job.spec = json.dumps(spec)
+<<<<<<< HEAD
         self.request.body = str.encode(job.spec)
+=======
+        if "longUrl" in spec["attributes"]:
+            spec["attributes"].pop('longUrl', None)
+        if "firstPagesUrls" in spec["attributes"]:
+            spec["attributes"].pop('firstPagesUrls', None)
+        self.request.body = str.encode(json.dumps(spec))
+>>>>>>> upstream/master
 
         resp, content = self._proxy("%s/report.%s" % (
             print_url,
