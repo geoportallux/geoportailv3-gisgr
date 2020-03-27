@@ -238,8 +238,8 @@ vars:
   global_headers:
   - headers: {
       Content-Security-Policy: 'default-src ''self'' https://*; script-src
-        ''self'' ''unsafe-inline'' https://cdn.polyfill.io/ https://maps.googleapis.com/ https://statistics.geoportail.lu/ https://statistics.app.geoportail.lu/ https://shop.geoportail.lu https://shop.app.geoportail.lu https://wmsproxy.app.geoportail.lu https://themes.app.geoportail.lu;
-        style-src ''self'' ''unsafe-inline''; img-src * data:; connect-src *', Referrer-Policy: origin,
+        ''self'' ''unsafe-inline'' ''unsafe-eval'' https://stackpath.bootstrapcdn.com https://map.sig-gr.eu https://map.gis-gr.eu https://devrm.geoportail.lu https://apiv3.geoportail.lu https://cdnjs.cloudflare.com/ https://cdn.polyfill.io/ https://maps.googleapis.com/ https://statistics.geoportail.lu/ https://statistics.app.geoportail.lu/ https://shop.geoportail.lu https://shop.app.geoportail.lu https://wmsproxy.app.geoportail.lu https://themes.app.geoportail.lu;
+        style-src ''self'' ''unsafe-inline'' https://stackpath.bootstrapcdn.com https://map.sig-gr.eu https://map.gis-gr.eu https://apiv3.geoportail.lu https://cdnjs.cloudflare.com/; img-src * data:; connect-src *', Referrer-Policy: origin,
       Strict-Transport-Security: max-age=31536000; includeSubDomains, X-Content-Type-Options: nosniff,
       X-Frame-Options: SAMEORIGIN, X-Xss-Protection: 1; mode=block}
     pattern: .*
@@ -468,7 +468,7 @@ vars:
   schema_static: '{PGSCHEMA_STATIC}'
   servers: {my_maps: 'https://ws.geoportail.lu/mymaps', mapserver: 'https://ws.geoportail.lu'}
   shortener:
-    allowed_hosts: ['{SHORTENER_ALLOWED_HOST}', 'map.sig-gr.eu', 'map.geoportail.lu', 'maps.geoportail.lu', 'maps.geoportal.lu', 'map.geoportal.lu', 'map.app.geoportail.lu']
+    allowed_hosts: ['{SHORTENER_ALLOWED_HOST}','map.gis-gr.eu', 'map.sig-gr.eu', 'map.geoportail.lu', 'maps.geoportail.lu', 'maps.geoportal.lu', 'map.geoportal.lu', 'map.app.geoportail.lu']
     base_url: '{SHORTENER_BASE_URL}'
     email_body: 'unused'
     email_from: unused
