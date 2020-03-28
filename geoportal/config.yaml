@@ -82,6 +82,7 @@ environment:
 - {name: PROXYWMSURL, default: 'https://wmsproxy.geoportail.lu/ogcproxywms'}
 - {name: ENABLE_3D_MODE}
 - {name: ENABLE_OFFLINE_DOWNLOAD}
+- {name: GEONETWORK_BASE_URL, default: 'https://geocatalogue.geoportail.lu/geonetwork'}
 
 interpreted: {}
 no_interpreted: []
@@ -372,6 +373,7 @@ vars:
         enable3DMode: '{ENABLE_3D_MODE}'
         enableOfflineDownload: '{ENABLE_OFFLINE_DOWNLOAD}'
         proxyWmsUrl: '{PROXYWMSURL}'
+        geonetworkBaseUrl: '{GEONETWORK_BASE_URL}'
       fulltextsearch_params: {
         assetsBaseUrl: 'geoportailv3_geoportal:static-ngeo/',
         authenticationBaseUrl: base, fulltextsearchUrl: fulltextsearch, gmfLayersUrl: layers_root,
