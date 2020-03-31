@@ -82,7 +82,7 @@ environment:
 - {name: PROXYWMSURL, default: 'https://wmsproxy.geoportail.lu/ogcproxywms'}
 - {name: ENABLE_3D_MODE}
 - {name: ENABLE_OFFLINE_DOWNLOAD}
-- {name: GEONETWORK_BASE_URL, default: 'https://geocatalogue.geoportail.lu/geonetwork'}
+- {name: GEONETWORK_BASE_URL, default: 'https://geocatalogue.geoportail.lu/geonetwork/gis-gr'}
 
 interpreted: {}
 no_interpreted: []
