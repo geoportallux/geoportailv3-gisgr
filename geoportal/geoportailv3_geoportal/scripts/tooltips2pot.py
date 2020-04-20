@@ -122,7 +122,7 @@ def main():  # pragma: nocover
     results = session.query(LuxGetfeatureDefinition).\
         filter(LuxGetfeatureDefinition.remote_template == False).filter(
             LuxGetfeatureDefinition.template.in_
-            (['default.html', 'default_table.html', 'feedbackanf.html'])).all()  # noqa
+            (['default.html', 'default_table.html', 'feedbackanf.html', 'default_gisgr.html'])).all()  # noqa
 
     fields = []
     print("%d results" % len(results))
