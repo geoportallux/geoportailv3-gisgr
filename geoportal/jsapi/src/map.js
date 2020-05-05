@@ -5,6 +5,7 @@ goog.require('lux.LayerManager');
 goog.require('lux.MyMap');
 goog.require('lux.PrintManager');
 goog.require('lux.StateManager');
+goog.require('lux.MapBoxLayer');
 goog.require('ol');
 goog.require('ol.array');
 goog.require('ol.Map');
@@ -35,6 +36,8 @@ goog.require('ol.MapBrowserEventType');
 goog.require('ol.Feature');
 goog.require('ol.geom.Polygon');
 goog.require('ol.source.VectorEventType');
+goog.require('ol.plugins');
+goog.require('ol.PluginType');
 
 
 proj4.defs('EPSG:2169', '+proj=tmerc +lat_0=49.83333333333334 +lon_0=6.166666666666667 +k=1 +x_0=80000 +y_0=100000 +ellps=intl +towgs84=-189.681,18.3463,-42.7695,-0.33746,-3.09264,2.53861,0.4598 +units=m +no_defs');
@@ -78,6 +81,8 @@ _paq.push(['setSiteId', 22]);
  * @api stable
  */
 lux.Map = function(options) {
+
+  this.mvtLayer_ = undefined;
   /**
    * @private
    * @type {Array}
@@ -237,7 +242,8 @@ lux.Map = function(options) {
     return resp.json();
   }).then(function(json) {
     this.layersConfig = /** @type {luxx.LayersOptions} */ (json);
-    this.addLayers_(layers, layerOpacities, layerVisibilities);
+    // Replace by mapbox
+    this.addLayers_(layers, layerOpacities, layerVisibilities, options);
   }.bind(this));
 
   Promise.all([this.i18nPromise, this.layersPromise]).then(function() {
@@ -360,6 +366,7 @@ lux.Map = function(options) {
   };
 
   ol.Map.call(this, options);
+  ol.plugins.register(ol.PluginType.LAYER_RENDERER, window['MapBoxLayerRenderer']);
 
   this.getTargetElement().classList.add('lux-map');
 
@@ -371,7 +378,14 @@ lux.Map = function(options) {
    * @type {Element|string|undefined}
    */
   this.popupTarget_ = undefined;
-  this.setPopupTarget(options.popupTarget);
+
+  /**
+   * @private
+   * @type {string|undefined}
+   */
+  this.popupClass_ = undefined;
+
+  this.setPopupTarget(options.popupTarget, options.popupClassPrefix);
 
   ol.events.listen(this, ol.MapBrowserEventType.SINGLECLICK,
       this.handleSingleclickEvent_, this);
@@ -660,13 +674,15 @@ lux.Map.prototype.showLayerInfoPopup = function(show) {
  * @param {Element|string|undefined} optPopupTarget The container for map
  * popups, either the element itself or the `id` of the element. Undefined lets
  * the popup be created by the api.
+ * @param {string|undefined} optPopupClass The css class of the row.
  * @export
  * @api
  */
-lux.Map.prototype.setPopupTarget = function(optPopupTarget) {
+lux.Map.prototype.setPopupTarget = function(optPopupTarget, optPopupClass) {
   this.popupTarget_ = typeof optPopupTarget === 'string' ?
       document.getElementById(optPopupTarget) :
       optPopupTarget;
+  this.popupClass_ = optPopupClass;
 };
 
 /**
@@ -829,13 +845,25 @@ lux.Map.prototype.findLayerConf_ = function(layer) {
   return layerConf;
 };
 
+
+lux.Map.prototype.prependMapBoxBackgroundLayer = function(target, mapBoxStyle, mapBoxStyleXYZ) {
+
+  return new lux.MapBoxLayer({
+    'style': mapBoxStyle,
+    'xyz': mapBoxStyleXYZ,
+    'container': target,
+    'label': 'MVT'
+  });
+};
+
 /**
  * @param {Array<string|number>} layers Array of layer names.
  * @param {Array<number>} opacities Array of layer opacities.
  * @param {Array<boolean>} visibilities Array of layer visibility.
+ * @param {Object} options The map options.
  * @private
  */
-lux.Map.prototype.addLayers_ = function(layers, opacities, visibilities) {
+lux.Map.prototype.addLayers_ = function(layers, opacities, visibilities, options) {
 
   var conf = this.layersConfig;
   if (!conf) {
@@ -848,6 +876,13 @@ lux.Map.prototype.addLayers_ = function(layers, opacities, visibilities) {
     }
     var layerConf = this.findLayerConf_(layer);
     if (layerConf !== null) {
+      if (layer == 'basemap_2015_global') {
+        if (this.mvtLayer_ === undefined) {
+          this.mvtLayer_ = this.MVTLayerFactory_(options);
+        }
+        this.getLayers().push(this.mvtLayer_);
+        return;
+      }
       var fn = (layerConf.type.indexOf('WMS') != -1) ?
         lux.WMSLayerFactory : lux.WMTSLayerFactory;
       var opacity = (opacities[index] !== undefined) ? opacities[index] : 1;
@@ -856,6 +891,25 @@ lux.Map.prototype.addLayers_ = function(layers, opacities, visibilities) {
     }
   }.bind(this));
 };
+
+lux.Map.prototype.MVTLayerFactory_ = function(options) {
+  const target = this.getTargetElement();
+  // FIXME: should be taken from the layer config
+  // TODO: when config is handled by c2cgeoportal
+  // Here we use roadmap_jsapi due to https://jira.camptocamp.com/browse/GSLUX-264
+  let mapBoxStyle = 'https://vectortiles.geoportail.lu/styles/roadmap_jsapi/style.json';
+  let mapBoxStyleXYZ = 'https://vectortiles.geoportail.lu/styles/roadmap_jsapi/{z}/{x}/{y}.png';
+  if (options && options.bgLayerStyle) {
+    mapBoxStyle = options.bgLayerStyle;
+  }
+  if (options && options.bgLayerStyleXYZ) {
+    mapBoxStyleXYZ = options.bgLayerStyleXYZ;
+  }
+  let mvtLayer_ = this.prependMapBoxBackgroundLayer(target, mapBoxStyle, mapBoxStyleXYZ);
+  mvtLayer_.set('name', 'basemap_2015_global');
+  return (mvtLayer_);
+};
+
 
 /**
  * @param {ol.CollectionEventType} event The event.
@@ -913,7 +967,7 @@ lux.Map.prototype.checkForExclusion_ = function(event) {
  * @api
  */
 lux.Map.prototype.addLayerById = function(layer, opt_opacity, opt_visibility) {
-  this.layersPromise.then(function() {
+  this.layersPromise.then(function(layers) {
     var opacity = (opt_opacity !== undefined) ? opt_opacity : 1;
     var visibility = (opt_visibility === undefined) ? opt_visibility : true;
     this.addLayers_([layer], [opacity], [visibility]);
@@ -982,6 +1036,7 @@ lux.Map.prototype.addBgSelector = function(target, bglayers) {
       var option = document.createElement('option');
       option.value = background.id;
       option.innerText = lux.translate(background.name);
+
       if (active == background.name) {
         option.setAttribute('selected', 'selected');
       }
@@ -1005,12 +1060,21 @@ lux.Map.prototype.addBgSelector = function(target, bglayers) {
     el.appendChild(container);
 
     select.addEventListener('change', function() {
-      if (select.value !== 'blank') {
+      if (this.mvtLayer_ !== undefined) {
+        this.mvtLayer_.setVisible(false);
+      }
+      if (this.layersConfig[select.value] && this.layersConfig[select.value].name === 'basemap_2015_global') {
+        if (this.mvtLayer_ === undefined) {
+          this.mvtLayer_ = this.MVTLayerFactory_();
+        }
+        this.getLayers().setAt(0, this.mvtLayer_);
+        this.mvtLayer_.setVisible(true);
+      } else if (select.value === 'blank') {
+        this.getLayers().setAt(0, this.blankLayer_);
+      } else {
         this.getLayers().setAt(
           0, lux.WMTSLayerFactory(this.layersConfig[select.value], 1, true)
         );
-      } else {
-        this.getLayers().setAt(0, this.blankLayer_);
       }
     }.bind(this));
 
@@ -1859,7 +1923,13 @@ lux.Map.prototype.handleSingleclickEvent_ = function(evt) {
     var htmls = [];
     json.forEach(function(resultLayer) {
       if ('tooltip' in resultLayer) {
-        htmls.push(resultLayer['tooltip']);
+        if (this.popupTarget_ !== undefined && this.popupClass_ !== undefined) {
+          htmls.push('<div class="' + this.popupClass_ +
+            '_' + resultLayer['layer'] + '">' +
+            resultLayer['tooltip'] + '</div>');
+        } else{
+          htmls.push(resultLayer['tooltip']);
+        }
       }
       var features = this.readJsonFeatures_(resultLayer);
       if (features.length != 0) {

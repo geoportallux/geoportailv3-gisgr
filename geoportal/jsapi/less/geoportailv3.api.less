@@ -1,3 +1,4 @@
+@import (inline) '/app/apiv3/node_modules/mapbox-gl/dist/mapbox-gl.css';
 @import (inline) '/app/apiv3/node_modules/openlayers/css/ol.css';
 @import (inline) '/app/apiv3/node_modules/js-autocomplete/auto-complete.css';
 @import "/app/apiv3/node_modules/bootstrap/less/mixins/vendor-prefixes.less";
@@ -30,6 +31,7 @@
 .lux-map {
   border: @border;
   position: relative;
+  z-index: 0;
   .ol-attribution {
     bottom: .2em;
     right: 0;
@@ -299,4 +301,9 @@
   bottom: -6px;
   margin-left: -7px;
   left: 50%;
+}
+
+.mapboxgl-canvas {
+  top: 0;
+  z-index: -1;
 }

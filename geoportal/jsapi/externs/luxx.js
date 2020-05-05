@@ -24,6 +24,21 @@ luxx.MapOptions.prototype.callback;
 luxx.MapOptions.prototype.bgLayer;
 
 /**
+ * Style to apply to vector tile background layer.
+ * @type {string|undefined}
+ * @api
+ */
+luxx.MapOptions.prototype.bgLayerStyle;
+
+/**
+ * XYZ layer to apply to vector tile background layer when printing.
+ * Ex: 'https://vectortiles.geoportail.lu/styles/roadmap/{z}/{x}/{y}.png'.
+ * @type {string|undefined}
+ * @api
+ */
+luxx.MapOptions.prototype.bgLayerStyleXYZ;
+
+/**
  * Set the presence of a background selector control in the map.
  * (not included by default).
  * @type {luxx.BgSelectorOptions|undefined}
@@ -89,6 +104,13 @@ luxx.MapOptions.prototype.mousePosition;
  * @api
  */
 luxx.MapOptions.prototype.popupTarget;
+
+/**
+ * The css class of the element that contains each row
+ * @type {string|undefined}
+ * @api
+ */
+luxx.MapOptions.prototype.popupClassPrefix;
 
 /**
  * The initial position of the center for the map view. The coordinate system
