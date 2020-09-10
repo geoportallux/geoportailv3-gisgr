@@ -3,6 +3,7 @@ import logging
 import re
 
 import urllib.request
+import datetime
 from urllib.parse import urlencode
 from pyramid.renderers import render
 from pyramid.view import view_config
@@ -637,6 +638,20 @@ class Getfeatureinfo(object):
                                 proxy_url + "?id=" + str(entry.id) +\
                                 "&filename=" + value.split(entry.url)[1]
                             break
+            modified_features.append(feature)
+        return modified_features
+
+    def format_esridate(self, features, attribute="date_time", format="%Y-%m-%d %H:%M:%S"):
+        modified_features = []
+        for feature in features:
+            try:
+                if attribute in feature['attributes']:
+                    value = feature['attributes'][attribute]
+                    if value is not None:
+                            feature['attributes'][attribute] =\
+                                datetime.datetime.fromtimestamp(int(value)/1000.0).strftime(format)
+            except Exception as e:
+                log.exception(e)
             modified_features.append(feature)
         return modified_features
 
