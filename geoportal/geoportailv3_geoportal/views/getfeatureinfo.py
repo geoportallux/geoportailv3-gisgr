@@ -1015,7 +1015,17 @@ class Getfeatureinfo(object):
         if 'features' in esricoll:
             for rawfeature in esricoll['features']:
                 geometry = ''
-                if (rawfeature['geometry'] and
+                if 'geometry' not in rawfeature:
+                    box = bbox.split(',')
+                    x1 = float(box[0])
+                    y1 = float(box[1])
+                    x2 = float(box[2])
+                    y2 = float(box[3])
+                    geometry = {'type': 'Polygon',
+                                'coordinates': [[
+                                    [x1, y1], [x2, y1], [x2, y2], [x1, y2], [x1, y1]
+                                ]]}
+                elif (rawfeature['geometry'] and
                     'x' in rawfeature['geometry'] and
                         'y' in rawfeature['geometry']):
                     geometry = {'type': 'Point',
