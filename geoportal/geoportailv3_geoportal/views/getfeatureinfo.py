@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import logging
 import re
-
 import urllib.request
 import datetime
+import pyproj
+import shapely
 from urllib.parse import urlencode
 from pyramid.renderers import render
 from pyramid.view import view_config
@@ -21,6 +22,8 @@ from shapely.geometry.polygon import LinearRing
 from c2cgeoportal_commons.models import DBSession, DBSessions
 from c2cgeoportal_commons.models.main import RestrictionArea, Role, Layer
 from shapely.geometry import MultiLineString, mapping, shape
+from shapely.ops import transform
+from functools import partial
 
 log = logging.getLogger(__name__)
 
@@ -456,19 +459,45 @@ class Getfeatureinfo(object):
 
         return results
 
+    def transform_(self, geometry, source, dest):
+        project = partial(
+            pyproj.transform,
+            pyproj.Proj(init=source), # source coordinate system
+            pyproj.Proj(init=dest)) # destination coordinate system
+
+        return transform(project, shape(geometry))  # apply projection
+
+    def pixel2meter (self, width, height, bbox, epsg_source, epsg_dest, pixels):
+        box3857 = bbox.split(',')
+        the_box = box(float(box3857[0]), float(box3857[1]), float(box3857[2]), float(box3857[3]))
+        box2169 = self.transform_(the_box, epsg_source, epsg_dest).bounds
+        if (box2169[2] - box2169[0]) > 0:
+            scale_x = (box2169[2] - box2169[0]) / width
+        else :
+            scale_x = (box2169[0] - box2169[2]) / width
+
+        return scale_x * pixels
+
     def remove_features_outside_tolerance(self, features, coords):
         features_to_keep = []
-
         the_box = box(float(coords[0]), float(coords[1]),
                       float(coords[2]), float(coords[3]))
-
         for feature in features:
             s = asShape(feature['geometry'])
+
             if s.area > 0:
                 if the_box.intersects(s):
                     features_to_keep.append(feature)
             else:
-                features_to_keep.append(feature)
+                width = self.request.params.get('WIDTH', None)
+                height = self.request.params.get('HEIGHT', None)
+                bbox = self.request.params.get('BBOX', None)
+                if width is None or height is None or bbox is None:
+                    features_to_keep.append(feature)
+                else:
+                    buffer = self.pixel2meter(float(width), float(height), bbox, "epsg:3857", "epsg:2169", 10)
+                    if the_box.intersects(s.buffer(buffer, 1)):
+                        features_to_keep.append(feature)
         return features_to_keep
 
     def to_feature(self, layer_id, fid, geometry, attributes,
