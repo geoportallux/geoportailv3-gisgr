@@ -11,8 +11,8 @@ const ls_ = window.localStorage;
 const LS_KEY_EXPERT = 'expertStyling';
 const LS_KEY_MEDIUM = 'mediumStyling';
 const LS_KEY_HILLSHADE = 'hillshadeStyling';
-export const defaultMapBoxStyle = 'https://vectortiles.geoportail.lu/styles/roadmap/style.json';
-export const defaultMapBoxStyleXYZ = 'https://vectortiles.geoportail.lu/styles/roadmap/{z}/{x}/{y}.png';
+export const defaultMapBoxStyle = 'https://vectortiles.geoportail.lu/styles/gisgr_roadmap/style.json';
+export const defaultMapBoxStyleXYZ = 'https://vectortiles.geoportail.lu/styles/gisgr_roadmap/{z}/{x}/{y}.png';
 
 
 
