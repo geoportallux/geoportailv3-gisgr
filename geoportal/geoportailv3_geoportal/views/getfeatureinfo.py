@@ -5,6 +5,7 @@ import urllib.request
 import datetime
 import pyproj
 import shapely
+import pytz
 from urllib.parse import urlencode
 from pyramid.renderers import render
 from pyramid.view import view_config
@@ -677,8 +678,11 @@ class Getfeatureinfo(object):
                 if attribute in feature['attributes']:
                     value = feature['attributes'][attribute]
                     if value is not None:
+                            utc_dt = datetime.datetime.fromtimestamp(int(value)/1000.0, tz=pytz.utc)
+                            lux_tz = pytz.timezone("Europe/Luxembourg")
+                            local_time = lux_tz.normalize(utc_dt)
                             feature['attributes'][attribute] =\
-                                datetime.datetime.fromtimestamp(int(value)/1000.0).strftime(format)
+                                local_time.strftime(format)
             except Exception as e:
                 log.exception(e)
             modified_features.append(feature)
