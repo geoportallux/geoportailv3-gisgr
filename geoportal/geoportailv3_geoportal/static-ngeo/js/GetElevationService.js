@@ -30,7 +30,7 @@ function service($http, gettextCatalog, elevationServiceUrl) {
   function getElevation(coordinate) {
     var lonlat = /** @type {ol.Coordinate} */
         (transform(coordinate,
-            'EPSG:3857', 'EPSG:2169'));
+            'EPSG:3857', 'EPSG:4326'));
     return $http.get(elevationServiceUrl, {
       params: {
         'lon': lonlat[0],
