@@ -31,6 +31,7 @@ import olStyleStyle from 'ol/style/Style.js';
  * @param {string} getRemoteTemplateServiceUrl The remote template service.
  * @param {string} downloadmeasurementUrl The url to download measurements.
  * @param {string} downloadsketchUrl The url to download sketches.
+ * @param {string} downloadPdfUrl The url to download pdf.
  * @param {angularGettext.Catalog} gettextCatalog Gettext catalog.
  * @param {app.Themes} appThemes The themes service.
  * @param {app.GetLayerForCatalogNode} appGetLayerForCatalogNode Tje layer
@@ -54,11 +55,17 @@ import olStyleStyle from 'ol/style/Style.js';
 const exports = function($sce, $timeout, $scope, $http,
     appGetProfile, ngeoLocation,
     appQueryTemplatesPath, getInfoServiceUrl, getRemoteTemplateServiceUrl,
-    downloadmeasurementUrl, downloadsketchUrl, gettextCatalog, appThemes,
-    appGetLayerForCatalogNode, appGetDevice, mymapsImageUrl, appExport,
-    appActivetool, appSelectedFeatures, appDrawnFeatures, appAuthtktCookieName,
-    appNotify, downloadresourceUrl, qrServiceUrl, previewMesurementUrl,
-    appLotChasse, appStateManager) {
+    downloadmeasurementUrl, downloadsketchUrl, downloadPdfUrl, gettextCatalog,
+    appThemes, appGetLayerForCatalogNode, appGetDevice, mymapsImageUrl,
+    appExport, appActivetool, appSelectedFeatures, appDrawnFeatures,
+    appAuthtktCookieName, appNotify, downloadresourceUrl, qrServiceUrl,
+    previewMesurementUrl, appLotChasse, appStateManager) {
+  /**
+   * @type {string}
+   * @private
+   */
+  this.downloadPdfUrl_ = downloadPdfUrl;
+
   /**
    * @type {app.LotChasse}
    * @private
@@ -486,7 +493,7 @@ const exports = function($sce, $timeout, $scope, $http,
   // Load info window if fid has a valid value
   var fid = this.ngeoLocation_.getParam('fid');
 
-  if (appStateManager.getInitialParamKeys().length == 1 && this.isFIDValid_(fid)) {
+  if (this.isFIDValid_(fid)) {
     this.getFeatureInfoById_(fid);
     this.ngeoLocation_.deleteParam('fid');
   }
@@ -1069,6 +1076,9 @@ exports.prototype.getTrustedUrlByLang = function(urlFr,
  */
 exports.prototype.highlightFeatures_ = function(features, fit) {
   if (features !== undefined && features !== null) {
+   if (this.map_.getLayers().getArray().indexOf(this.featureLayer_) === -1) {
+        this.map_.addLayer(this.featureLayer_);
+      }
     var encOpt = /** @type {olx.format.ReadOptions} */ ({
       dataProjection: 'EPSG:2169',
       featureProjection: this.map_.getView().getProjection()
@@ -1083,6 +1093,9 @@ exports.prototype.highlightFeatures_ = function(features, fit) {
         extent = extentExtend(extent,
             jsonFeatures[i].getGeometry().getExtent());
         var curFeature = jsonFeatures[i];
+        if (curFeature.getId() == null) {
+          curFeature.setId(undefined);
+        }
         if (curFeature.getGeometry().getType() ==
             olGeomGeometryType.GEOMETRY_COLLECTION) {
           var geomCollection = /** @type {ol.geom.GeometryCollection} */
@@ -1109,11 +1122,35 @@ exports.prototype.highlightFeatures_ = function(features, fit) {
 
 
 /**
+ * @param {string} key The key to find.
+ * @param {Object} attributes The attributes to translate.
+ * @param {number | undefined} minLength The minimum length of the value to be considered as existing.
+ * @return {boolean} True if the property is in the attributes.
+ * @export
+ */
+exports.prototype.hasProperty = function(key, attributes, minLength) {
+  if (minLength == undefined) {
+    minLength = 0;
+  }
+  return (key in attributes && ('' + attributes[key]).length > minLength);
+};
+
+
+/**
  * @return {string} Get the URL.
  * @export
  */
 exports.prototype.getDownloadMeasurementUrl = function() {
   return this.downloadmeasurementUrl_;
+};
+
+
+/**
+ * @return {string} Get the URL.
+ * @export
+ */
+exports.prototype.getDownloadPdfUrl = function() {
+  return this.downloadPdfUrl_;
 };
 
 
@@ -1201,7 +1238,7 @@ exports.prototype.getQrCodeForMymapsUrl = function(mapId) {
  * @export
  */
 exports.prototype.isEmpty = function(value) {
-  if (!value) {
+  if (value === undefined || value === null) {
     return true;
   }
   return String(value).length === 0;
@@ -1327,22 +1364,41 @@ exports.prototype.orderAffaire = function(numCommune, numMesurage) {
  * Show tracing Geometry
  * @param {string} geom Geoson multilinestring string in 3857.
  * @param {string} color The line color. If undefined then use the default one.
+ * @param {number} width The line width. If undefined then use the default one.
  * @export
  */
-exports.prototype.showGeom = function(geom, color) {
+exports.prototype.showGeom = function(geom, color, width) {
   this.featureLayer_.getSource().clear();
+  this.highlightFeatures_(this.lastHighlightedFeatures_, false);
   if (geom !== undefined) {
     var feature = /** @type {ol.Feature} */
       ((new olFormatGeoJSON()).readFeature(geom));
     if (color !== undefined) {
       feature.set('color', color);
     }
+    if (width !== undefined) {
+      feature.set('width', width);
+    }
     this.featureLayer_.getSource().addFeature(feature);
     this.map_.getView().fit(feature.getGeometry().getExtent());
   }
-  this.highlightFeatures_(this.lastHighlightedFeatures_, false);
 };
 
+/**
+ * Open the legend panel.
+ * @export
+ */
+exports.prototype.openLegendPanel = function() {
+  this['legendsOpen'] = true;
+};
+
+/**
+ * Close the legend panel.
+ * @export
+ */
+exports.prototype.closeLegendPanel = function() {
+  this['legendsOpen'] = false;
+};
 
 appModule.controller('AppQueryController',
                       exports);

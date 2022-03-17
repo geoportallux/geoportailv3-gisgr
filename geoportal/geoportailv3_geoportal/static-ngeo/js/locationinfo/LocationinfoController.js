@@ -43,6 +43,7 @@ import {intersects} from 'ol/extent.js';
  * @param {angular.$sce} $sce Angular $sce service.
  * @param {app.locationinfo.LocationInfoOverlay} appLocationInfoOverlay The overlay.
  * @param {app.Activetool} appActivetool The activetool service.
+ * @param {app.UserManager} appUserManager
  * @ngInject
  */
 const exports = function(
@@ -51,7 +52,14 @@ const exports = function(
         qrServiceUrl, appLocationinfoTemplateUrl, appSelectedFeatures,
         appGeocoding, appGetDevice, ngeoLocation, appThemes,
         appGetLayerForCatalogNode, bboxLidar, bboxSrsLidar, lidarDemoUrl,
-        appRouting, $sce, appLocationInfoOverlay, appActivetool) {
+        appRouting, $sce, appLocationInfoOverlay, appActivetool,
+        appUserManager) {
+  /**
+   * @type {app.UserManager}
+   * @private
+   */
+  this.appUserManager_ = appUserManager;
+
   /**
    * @type {app.Activetool}
    * @private
@@ -304,11 +312,21 @@ const exports = function(
     var x = parseInt(appStateManager.getInitialValue('X'), 0);
     var y = parseInt(appStateManager.getInitialValue('Y'), 0);
     var version = this.stateManager_.getVersion();
+    var srs = appStateManager.getInitialValue('SRS');
+    if (srs === undefined) {
+      if (version === 3) {
+        srs = 'EPSG:3857';
+      } else {
+        srs = 'EPSG:2169';
+      }
+    }
+
 
     if (x !== undefined && y !== undefined) {
       var coordinate = version === 3 ?
-          /** @type {ol.Coordinate} */ ([x, y]) :
-          /** @type {ol.Coordinate} */ (transform([y, x], 'EPSG:2169',
+          /** @type {ol.Coordinate} */ (transform([x, y], srs,
+              this['map'].getView().getProjection())) :
+          /** @type {ol.Coordinate} */ (transform([y, x], srs,
               this['map'].getView().getProjection()));
       this.setClickCordinate_(coordinate);
       this.loadInfoPane_();
@@ -529,6 +547,33 @@ exports.prototype.getLidarUrl = function() {
       parseInt(this.rawElevation_ / 100, 0);
   }
   return '';
+};
+
+
+/**
+ * @return {boolean} True if we want to show cyclomedia button.
+ * @export
+ */
+exports.prototype.isCyclomediaAvailable = function() {
+  if (this.appUserManager_.getUserType() == 'etat' ||
+      this.appUserManager_.getUserType() == 'commune') {
+    return true;
+  }
+  return false;
+};
+
+
+/**
+ * @return {string} The cyclomedia url.
+ * @export
+ */
+exports.prototype.getCyclomediaUrl = function() {
+  if (this.clickCoordinateLuref_ !== undefined) {
+  return 'http://streetsmart.cyclomedia.com/streetsmart?q=' +
+          this.clickCoordinateLuref_[0] + ';' +
+          this.clickCoordinateLuref_[1];
+  }
+  return undefined;
 };
 
 /**

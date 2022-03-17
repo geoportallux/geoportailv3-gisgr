@@ -352,7 +352,8 @@ const exports = function($scope,
     hitTolerance: 20,
     filter: function(feature, layer) {
       return this.drawnFeatures_.getArray().indexOf(feature) != -1;
-    }.bind(this)
+    }.bind(this),
+    style: null
   });
   this.map.addInteraction(selectInteraction);
 
@@ -755,6 +756,7 @@ exports.prototype.onDrawEnd_ = function(event) {
   feature.set('isLabel', this.drawLabel.getActive());
   feature.setStyle(this.featureStyleFunction_);
   feature.set('display_order', nbFeatures);
+  this.drawnFeatures_.getLayer().changed()
 
 
   // Deactivating asynchronosly to prevent dbl-click to zoom in
@@ -974,7 +976,6 @@ exports.prototype.createMeasureTooltip_ = function() {
   this.removeMeasureTooltip_();
   this.measureTooltipElement_ = document.createElement('DIV');
   this.measureTooltipElement_.classList.add('tooltip');
-  this.measureTooltipElement_.classList.add('ngeo-tooltip-measure');
 
   this.measureTooltipOverlay_ = new olOverlay({
     element: this.measureTooltipElement_,

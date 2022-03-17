@@ -7,8 +7,6 @@
  * module.
  */
 
-import {TOUCH} from 'ol/has.js';
-
 import ngeoDatasourceModule from 'ngeo/datasource/module.js';
 import ngeoDownloadModule from 'ngeo/download/module.js';
 import ngeoDrawModule from 'ngeo/draw/module.js';
@@ -63,7 +61,7 @@ const exports = angular.module('Appmain', [
   ngeoStatemanagerModule.name,
   ngeoStatemanagerWfsPermalink.module.name,
   'gettext']).run(function() {
-    if (!TOUCH) {
+    if (!('ontouchstart' in window)) {
       document.body.classList.add('no-touch');
     }
   });
@@ -126,7 +124,7 @@ exports.constant('ngeoScaleselectorTemplateUrl', 'templatecache/ngeoScaleselecto
 exports.constant('ngeoOfflineTestUrl', '/ping');
 exports.constant('ngeoOfflineTemplateUrl', () => 'templatecache/ngeoOfflineTemplateUrl');
 exports.constant('ngeoOlcsControls3dTemplateUrl', 'templatecache/ngeoOlcsControls3dTemplateUrl');
-exports.constant('appBackgroundlayerTemplateUrl', 'templatecache/appBackgroundlayerTemplateUrl');
+exports.constant('appBackgroundselectorTemplateUrl', 'templatecache/appBackgroundselectorTemplateUrl');
 exports.constant('appLayermanagerTemplateUrl', 'templatecache/appLayermanagerTemplateUrl');
 exports.constant('appLayerlegendsTemplateUrl', 'templatecache/appLayerlegendsTemplateUrl');
 exports.constant('appStreetviewTemplateUrl', 'templatecache/appStreetviewTemplateUrl');
@@ -139,6 +137,7 @@ exports.constant('appSymbolSelectorTemplateUrl', 'templatecache/appSymbolSelecto
 exports.constant('appLayerinfoTemplateUrl', 'templatecache/appLayerinfoTemplateUrl');
 exports.constant('appAuthenticationTemplateUrl', 'templatecache/appAuthenticationTemplateUrl');
 exports.constant('appInfobarTemplateUrl', 'templatecache/appInfobarTemplateUrl');
+exports.constant('app3dbarTemplateUrl', 'templatecache/app3dbarTemplateUrl');
 exports.constant('appProjectionselectorTemplateUrl', 'templatecache/appProjectionselectorTemplateUrl');
 exports.constant('appMapTemplateUrl', 'templatecache/appMapTemplateUrl');
 exports.constant('appThemeswitcherTemplateUrl', 'templatecache/appThemeswitcherTemplateUrl');
@@ -173,7 +172,7 @@ function templateRunner($templateCache) {
   $templateCache.put('templatecache/ngeoScaleselectorTemplateUrl', require('./infobar/scaleselector.html'));
   $templateCache.put('templatecache/ngeoOfflineTemplateUrl', require('./offlineNgeoComponent.html')); //  # FIXME was a function
   $templateCache.put('templatecache/ngeoOlcsControls3dTemplateUrl', require('./olcs/controls3d.html'));
-  $templateCache.put('templatecache/appBackgroundlayerTemplateUrl', require('./backgroundlayer/backgroundlayer.html'));
+  $templateCache.put('templatecache/appBackgroundselectorTemplateUrl', require('./backgroundselector/backgroundselector.html'));
   $templateCache.put('templatecache/appLayermanagerTemplateUrl', require('./layermanager/layermanager.html'));
   $templateCache.put('templatecache/appLayerlegendsTemplateUrl', require('./layerlegends/layerlegends.html'));
   $templateCache.put('templatecache/appStreetviewTemplateUrl', require('./streetview/streetview.html'));
@@ -186,6 +185,7 @@ function templateRunner($templateCache) {
   $templateCache.put('templatecache/appLayerinfoTemplateUrl', require('./layerinfo/layerinfo.html'));
   $templateCache.put('templatecache/appAuthenticationTemplateUrl', require('./authentication/authentication.html'));
   $templateCache.put('templatecache/appInfobarTemplateUrl', require('./infobar/infobar.html'));
+  $templateCache.put('templatecache/app3dbarTemplateUrl', require('./olcs/3dbar.html'));
   $templateCache.put('templatecache/appProjectionselectorTemplateUrl', require('./infobar/projectionselector.html'));
   $templateCache.put('templatecache/appMapTemplateUrl', require('./map/map.html'));
   $templateCache.put('templatecache/appThemeswitcherTemplateUrl', require('./themeswitcher/themes.html'));

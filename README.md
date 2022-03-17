@@ -28,9 +28,6 @@ Build
 
 ```bash
 cd geoportailv3
-# Create symlink to the env you want to use
-# You can create a custom env if you need to
-ln -s env-localdev .env
 make build
 ```
 
@@ -49,6 +46,8 @@ Until the migration is finished, the database must be fixed by doing: `make fix-
 
 The local ldap contains a single user: c2c/test1234 with admin rights.
 See docker-compose exec geoportal ldapsearch -x -H ldap://ldap -b ou=portail,dc=act,dc=lu -D "login=c2c,ou=portail,dc=act,dc=lu" -w test1234 -LL '\*'
+
+Admin interface can be accessed at http://localhost:8080/admin/.
 
 The print service is available directly at http://localhost:28080/.
 
@@ -97,7 +96,7 @@ In the `geoportal/.dockerignore` file add:
 Translations
 ------------
 
-The translation worflow is as follows:
+The translation workflow is as follows:
 - make update-pots # Replace pot files with new ones using a running composition
 - make update-translations # push new pots to transifex
 - make pull-translations # retrieve pos from transifex
@@ -110,6 +109,6 @@ Updating c2cgeoportal
 
 Update version in:
 - geoportal/luxembourg_requirements.txt
-- replace geoportal/upstrean_requirements.txt using the corresponding version
+- replace geoportal/upstream_requirements.txt using the corresponding version
   https://github.com/camptocamp/c2cgeoportal/blob/_C2C_GEOPORTAL_VERSION_/geoportal/requirements.txt
 - check the docs / adapt the code

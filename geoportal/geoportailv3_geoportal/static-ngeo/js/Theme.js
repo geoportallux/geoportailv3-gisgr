@@ -24,6 +24,23 @@ const exports = function($window, ngeoLocation, appThemes) {
   this.piwikSiteIdLookup_ = {
     'transport': 24,
     'main': 24
+    'eau': 6,
+    'tourisme': 7,
+    'emwelt': 8,
+    'agriculture': 9,
+    'prof': 10,
+    'go': 11,
+    'm': 12,
+    'at': 16,
+    'map': 18,
+    'pag': 19,
+    'cadastre_hertzien': 25,
+    'atlas_demographique': 29,
+    'urban_farming': 30,
+    'logement': 32,
+    'energie': 40,
+    'embedded': 44,
+    'geosciences': 59
   };
 
   /**
@@ -59,6 +76,9 @@ exports.prototype.setCurrentTheme = function(themeId) {
   this.currentTheme_ = themeId;
 
   var piwikSiteId = this.piwikSiteIdLookup_[this.currentTheme_];
+  if (!!(new URL(window.location).searchParams.get('embedded'))) {
+    piwikSiteId = this.piwikSiteIdLookup_['embedded'];
+  }
   var isApp =
     location.search.includes('localforage=android') ||
     location.search.includes('localforage=ios') ||

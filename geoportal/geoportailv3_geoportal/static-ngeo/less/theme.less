@@ -7,6 +7,7 @@
       content: '\@{icon}';
       font-family: @font-family !important;
     }
+    --primary: @primary;
   }
 
   .theme-@{theme} {
@@ -208,7 +209,10 @@
     background-color: white;
     color: @primary;
   }
-
+  .ol-control-on button{
+    background-color: @primary;
+    color: white;
+  }
   .tracker-on button{
     background-color: @primary;
     color: white;
@@ -432,6 +436,7 @@ header.navbar-default {
 .theme(Environnement_naturel, #879d31, #bacd81, #627529, e909, "Geoportail-Grande-Region");
 .theme(Environnement_humain, #558b2f, #85bb5c, #255d00, e906, "Geoportail-Grande-Region");
 .theme(Occupation_du_sol,  #8d6e63, #bd9b8f, #5e4238, e90f, "Geoportail-Grande-Region");
+.theme(energie, #558b2f, #85bb5c, #255d00, e906, "Geoportail-Grande-Region");
 .theme(Eau, #03a2ac, #45cdd6, #078f98, e016, "geoportail-icons");
 .theme(eau, #03a2ac, #45cdd6, #078f98, e016, "geoportail-icons");
 
@@ -467,4 +472,6 @@ header.navbar-default {
 .theme(sig_secours, #2979ff,#75a7ff,#004ecb,e00a,"geoportail-icons");
 .theme(urban_farming, #028349, #4ab475, #005520, e901, "urban-farming");
 .theme(logement, #b0271a, #e95b43, #790000, e903, "urban-farming");
+.theme(np_our, #76B854, #a8ea82, #458725, e005, "geoportail-icons");
+.theme(geosciences, #895E03, #D7BA87, #5E4024, e909, "urban-farming");
 .theme_(#777, #ddd, #999);

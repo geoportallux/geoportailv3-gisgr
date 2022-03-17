@@ -12,6 +12,7 @@ goog.require('ol.Map');
 goog.require('ol.Overlay');
 goog.require('ol.View');
 goog.require('ol.control.MousePosition');
+goog.require('ol.control.ZoomToExtent');
 goog.require('ol.events');
 goog.require('ol.format.GPX');
 goog.require('ol.format.GeoJSON');
@@ -49,12 +50,47 @@ proj4.defs('EPSG:2169', '+proj=tmerc +lat_0=49.83333333333334 +lon_0=6.166666666
 var _paq = [];
 
 _paq.push(['setSiteId', 22]);
-
+function getCookie(name) {
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      let value = c.substring(name.length, c.length);
+      return value;
+    }
+  }
+  return null;
+}
 (function() {
-  var u = 'https://statistics.geoportail.lu/';
-  _paq.push(['setTrackerUrl', u + 'piwik.php']);
-  var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
-  g.type = 'text/javascript'; g.async = true; g.defer = true; g.src = u + 'piwik.js'; s.parentNode.insertBefore(g, s);
+  let loadPiwik = true;
+  let cookieOrejime = getCookie('orejime=');
+  let cookieIsPublicWebsite = getCookie('isPublicWebsite=');
+  if (cookieIsPublicWebsite == null && cookieOrejime == null) {
+    // If IsPublicWebsite and Orejime don't exist load piwik.
+    loadPiwik = true;
+  } else if (cookieIsPublicWebsite !== null && cookieOrejime == null) {
+    // If IsPublicWebsite exists and orejime does not exist, do not load piwik.
+    loadPiwik = false;
+  } else if ((cookieIsPublicWebsite !== null && cookieOrejime != null) ||
+      (cookieIsPublicWebsite == null && cookieOrejime != null)) {
+    // If IsPublicWebsite exists and orejime exists, loading piwik depends on the orejime value.
+    loadPiwik = false;
+    let value = JSON.parse(cookieOrejime);
+    if ('geoportail' in value && value['geoportail']) {
+      loadPiwik = true;
+    }
+  } 
+
+  if (loadPiwik) {
+    var u = 'https://statistics.geoportail.lu/';
+    _paq.push(['setTrackerUrl', u + 'piwik.php']);
+    var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+    g.type = 'text/javascript'; g.async = true; g.defer = true; g.src = u + 'piwik.js'; s.parentNode.insertBefore(g, s);
+  }
 })();
 
 
@@ -81,6 +117,31 @@ _paq.push(['setSiteId', 22]);
  * @api stable
  */
 lux.Map = function(options) {
+
+  this.grantedUrls = ['visitluxembourg.com', 'mullerthal-trail.lu', 'traveltrade.visitluxembourg.com', 'visit-eislek.lu', 'visitguttland.lu',
+    'visitmoselle.lu', 'visitminett.lu', 'mullerthal.lu', 'gites.lu', 'vins-cremants.lu', 'visitbeaufort.lu', 'visitberdorf.lu',
+    'visitconsdorf.lu', 'visitechternach.lu', 'visitlarochette.lu', 'medernach.info', 'mullerthal-millen.lu', 'rosport-tourism.lu', 'visitmondorf.lu',
+    'visitwasserbillig.lu', 'si-schengen.lu', 'visitatertwark.lu', 'visit-clervaux.lu', 'visit-diekirch.lu', 'visit-vianden.lu', 'visit-wincrange.lu',
+    'public.lu', 'etat.lu', 'inondations.lu', 'visit-fouhren.lu', 'visit-hoscheid.lu', 'visitjunglinster.lu', 'visitreisdorf.lu', 'visitrosportmompach.lu',
+    'mae.lu', 'gouvernement.lu', 'meteolux.lu', 'luxemburg.infomax.online'];
+
+  /**
+   * @private
+   * @type {boolean}
+   */
+  this.showSelectedFeature_ = true;
+
+  /**
+   * @private
+   * @type {boolean}
+   */
+  this.queryOnClick_ = true;
+
+  /**
+   * @private
+   * @type {boolean}
+   */
+  this.queryOnDrawEnd_ = false;
 
   this.mvtLayer_ = undefined;
   /**
@@ -145,6 +206,12 @@ lux.Map = function(options) {
    */
   this.showLayerInfoPopup_ = options.showLayerInfoPopup ? true : false;
 
+  /**
+   * @private
+   * @type {function()=|undefined}
+   */
+  this.layerInfoCb_ = options.layerInfoCallback;
+
   this.setLanguage(lux.lang);
 
   /**
@@ -184,6 +251,32 @@ lux.Map = function(options) {
     source: new ol.source.Vector()
   });
 
+  /**
+   * @private
+   * @type {Array<ol.layer.Vector>}
+   */
+  this.showVectorLayerArray_ = [];
+
+  /**
+   * @private
+   * @type {ol.source.Vector}
+   */
+  this.sourceDrawFeatures_ = new ol.source.Vector();
+
+  /**
+   * @private
+   * @type {ol.interaction.Modify | undefined}
+   */
+  this.modifyInteraction_ = undefined;
+
+  /**
+   * @private
+   * @type {ol.layer.Vector}
+   */
+  this.drawingLayer_ = new ol.layer.Vector({
+    source: this.sourceDrawFeatures_
+  });
+
   this.showLayer_.setStyle(this.vectorStyle_);
 
   /**
@@ -204,6 +297,12 @@ lux.Map = function(options) {
    * @private
    */
   this.maxExtent_ = [2.6, 47.7, 8.6, 51];
+
+  /**
+   * @type {ol.interaction.Draw | undefined}
+   * @private
+   */
+  this.curDrawInteraction_ = undefined;
 
   /**
    * @private
@@ -279,7 +378,7 @@ lux.Map = function(options) {
   }
 
   if (options.view === undefined) {
-    options.view = new ol.View();
+    options.view = new ol.View({});
   }
 
   if (options.position) {
@@ -308,6 +407,22 @@ lux.Map = function(options) {
       options.view.getZoom() === null) {
     options.view.setZoom(9);
   }
+  var mouseWheelZoom = (options.mouseWheelZoom !== undefined) ? options.mouseWheelZoom : true;
+  var interactions = ol.interaction
+    .defaults({
+      mouseWheelZoom: mouseWheelZoom,
+      altShiftDragRotate: false,
+      pinchRotate: true,
+      constrainResolution: true
+    })
+    .extend([
+      new ol.interaction.DragRotate({
+        condition: new URLSearchParams(document.location.search).has('shiftKeyRotate')
+          ? ol.events.condition.shiftKeyOnly
+          : ol.events.condition.altShiftKeyOnly
+      })
+    ]);
+  options.interactions = interactions;
 
   var controls;
   if (options.controls !== undefined) {
@@ -322,9 +437,15 @@ lux.Map = function(options) {
     var attribution = new ol.control.Attribution({
       collapsible: false
     });
-    controls = ol.control.defaults({attribution: false}).extend([attribution]);
+    var rotate = new ol.control.Rotate();
+    controls = ol.control.defaults({attribution: false}).extend(
+      [attribution, rotate]
+    );
   }
 
+  if (options.zoomToExtent) {
+    controls.push(new ol.control.ZoomToExtent({extent: [631077,6337091, 724025, 6492411]}));
+  }
   var target;
   var el;
   if (options.mousePosition) {
@@ -385,6 +506,25 @@ lux.Map = function(options) {
    */
   this.popupClass_ = undefined;
 
+  /**
+   * @private
+   * @type {function()=|undefined}
+   */
+  this.popupContentTransformer_ = undefined;
+  if (options.popupContentTransformer !== undefined) {
+    this.popupContentTransformer_ = options.popupContentTransformer;
+    delete options.popupContentTransformer;
+  }
+
+  /**
+   * @private
+   * @type {boolean}
+   */
+  this.popupAutoPan_ = false;
+  if (options.popupAutoPan !== undefined) {
+    this.popupAutoPan_ = options.popupAutoPan;
+    delete options.popupAutoPan;
+  }
   this.setPopupTarget(options.popupTarget, options.popupClassPrefix);
 
   ol.events.listen(this, ol.MapBrowserEventType.SINGLECLICK,
@@ -394,6 +534,7 @@ lux.Map = function(options) {
   this.stateManager_.setMap(this);
 
   this.showLayer_.setMap(this);
+  this.drawingLayer_.setMap(this);
 
   // change cursor on mouseover feature
   ol.events.listen(this, ol.MapBrowserEventType.POINTERMOVE, function(evt) {
@@ -416,6 +557,138 @@ lux.Map = function(options) {
 
 ol.inherits(lux.Map, ol.Map);
 
+
+/**
+ * Create a new empty vector layer.
+ * @param {ol.style.Style|Array.<ol.style.Style>|ol.StyleFunction|undefined} style The 
+ * style to apply to the layer.
+ * @return {ol.layer.Vector} The created layer.
+ * @export
+ * @api
+ */
+lux.Map.prototype.createVectorLayer = function(style) {
+  var vectorLayer = new ol.layer.Vector({
+    source: new ol.source.Vector()
+  });
+  if (style !== undefined) {
+    vectorLayer.setStyle(style);
+  }
+  this.showVectorLayerArray_.push(vectorLayer);
+  vectorLayer.setMap(this);
+  return vectorLayer;
+}
+
+/**
+ * Enable query layer after clicking on the map.
+ * @param {boolean} queryOnClick.
+ * @export
+ * @api
+ */
+lux.Map.prototype.enableQueryOnClick = function(queryOnClick) {
+  this.queryOnClick_ = !!queryOnClick;
+}
+
+/**
+ * If set to true, then it allows to display the clicked feature.
+ * @param {boolean} showSelectedFeature.
+ * @export
+ * @api
+ */
+lux.Map.prototype.enableShowSelectedFeature = function(showSelectedFeature) {
+  this.showSelectedFeature_ = showSelectedFeature;
+}
+
+/**
+ * Enable query layer after finishing to draw on the map.
+ * @param {boolean} queryOnDrawEnd.
+ * @export
+ * @api
+ */
+lux.Map.prototype.enableQueryOnDrawEnd = function(queryOnDrawEnd) {
+  this.queryOnDrawEnd_ = !!queryOnDrawEnd;
+}
+
+/**
+ * Draw a point on the map.
+ * @param {function()=|undefined} onDrawEnd the callback function.
+ * @export
+ * @api
+ */
+lux.Map.prototype.enableDrawPoint = function(onDrawEnd) {
+  this.drawType_('Point', onDrawEnd);
+};
+
+/**
+ * Draw a polygon on the map.
+ * @param {function()=|undefined} onDrawEnd the callback function.
+ * @export
+ * @api
+ */
+lux.Map.prototype.enableDrawPolygon = function(onDrawEnd) {
+  this.drawType_('Polygon', onDrawEnd);
+};
+
+/**
+ * Draw a polygon on the map.
+ * @param {function()=|undefined} onDrawEnd the callback function.
+ * @param {boolean|undefined} queryLayer.
+ * @export
+ * @api
+ */
+lux.Map.prototype.enableDrawLine = function(onDrawEnd) {
+  this.drawType_('LineString', onDrawEnd);
+};
+
+/**
+ * Draw a polygon on the map.
+ * @param {boolean} enabled the callback function.
+ * @export
+ * @api
+ */
+lux.Map.prototype.activateModifyDrawing = function(enabled) {
+  if (this.modifyInteraction_ === undefined) {
+    this.modifyInteraction_ = new ol.interaction.Modify({source: this.sourceDrawFeatures_});
+    this.modifyInteraction_.setActive(false);
+    this.addInteraction(this.modifyInteraction_);
+  }
+
+  this.modifyInteraction_.setActive(enabled);
+};
+
+/**
+ * Disable the current drawing tool.
+ * @export
+ * @api
+ */
+lux.Map.prototype.disableDrawTool = function() {
+  if (this.curDrawInteraction_ !== undefined) {
+    this.removeInteraction(this.curDrawInteraction_);
+    this.curDrawInteraction_ = undefined;
+  }
+};
+
+/**
+ * Draw on the map.
+ * @param {string} type the kind of obejct we want to draw.
+ * @param {function()=|undefined} onDrawEnd the callback function.
+ */
+lux.Map.prototype.drawType_ = function(type, onDrawEnd) {
+  if (this.curDrawInteraction_ !== undefined) {
+    this.removeInteraction(this.curDrawInteraction_);
+  }
+  this.curDrawInteraction_ = new ol.interaction.Draw({
+    source: this.sourceDrawFeatures_,
+    type: type,
+  });
+  if (onDrawEnd !== undefined) {
+   ol.events.listen(this.curDrawInteraction_, 'drawend', onDrawEnd, this);
+  }
+  ol.events.listen(this.curDrawInteraction_, 'drawend', this.handleDrawendEvent_, this);
+
+  this.addInteraction(this.curDrawInteraction_);
+};
+
+
 /**
  * Adds the given layer to the top of this map. If you want to add a layer
  * elsewhere in the stack, use `getLayers()` and the methods available on
@@ -429,7 +702,6 @@ lux.Map.prototype.addLayer = function(layer) {
   this.layersPromise.then(function() {
     ol.Map.prototype.addLayer.call(this, layer);
   }.bind(this));
-
 };
 
 /**
@@ -516,7 +788,11 @@ lux.Map.prototype.print = function(name, layout, scale, firstPagesUrls, callback
   }
 
   if (scale === undefined || scale === null) {
-    scale = Math.round(this.getView().getResolution() * 39.3701 * 72);
+    const resolution = this.getView().getResolution();
+    const dpi = 25.4 / 0.28;
+    const mpu = this.getView().getProjection().getMetersPerUnit();
+    const inchesPerMeter = 1000 / 25.4;
+    scale = Math.round(parseFloat(resolution.toString()) * mpu * inchesPerMeter * dpi);
   }
   var spec = pm.createSpec(scale, dpi, curLayout, format, {
     'disclaimer': disclaimer,
@@ -545,6 +821,85 @@ lux.Map.prototype.print = function(name, layout, scale, firstPagesUrls, callback
         }.bind(this));
       }
     }.bind(this));
+};
+
+/**
+ * Get the print spec.
+ *
+ * @export
+ * @api
+ */
+lux.Map.prototype.getPrintSpec = function(layout, scale, dpi, pformat) {
+  var printDpi = (dpi !== undefined) ? dpi : 127;
+  var format = (pformat !== undefined) ? pformat : 'png';
+
+  var pm = new lux.PrintManager(lux.printUrl, this);
+
+  var curLayout = '';
+  if (layout === undefined || layout === null ||
+      lux.PrintManager.LAYOUTS.indexOf(layout) === -1) {
+    var size = this.getSize();
+    if (size !== undefined && size[0] > size[1]) {
+      curLayout = 'A4 landscape';
+    } else {
+      curLayout = 'A4 portrait';
+    }
+  } else {
+    curLayout = layout;
+  }
+  var dataOwners = [];
+  this.getLayers().forEach(function(layer) {
+    var source = undefined;
+    if (/** @type{Object} */ (layer).getSource instanceof Function) {
+      source = /** @type{Object} */ (layer).getSource();
+    }
+    if (source != undefined) {
+      var attributions = source.getAttributions();
+      if (attributions !== null) {
+        attributions.forEach(function(attribution) {
+          dataOwners.push(attribution.getHTML());
+        }.bind(this));
+      }
+    }
+  });
+
+  dataOwners = dataOwners.filter(function(item, pos, self) {
+    return self.indexOf(item) == pos;
+  });
+
+  var disclaimer = lux.translate('www.geoportail.lu est un portail d\'accès aux informations géolocalisées, données et services qui sont mis à disposition par les administrations publiques luxembourgeoises. Responsabilité: Malgré la grande attention qu’elles portent à la justesse des informations diffusées sur ce site, les autorités ne peuvent endosser aucune responsabilité quant à la fidélité, à l’exactitude, à l’actualité, à la fiabilité et à l’intégralité de ces informations. Information dépourvue de foi publique. Droits d\'auteur: Administration du Cadastre et de la Topographie. http://g-o.lu/copyright');
+  var dateText = lux.translate('Date d\'impression: ');
+  var scaleTitle = lux.translate('Echelle approximative 1:');
+  var appTitle = lux.translate('Le géoportail national du Grand-Duché du Luxembourg');
+
+  if (scale === undefined || scale === null) {
+    const resolution = this.getView().getResolution();
+    const dpi = 25.4 / 0.28;
+    const mpu = this.getView().getProjection().getMetersPerUnit();
+    const inchesPerMeter = 1000 / 25.4;
+    scale = Math.round(parseFloat(resolution.toString()) * mpu * inchesPerMeter * dpi);
+  }
+  var longUrl = this.stateManager_.getUrl();
+  if (longUrl.toLowerCase().indexOf('http') !== 0 &&
+      longUrl.toLowerCase().indexOf('//') === 0) {
+    longUrl = 'http:' + longUrl;
+  }
+
+  var spec = pm.createSpec(scale, printDpi, curLayout, format, {
+    'disclaimer': disclaimer,
+    'scaleTitle': scaleTitle,
+    'appTitle': appTitle,
+    'scale': scale,
+    'name': '',
+    'lang': lux.lang,
+    'legend': '',
+    'scalebar': {'geodetic': true},
+    'dataOwner': dataOwners.join(' '),
+    'dateText': dateText,
+    "url": longUrl,
+    "qrimage": "https://apiv3.geoportail.lu/qr?url="+longUrl
+  });
+  return spec;
 };
 
 /**
@@ -593,6 +948,26 @@ lux.Map.prototype.getStatus_ = function(pm, ref, callback) {
 lux.Map.prototype.getShowLayer = function() {
   return this.showLayer_;
 };
+
+/**
+ * Get the layer containing drawn features.
+ * @export
+ * @api
+ * @return {ol.layer.Vector} The show layer.
+ */
+lux.Map.prototype.getDrawingLayer = function() {
+  return this.drawingLayer_;
+};
+
+/**
+ * Remove the drawings.
+ * @export
+ * @api
+ */
+lux.Map.prototype.removeDrawings = function() {
+  return this.drawingLayer_.getSource().clear();
+};
+
 
 /**
  * @param {string} lang Set the new language.
@@ -670,6 +1045,63 @@ lux.Map.prototype.showLayerInfoPopup = function(show) {
 };
 
 /**
+ * Set the information callback function.
+ * @param {function()=|undefined} layerInfoCb The callback function.
+ * @export
+ * @api
+ */
+lux.Map.prototype.setLayerInfoCb = function(layerInfoCb) {
+  this.layerInfoCb_ = layerInfoCb;
+};
+
+/**
+ * Get the area of a geometry in square meters.
+ * @param {ol.geom.Geometry} geometry The geometry the get the area.
+ * @param {string} srs the geometry's srs. Default is EPSG:3857.
+ * @return {number} The spherical area (in square meters).
+ * @export
+ * @api
+ */
+lux.Map.prototype.getGeometryArea = function(geometry, srs) {
+  const curSrs = ((srs === undefined) ? 'EPSG:3857' : srs);
+  let area = 0;
+  switch (geometry.getType()) {
+    case 'Polygon':
+      area = geometry.clone().transform(curSrs, 'EPSG:2169').getArea();
+      break;
+    case 'MultiPolygon':
+      area = geometry.clone().transform(curSrs, 'EPSG:2169').getArea();
+      break;
+  }
+  return area;
+};
+
+/**
+ * Get the length of a geometry in meters.
+ * @param {ol.geom.Geometry} geometry The geometry the get the area.
+ * @param {string} srs the geometry's srs. Default is EPSG:3857.
+ * @return {number} The spherical length (in meters).
+ * @export
+ * @api
+ */
+lux.Map.prototype.getGeometryLength = function(geometry, srs) {
+  const curSrs = ((srs === undefined) ? 'EPSG:3857' : srs);
+  let length = 0;
+  switch (geometry.getType()) {
+      case 'Polygon':
+        length = new ol.geom.LineString(geometry.getLinearRing(0).clone().transform(curSrs, 'EPSG:2169').getCoordinates()).getLength();
+        break;
+      case 'MultiPolygon':
+        length = new ol.geom.LineString(geometry.getPolygon(0).getLinearRing(0).clone().transform(curSrs, 'EPSG:2169').getCoordinates()).getLength();
+        break;
+      case 'LineString':
+        length = geometry.clone().transform(curSrs, 'EPSG:2169').getLength();
+        break;
+    }
+  return length;
+};
+
+/**
  * Sets the popup target or undefined to let the api create popup.
  * @param {Element|string|undefined} optPopupTarget The container for map
  * popups, either the element itself or the `id` of the element. Undefined lets
@@ -718,7 +1150,7 @@ lux.Map.prototype.showMarker = function(opt_options) {
     }
   }
   image.src = options.iconURL ||
-      'https://openlayers.org/en/master/examples/data/icon.png';
+      'https://apiv3.geoportail.lu/proj/1.0/build/apidoc/examples/icon.png';
   element.appendChild(image);
 
   var position;
@@ -733,6 +1165,7 @@ lux.Map.prototype.showMarker = function(opt_options) {
     position = this.getView().getCenter();
   }
   var markerOverlay = new ol.Overlay({
+    id: options.id,
     element: element,
     position: position,
     positioning: options.positioning || 'center-center'
@@ -743,6 +1176,9 @@ lux.Map.prototype.showMarker = function(opt_options) {
     this.getView().setCenter(position);
   }
   var canvasContext = document.createElement('canvas').getContext('2d');
+  if (options.onClick) {
+    ol.events.listen(element, ol.events.EventType.CLICK, options.onClick);
+  }
   if (options.html) {
     var popup;
     var showPopupEvent = options.click ?
@@ -897,8 +1333,13 @@ lux.Map.prototype.MVTLayerFactory_ = function(options) {
   // FIXME: should be taken from the layer config
   // TODO: when config is handled by c2cgeoportal
   // Here we use roadmap_jsapi due to https://jira.camptocamp.com/browse/GSLUX-264
-  let mapBoxStyle = 'https://vectortiles.geoportail.lu/styles/roadmap_jsapi/style.json';
-  let mapBoxStyleXYZ = 'https://vectortiles.geoportail.lu/styles/roadmap_jsapi/{z}/{x}/{y}.png';
+  const host = new URL(window.location).host;
+  let layer = 'roadmap_jsapi';
+  if (this.grantedUrls.find(element => host.endsWith(element)) !== undefined) {
+    layer = 'roadmap';
+  }
+  let mapBoxStyle = 'https://vectortiles.geoportail.lu/styles/'+ layer + '/style.json';
+  let mapBoxStyleXYZ = 'https://vectortiles.geoportail.lu/styles/'+ layer +'/{z}/{x}/{y}.png';
   if (options && options.bgLayerStyle) {
     mapBoxStyle = options.bgLayerStyle;
   }
@@ -1506,11 +1947,11 @@ lux.Map.prototype.decDegFromMatch_ = function(m) {
  * @see {@link https://apiv3.geoportail.lu/proj/1.0/build/apidoc/examples/index.html#example4}
  * @param {string} url Url to the GPX file.
  * @param {luxx.VectorOptions=} opt_options Options.
+ * @return {Promise} The vector layer promise.
  * @export
  * @api
  */
 lux.Map.prototype.addGPX = function(url, opt_options) {
-
   /** @type {ol.StyleFunction | undefined}*/
   var styleFunction;
   if (opt_options && opt_options.style !== undefined) {
@@ -1547,7 +1988,7 @@ lux.Map.prototype.addGPX = function(url, opt_options) {
     };
   }
 
-  this.addVector_(url, new ol.format.GPX(), {
+  return this.addVector_(url, new ol.format.GPX(), {
     style: styleFunction,
     reloadInterval: opt_options && opt_options.reloadInterval,
     click: opt_options.click,
@@ -1561,22 +2002,28 @@ lux.Map.prototype.addGPX = function(url, opt_options) {
  * @see {@link https://apiv3.geoportail.lu/proj/1.0/build/apidoc/examples/index.html#example4}
  * @param {string} url Url to the KML file.
  * @param {luxx.VectorOptions=} opt_options Options.
+ * @return {Promise} The vector layer promise.
  * @export
  * @api
  */
 lux.Map.prototype.addKML = function(url, opt_options) {
-  this.addVector_(url, new ol.format.KML(), opt_options);
+  return this.addVector_(url, new ol.format.KML(), opt_options);
 };
 
 /**
  * It displays a GeoJSON file on the map.
  * @param {string} url Url to the GeoJSON file.
  * @param {luxx.VectorOptions=} opt_options Options.
+ * @return {Promise} The vector layer promise.
  * @export
  * @api
  */
 lux.Map.prototype.addGeoJSON = function(url, opt_options) {
-  this.addVector_(url, new ol.format.GeoJSON(), opt_options);
+  var opt_format = {};
+  if (opt_options && opt_options.dataProjection !== undefined) {
+    opt_format['defaultDataProjection'] = opt_options.dataProjection;
+  }
+  return this.addVector_(url, new ol.format.GeoJSON(opt_format), opt_options);
 };
 
 /**
@@ -1584,6 +2031,7 @@ lux.Map.prototype.addGeoJSON = function(url, opt_options) {
  * @param {string} url Url to the vector file
  * @param {ol.format.GPX|ol.format.KML|ol.format.GeoJSON} format The format.
  * @param {luxx.VectorOptions=} opt_options Options.
+ * @return {Promise} The vector layer promise.
  * @private
  */
 lux.Map.prototype.addVector_ = function(url, format, opt_options) {
@@ -1625,7 +2073,7 @@ lux.Map.prototype.addVector_ = function(url, format, opt_options) {
   if (opt_options && opt_options.name) {
     options.name = opt_options.name;
   }
-  this.layersPromise.then(function() {
+  return this.layersPromise.then(function() {
     vector = new ol.layer.Vector(options);
 
     var interval = opt_options && opt_options.reloadInterval;
@@ -1639,12 +2087,17 @@ lux.Map.prototype.addVector_ = function(url, format, opt_options) {
     this.addLayer(vector);
     this.addedKmlLayers_.push(vector);
     this.addedKmlOnClick_.push(opt_options.onClick);
-    if (fit) {
+    if (fit || (opt_options && opt_options.onFeatureAdded !== undefined)) {
       ol.events.listen(vector.getSource(), ol.source.VectorEventType.ADDFEATURE,
-          function() {
-            var size = this.getSize();
-            console.assert(size !== undefined, 'size should be defined');
-            this.getView().fit(vector.getSource().getExtent(), {size: size});
+          function(evt) {
+            if (fit) {
+              var size = this.getSize();
+              console.assert(size !== undefined, 'size should be defined');
+              this.getView().fit(vector.getSource().getExtent(), {size: size});
+            }
+            if ((opt_options && opt_options.onFeatureAdd !== undefined)) {
+              opt_options.onFeatureAdd.call(this, evt.feature);
+            }
           }.bind(this)
       );
     }
@@ -1653,6 +2106,11 @@ lux.Map.prototype.addVector_ = function(url, format, opt_options) {
       var interaction = new ol.interaction.Select({
         layers: this.addedKmlLayers_
       });
+      this.getLayers().on('remove', function(event) {
+        if (event.element == vector) {
+          this.removeInteraction(interaction);
+        }
+      }.bind(this));
       this.addInteraction(interaction);
       if (opt_options.onClick) {
         interaction.on('select', function(e) {
@@ -1708,6 +2166,7 @@ lux.Map.prototype.addVector_ = function(url, format, opt_options) {
         }.bind(this));
       }
     }
+    return vector;
   }.bind(this));
 };
 
@@ -1761,13 +2220,26 @@ lux.Map.prototype.showPopup = function(position, title, content) {
  * @api
  */
 lux.Map.prototype.addMyMapLayer = function(options) {
-  this.stateManager_.setMyMap(options.mapId);
+  if (options.mapId !== undefined) {
+    this.stateManager_.setMyMap(options.mapId);
+  }
   return Promise.all([this.i18nPromise, this.layersPromise]).then(function() {
     var mymap = new lux.MyMap(options);
     mymap.setMap(this);
     return mymap;
   }.bind(this));
 };
+
+
+/**
+ * Get the popup overlay.
+ * @return {ol.Overlay} The popup overlay.
+ * @export
+ */
+lux.Map.prototype.getPopupOverlay = function() {
+  return this.queryPopup_;
+};
+
 
 /**
  * Removes the popup or the information content.
@@ -1895,6 +2367,63 @@ lux.Map.prototype.getFeatureInfo = function(evt, callback) {
 };
 
 /**
+ * @param {Object} evt The drawend event.
+ * @param {function(?)} callback The function to call.
+ * @export
+ */
+lux.Map.prototype.getFeatureInfoByGeometry = function(evt, callback) {
+  var layers = this.getLayers().getArray();
+
+  // collect the queryable layers
+  var layersToQuery = [];
+  if (this.queryableLayers_ === undefined) {
+    layers.forEach(function(layer) {
+      var metadata = layer.get('metadata');
+      if (metadata && metadata['is_queryable'] === true &&
+          layer.getVisible() && layer.getOpacity() > 0) {
+        layersToQuery.push(layer.get('id'));
+      }
+    });
+  } else {
+    this.queryableLayers_.forEach(function(layer) {
+      var layerConf = this.findLayerConf_(layer);
+      if (layerConf !== null) {
+        layersToQuery.push(layerConf.id);
+      }
+    }.bind(this));
+  }
+
+  if (!layersToQuery.length) {
+    callback.call(this, []);
+    return;
+  }
+
+  
+  this.getViewport().style.cursor = 'wait';
+  var size = this.getSize();
+  var extent = this.getView().calculateExtent(size);
+  var writer = new ol.format.WKT();
+  let options = {dataProjection: 'EPSG:2169', featureProjection: 'EPSG:3857'};
+
+  var params = {
+    'layers': layersToQuery.join(),
+    'geometry': writer.writeGeometry(evt.feature.getGeometry(), options)
+  };
+  var url = document.createElement('A');
+  url.href = lux.queryUrl;
+
+  Object.keys(params).forEach(function(key) {
+    url.search = url.search + '&' + key + '=' + params[key];
+  });
+  fetch(url.toString()).then(function(resp) {
+    return resp.json();
+  }).then(function(json) {
+    this.getViewport().style.cursor = '';
+    callback.call(this, json);
+  }.bind(this));
+};
+
+/**
  * @param {ol.style.Style|Array.<ol.style.Style>|ol.StyleFunction|null|undefined}
  *      style The style of the show layer.
  * @export
@@ -1904,13 +2433,89 @@ lux.Map.prototype.setShowlayerStyle = function(style) {
   this.showLayer_.setStyle(style);
 };
 
+
+/**
+ * @param {Object} evt The event.
+ * @private
+ */
+lux.Map.prototype.handleDrawendEvent_ = function(evt) {
+  if (!this.queryOnDrawEnd_) {
+    return;
+  }
+  this.removeInfoPopup();
+
+  this.showLayer_.getSource().clear();
+
+  this.getFeatureInfoByGeometry(evt, function(json) {
+    if (!json || !json.length) {
+      this.showLayer_.getSource().clear();
+      return;
+    }
+    // each item in the result corresponds to a layer
+    var htmls = [];
+    json.forEach(function(resultLayer) {
+      var curHtml = undefined;
+      if ('tooltip' in resultLayer) {
+        if (this.popupTarget_ !== undefined && this.popupClass_ !== undefined) {
+          curHtml = '<div class="' + this.popupClass_ +
+            '_' + resultLayer['layer'] + '">' +
+            resultLayer['tooltip'] + '</div>';
+        } else{
+          curHtml = resultLayer['tooltip'];
+        }
+      }
+      var features = this.readJsonFeatures_(resultLayer);
+
+      if (features.length != 0) {
+        this.showLayer_.getSource().addFeatures(features);
+        if (this.showLayerInfoPopup_ && this.popupContentTransformer_ !== undefined) {
+          curHtml = this.popupContentTransformer_.call(this, resultLayer, features, curHtml);
+        }
+      }
+      if (curHtml !== undefined) {
+        htmls.push(curHtml);
+      }
+      if (this.layerInfoCb_ !== undefined) {
+        if (features.length > 0) {
+          this.layerInfoCb_.call(this, features);
+        }
+      }
+    }.bind(this));
+    if (this.showLayerInfoPopup_) {
+      if (this.popupTarget_) {
+        this.popupTarget_.innerHTML = htmls.join('');
+      } else {
+        var element = lux.buildPopupLayout(htmls.join('<hr>'), function() {
+          this.removeOverlay(this.queryPopup_);
+        }.bind(this));
+        this.queryPopup_ = new ol.Overlay({
+          element: element,
+          position: this.getCoordinateFromPixel([evt.pixel[0], evt.pixel[1]]),
+          positioning: 'bottom-center',
+          offset: [0, -20],
+          insertFirst: false,
+          autoPan: this.popupAutoPan_
+        });
+        this.addOverlay(this.queryPopup_);
+        this.renderSync();
+        this.queryPopup_.setPosition(this.getCoordinateFromPixel([evt.pixel[0], evt.pixel[1]]));
+      }
+    }
+  }.bind(this));
+
+};
+
+
 /**
  * @param {Object} evt The event.
  * @private
  */
 lux.Map.prototype.handleSingleclickEvent_ = function(evt) {
   this.removeInfoPopup();
-  if (!this.showLayerInfoPopup_) {
+  if (!this.queryOnClick_) {
+    return;
+  }
+  if ((this.curDrawInteraction_ !== undefined) || (!this.showLayerInfoPopup_ && this.layerInfoCb_ === undefined)) {
     return;
   }
   this.showLayer_.getSource().clear();
@@ -1922,38 +2527,174 @@ lux.Map.prototype.handleSingleclickEvent_ = function(evt) {
     // each item in the result corresponds to a layer
     var htmls = [];
     json.forEach(function(resultLayer) {
+      var curHtml = undefined;
       if ('tooltip' in resultLayer) {
         if (this.popupTarget_ !== undefined && this.popupClass_ !== undefined) {
-          htmls.push('<div class="' + this.popupClass_ +
+          curHtml = '<div class="' + this.popupClass_ +
             '_' + resultLayer['layer'] + '">' +
-            resultLayer['tooltip'] + '</div>');
+            resultLayer['tooltip'] + '</div>';
         } else{
-          htmls.push(resultLayer['tooltip']);
+          curHtml = resultLayer['tooltip'];
         }
       }
       var features = this.readJsonFeatures_(resultLayer);
+      if (this.layerInfoCb_ !== undefined) {
+        if (features.length > 0) {
+          this.layerInfoCb_.call(this, features);
+        }
+      }
+
       if (features.length != 0) {
-        this.showLayer_.getSource().addFeatures(features);
+        if (this.showSelectedFeature_) {
+          this.showLayer_.getSource().addFeatures(features);
+        }
+        if (this.showLayerInfoPopup_ && this.popupContentTransformer_ !== undefined) {
+          curHtml = this.popupContentTransformer_.call(this, resultLayer, features, curHtml);
+        }
+      }
+      if (curHtml !== undefined) {
+        htmls.push(curHtml);
       }
     }.bind(this));
-
-    if (this.popupTarget_) {
-      this.popupTarget_.innerHTML = htmls.join('');
-    } else {
-      var element = lux.buildPopupLayout(htmls.join('<hr>'), function() {
-        this.removeOverlay(this.queryPopup_);
-      }.bind(this));
-      this.queryPopup_ = new ol.Overlay({
-        element: element,
-        position: this.getCoordinateFromPixel([evt.pixel[0], evt.pixel[1]]),
-        positioning: 'bottom-center',
-        offset: [0, -20],
-        insertFirst: false
-      });
-
-      this.addOverlay(this.queryPopup_);
-      this.renderSync();
+    if (this.showLayerInfoPopup_) {
+      if (this.popupTarget_) {
+        this.popupTarget_.innerHTML = htmls.join('');
+      } else {
+        var element = lux.buildPopupLayout(htmls.join('<hr>'), function() {
+          this.removeOverlay(this.queryPopup_);
+        }.bind(this));
+        this.queryPopup_ = new ol.Overlay({
+          element: element,
+          position: this.getCoordinateFromPixel([evt.pixel[0], evt.pixel[1]]),
+          positioning: 'bottom-center',
+          offset: [0, -20],
+          insertFirst: false,
+          autoPan: this.popupAutoPan_
+        });
+        this.addOverlay(this.queryPopup_);
+        this.renderSync();
+        this.queryPopup_.setPosition(this.getCoordinateFromPixel([evt.pixel[0], evt.pixel[1]]));
+      }
     }
   }.bind(this));
 
 };
+
+/**
+ * Set the center of the current view in EPSG:2169.
+ * @param {ol.Coordinate} coordinate The coordinate of the center.
+ * @param {number|undefined} zoom The zoom numer.
+ * @param {string|number|undefined} positionSrs The projection of the position coordinates.
+ * Default is `2169`.
+ * @export
+ * @api
+ */
+lux.Map.prototype.setCenter = function(coordinate, zoom, positionSrs) {
+  var lonlat = /** @type {ol.Coordinate} */
+        (ol.proj.transform(coordinate,
+            (positionSrs !== undefined) ? 'EPSG:' + positionSrs.toString() : 'EPSG:2169', 'EPSG:3857'));
+  this.getView().setCenter(lonlat);
+  if (zoom !== undefined) {
+    this.getView().setZoom(zoom);
+  }
+};
+
+/**
+ * Destroy the map.
+ * @export
+ * @api
+ */
+lux.Map.prototype.destroyMap = function() {
+  var target = this.getTarget();
+  var elem = document.getElementById(target);
+  this.setTarget(null);
+  while (elem.firstChild) {
+    elem.removeChild(elem.lastChild);
+  }
+};
+
+
+/**
+ * Transforms features into geojson
+ * @param {Array.<ol.Feature>} fArray features array.
+ * @param {olx.format.GeoJSONOptions=} opt_options Options.
+ * @param {boolean=} exportMeasures True if length and area should be added to attributes.
+ * @return {string} The geojson string.
+ * @export
+ * @api
+ */
+lux.Map.prototype.exportGeoJSON = function(fArray, opt_options, exportMeasures) {
+  let options = opt_options;
+  if (opt_options == undefined) {
+    options = {dataProjection: 'EPSG:4326', featureProjection: this.getView().getProjection()};
+  }
+  if (exportMeasures === true && fArray !== null && fArray !== undefined) {
+    fArray.forEach(function(feature) {
+      feature.set('__length__', this.getGeometryLength(feature.getGeometry()));
+      feature.set('__area__', this.getGeometryArea(feature.getGeometry()));
+    }, this);
+  }
+  const writer = new ol.format.GeoJSON(options);
+  return writer.writeFeatures(fArray);
+}
+
+
+/**
+ * Fit the map to an extent. The default extent is content of a vector layer.
+ * @param {ol.Extent | undefined} extent The extent to fit on. Default is the one of the drawing layer.
+ * @param {object | undefined} opt_options Options.
+ * @export
+ * @api
+ */
+lux.Map.prototype.fit = function(extent, opt_options) {
+  var curExtent = undefined;
+  if (extent !== undefined && extent !== null) {
+    curExtent = extent;
+  } else {
+    var curExtentDL = this.getDrawingLayer().getSource().getExtent();
+    var curExtentSL = this.getShowLayer().getSource().getExtent();
+    if (!ol.extent.isEmpty(curExtentDL) && !ol.extent.isEmpty(curExtentSL)) {
+      curExtent = ol.extent.extend(curExtentDL, curExtentSL)
+    } else if (!ol.extent.isEmpty(curExtentDL)) {
+      curExtent = curExtentDL;
+    } else if (!ol.extent.isEmpty(curExtentSL)) {
+      curExtent = curExtentSL;
+    }
+    
+    this.showVectorLayerArray_.forEach(function(curLayer) {
+      if (curExtent !== undefined && curExtent !== null) {
+        if (!ol.extent.isEmpty(curLayer.getSource().getExtent())) {
+          curExtent = ol.extent.extend(curExtent, curLayer.getSource().getExtent());
+        }
+      } else {
+        if (!ol.extent.isEmpty(curLayer.getSource().getExtent())) {
+          curExtent = curLayer.getSource().getExtent();
+        }
+      }
+    }.bind(this))
+    this.getLayers().forEach(function(layer) {
+        if(layer instanceof ol.layer.Group) {
+            layer.getLayers().forEach(function(groupLayer) {
+                if(layer instanceof ol.layer.Vector) {
+                  if (curExtent !== undefined && curExtent !== null) {
+                    ol.extent.extend(curExtent, groupLayer.getSource().getExtent());
+                  } else {
+                    curExtent = groupLayer.getSource().getExtent();
+                  }
+                }
+            });
+        } else {
+          if(layer instanceof ol.layer.Vector) {
+            if (curExtent !== undefined && curExtent !== null) {
+              ol.extent.extend(curExtent, layer.getSource().getExtent());
+            } else {
+              curExtent = layer.getSource().getExtent();
+            }
+          }
+        }
+    });
+  }
+  if (curExtent !== undefined && !ol.extent.isEmpty(curExtent)) {
+    this.getView().fit(curExtent, opt_options);
+  }
+}

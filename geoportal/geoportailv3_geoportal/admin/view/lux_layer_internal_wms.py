@@ -44,6 +44,7 @@ class LuxLayerInternalWMSViews(DimensionLayerViews):
         _list_field('url'),
         _list_field('layers'),
         _list_field('is_poi'),
+        _list_field('use_auth'),
         _list_field('collection_id'),
         _list_field('rest_url'),
         _list_field('layer'),
@@ -75,8 +76,8 @@ class LuxLayerInternalWMSViews(DimensionLayerViews):
     def grid(self):
         return super().grid()
 
-    def _item_actions(self, item):
-        actions = super()._item_actions(item)
+    def _item_actions(self, item, readonly=False):
+        actions = super()._item_actions(item, readonly)
         if inspect(item).persistent:
             actions.insert(next((i for i, v in enumerate(actions) if v.name() == 'delete')), ItemAction(
                 name='convert_to_wmts',

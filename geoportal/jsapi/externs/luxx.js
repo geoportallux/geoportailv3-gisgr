@@ -4,6 +4,29 @@
 var luxx;
 
 /**
+ * Allows the user to zoom the map by scrolling the mouse wheel.
+ * Default is true.
+ * @type {boolean|undefined}
+ * @api
+ */
+luxx.MapOptions.prototype.mouseWheelZoom;
+
+/**
+ * Function called to transform the result of the information popup.
+ * @type {function()|undefined}
+ * @api
+ */
+luxx.MapOptions.prototype.popupContentTransformer;
+
+/**
+ * If the popup should automatically pan or not.
+ * Default is false.
+ * @type {boolean|undefined}
+ * @api
+ */
+luxx.MapOptions.prototype.popupAutoPan;
+
+/**
  * Object literal with config options for the map.
  * @typedef {Object}
  */
@@ -15,6 +38,13 @@ luxx.MapOptions;
  * @api
  */
 luxx.MapOptions.prototype.callback;
+
+/**
+ * Function called when an info layer is return.
+ * @type {function()|undefined}
+ * @api
+ */
+luxx.MapOptions.prototype.layerInfoCallback;
 
 /**
  * Identifier of background layer. Default to `basemap_2015_global`.
@@ -48,11 +78,19 @@ luxx.MapOptions.prototype.bgSelector;
 
 /**
  * Controls initially added to the map. If not specified,
- * {@link ol.control.defaults ol.control.defaults()} is used.
+ * {@link ol.control.defaults ol.control.defaults()} is used plus a {@link ol.control.Rotate rotate control}.
  * @type {ol.Collection.<ol.control.Control>|Array.<ol.control.Control>|undefined}
  * @api
  */
 luxx.MapOptions.prototype.controls;
+
+/**
+ * Interactions initially added to the map. If not specified,
+ * {@link ol.interaction.defaults ol.interaction.defaults()} is used, plus a {@link ol.interaction.DragRotate dragRotate interaction}.
+ * @type {ol.Collection.<ol.interaction.Interaction>|Array.<ol.interaction.Interaction>|undefined}
+ * @api
+ */
+luxx.MapOptions.prototype.interactions;
 
 /**
  * Set the presence of features to recenter on & to show markers for.
@@ -89,6 +127,13 @@ luxx.MapOptions.prototype.layerVisibilities;
  * @api
  */
 luxx.MapOptions.prototype.layers;
+
+/**
+ * Set the presence of a ZoomToExtent control in the map. (not included by
+ * default).
+ * @type {boolean|undefined}
+ */
+luxx.MapOptions.prototype.zoomToExtent;
 
 /**
  * Set the presence of a mouse position control in the map. (not included by
@@ -209,6 +254,12 @@ luxx.SearchOption.prototype.onSelect;
 luxx.MarkerOptions;
 
 /**
+ * Set the overlay id. The overlay id can be used with the ol.Map#getOverlayById method.
+ * @type {number | string | undefined}
+ */
+luxx.MarkerOptions.prototype.id;
+
+/**
  * Allow to deactivate popup when clicking on a transparent part of the marker.
  * This property is experimental. The marker should come from the same source
  * as the page, or the image server has to set the following  header
@@ -275,6 +326,13 @@ luxx.MarkerOptions.prototype.click;
  * @type {Element|string}
  */
 luxx.MarkerOptions.prototype.target;
+
+/**
+ * If set, the function is called when clicking on the marker.
+ * @type {function | undefined}
+ */
+luxx.MarkerOptions.prototype.onClick;
+
 
 /**
  * Object literal with config options for the layer.
@@ -376,11 +434,32 @@ luxx.LayerMetadataOptions.prototype.exclusion;
 luxx.MyMapOptions;
 
 /**
+ * Fit to the mymaps extent. Default value is true.
+ * @type {boolean}
+ * @api
+ */
+luxx.MyMapOptions.prototype.fitToExtent;
+
+/**
  * The map identifier.
- * @type {string}
+ * @type {string | undefined}
  * @api
  */
 luxx.MyMapOptions.prototype.mapId;
+
+/**
+ *An array of map identifiers.
+ * @type {Array<string> | undefined}
+ * @api
+ */
+luxx.MyMapOptions.prototype.mapIds;
+
+/**
+ * The name of the mymaps layer.
+ * @type {string}
+ * @api
+ */
+luxx.MyMapOptions.prototype.name;
 
 /**
  * The id of the element in which to put the profile (without #). Optional. It
@@ -453,6 +532,14 @@ luxx.FeaturesOptions.prototype.maxZoom;
  * @typedef {Object}
  */
 luxx.VectorOptions;
+
+/**
+ * Callback function called when a feature is added.
+ * @type {function() | undefined}
+ * @api
+ */
+luxx.VectorOptions.prototype.onFeatureAdd;
+
 
 /**
  * True if map should fit to the vector. Default and undefined are true.

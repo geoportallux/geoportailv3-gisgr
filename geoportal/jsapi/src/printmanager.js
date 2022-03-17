@@ -106,7 +106,8 @@ lux.PrintManager.LAYOUTS = [
   'A1 landscape',
   'A1 portrait',
   'A0 landscape',
-  'A0 portrait'
+  'A0 portrait',
+  'a4_landscape_notext'
 ];
 
 /**
@@ -165,13 +166,32 @@ lux.PrintManager.prototype.encodeXYZLayer_ = function(arr, url) {
   }
   const baseURL = url.substr(0, i);
   const imageExtension = url.substr(j + 1);
-  const object = {
-    baseURL: baseURL,
-    type: "OSM",
-    'imageExtension': imageExtension
-  };
-  arr.push(object);
-}
+  const styleName = baseURL.substr(baseURL.lastIndexOf('/styles/') + '/styles/'.length);
+  if (styleName === 'topomap' || styleName === 'roadmap' ||
+      styleName === 'topomap_gray' || styleName === 'roadmap_jsapi') {
+    const object = {
+      'baseURL': 'https://wms.geoportail.lu/vectortiles_wms_4_print/service',
+      'imageFormat': 'image/' + imageExtension,
+      'layers': [styleName === 'roadmap_jsapi'?'roadmap_luxonly':styleName],
+      'customParams': {
+        'TRANSPARENT': true,
+        'MAP_RESOLUTION': 127
+      },
+      'type': 'wms',
+      'opacity': 1,
+      'version': '1.1.1',
+      'useNativeAngle': true
+    }
+    arr.push(object);
+  } else {
+    const object = {
+      baseURL,
+      type: "OSM",
+      'imageExtension': imageExtension
+    };
+    arr.push(object);
+  }
+};
 
 /**
  * @param {number} scale Scale.
@@ -199,6 +219,9 @@ lux.PrintManager.prototype.encodeMap_ = function(scale, object) {
   var showLayer = this.map_.getShowLayer();
   var layers = this.getFlatLayers(mapLayerGroup);
   layers.push(showLayer);
+  var drawingLayer = this.map_.getDrawingLayer();
+  layers.push(drawingLayer);
+
   layers = layers.slice().reverse();
 
   layers.forEach(function(layer) {
@@ -466,7 +489,7 @@ lux.PrintManager.prototype.encodeVectorLayer_ = function(arr, layer, resolution)
   });
 
   for (var i = 0, ii = features.length; i < ii; ++i) {
-    var originalFeature = features[i];
+    var originalFeature = features[i].clone();
 
     var styleData = null;
     var styleFunction = originalFeature.getStyleFunction();
@@ -478,7 +501,11 @@ lux.PrintManager.prototype.encodeVectorLayer_ = function(arr, layer, resolution)
         styleData = styleFunction.call(layer, originalFeature, resolution);
       }
     }
+    if (originalFeature.getGeometry().getType() === 'Circle') {
+      originalFeature.setGeometry(ol.geom.Polygon.fromCircle(originalFeature.getGeometry(), 64));
+    }
     var origGeojsonFeature = geojsonFormat.writeFeatureObject(originalFeature);
+    origGeojsonFeature.properties = {};
     /**
      * @type {Array<ol.style.Style>}
      */
@@ -809,7 +836,8 @@ lux.PrintManager.prototype.encodeVectorStyleStroke_ = function(symbolizer, strok
  */
 lux.PrintManager.prototype.encodeTextStyle_ = function(symbolizers, textStyle) {
   var symbolizer = /** @type {MapFishPrintSymbolizerText} */ ({
-    type: 'Text'
+    type: 'Text',
+    'goodnessOfFit': 0.0,
   });
   var label = textStyle.getText();
   if (label !== undefined) {
@@ -868,7 +896,6 @@ lux.PrintManager.prototype.encodeTextStyle_ = function(symbolizers, textStyle) {
       // minus sign is required for the y offset to be identical.
       symbolizer.labelYOffset = -textStyle.getOffsetY();
     }
-
     symbolizers.push(symbolizer);
   }
 };

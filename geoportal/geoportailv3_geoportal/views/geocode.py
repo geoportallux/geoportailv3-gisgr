@@ -84,7 +84,8 @@ class Geocode(object):
             res = geojson_loads(urllib.request.urlopen(request_url).read())
             if 'address' in res:
                 address = res['address']
-            results.append({"id_caclr_street": None,
+            results.append({"id_caclr_locality": None,
+                            "id_caclr_street": None,
                             "id_caclr_bat": None,
                             "street": address['road'] if 'road' in address else "",
                             "number": address['house_number'] if 'house_number' in address else "",
@@ -106,6 +107,7 @@ class Geocode(object):
             }, srid=2169), Address.geom)
 
             for feature in self.db_ecadastre.query(
+                    Address.id_caclr_loca.label("id_caclr_loca"),
                     Address.id_caclr_rue.label("id_caclr_rue"),
                     Address.id_caclr_bat.label("id_caclr_bat"),
                     Address.rue.label("rue"),
@@ -116,7 +118,8 @@ class Geocode(object):
                     func.ST_AsGeoJSON((func.ST_Transform(Address.geom, 4326))).
                     label("geomlonlat"),
                     distcol.label("distance")).order_by(distcol).limit(1):
-                results.append({"id_caclr_street": feature.id_caclr_rue,
+                results.append({"id_caclr_locality": feature.id_caclr_loca,
+                                "id_caclr_street": feature.id_caclr_rue,
                                 "id_caclr_bat": feature.id_caclr_bat,
                                 "street": feature.rue,
                                 "number": feature.numero,
@@ -415,6 +418,12 @@ class Geocode(object):
             numero = ""
 
         caclr_rue = ""
+        if hasattr(feature, 'id_caclr_loca'):
+            caclr_loca = feature.id_caclr_loca
+        if caclr_loca is None:
+            caclr_loca = ""
+
+        caclr_rue = ""
         if hasattr(feature, 'id_caclr_rue'):
             caclr_rue = feature.id_caclr_rue
         if caclr_rue is None:
@@ -458,7 +467,8 @@ class Geocode(object):
             "zip": str(code_postal).strip(),
             "locality": str(feature.localite).strip(),
             "id_caclr_street": str(caclr_rue),
-            "id_caclr_building": str(caclr_bat)
+            "id_caclr_building": str(caclr_bat),
+            "id_caclr_locality": str(caclr_loca)
         }}
         if hasattr(feature, 'cle_parcelle') and self.returnParcelInfo is True:
             label = self.db_ecadastre.query(
@@ -511,7 +521,7 @@ class Geocode(object):
             pass
 
         return p_session.query(Address).\
-            filter(text("code_postal = '" + p_zip + "'")).count() > 0
+            filter(Address.code_postal == p_zip).count() > 0
 
     # Returns the best matching loçcality name.
     # For instance Esch/Alzette should return Esch sur Alzette
@@ -699,14 +709,16 @@ class Geocode(object):
         results = []
         # List of zip code belonging to the locality
 
-        if len(p_locality) > 0:
+        if p_locality is not None and len(p_locality) > 0:
             features = p_session.query(
                 (func.ST_AsText(func.ST_Centroid(func.ST_Collect(
                     Address.geom)))).label("geom"),
+                Address.id_caclr_loca,
                 Address.id_caclr_rue, Address.rue,
                 Address.code_postal, Address.localite).filter(
                 text(" lower(localite) = lower('" + p_locality + "')")).\
                 group_by(
+                    Address.id_caclr_loca,
                     Address.id_caclr_rue,
                     Address.rue,
                     Address.code_postal,
@@ -804,11 +816,13 @@ class Geocode(object):
             features = p_session.query(
                 (func.ST_AsText(func.ST_Centroid(
                     func.ST_Collect(Address.geom)))).label("geom"),
+                Address.id_caclr_loca,
                 Address.id_caclr_rue, Address.rue,
                 Address.code_postal, Address.localite).\
                 filter(text(
                     " code_postal::integer  in (" + (",".join(zips)) + ")")).\
                 group_by(
+                    Address.id_caclr_loca,
                     Address.id_caclr_rue,
                     Address.rue,
                     Address.code_postal,
@@ -836,6 +850,7 @@ class Geocode(object):
             return results
 
         features = p_session.query(
+            Address.id_caclr_loca,
             Address.id_caclr_rue,
             Address.rue,
             Address.code_postal,
@@ -844,6 +859,7 @@ class Geocode(object):
             label('geom')).\
             filter(text(" code_postal::integer  = (" + str(p_zip) + ") ")).\
             group_by(
+                Address.id_caclr_loca,
                 Address.id_caclr_rue,
                 Address.rue,
                 Address.code_postal,
@@ -874,9 +890,11 @@ class Geocode(object):
         features = p_session.query(
             (func.ST_AsText(func.ST_Centroid(
                 func.ST_Collect(Address.geom)))).label('geom'),
+            Address.id_caclr_loca,
             Address.id_caclr_rue, Address.rue,
             Address.code_postal, Address.localite).\
             group_by(
+                Address.id_caclr_loca,
                 Address.id_caclr_rue,
                 Address.rue,
                 Address.code_postal,
@@ -1279,8 +1297,9 @@ class Geocode(object):
                         part2 = streetandhouse[len(house_num) + 1:]
 
                         nums2 = re.findall(r'\d+', part2)
-                        idx2 = streetandhouse.find(nums2[0])
-                        house_num = streetandhouse[idx:idx2 + len(nums2[0])]
+                        if nums2 is not None and len(nums2) > 0:
+                            idx2 = streetandhouse.find(nums2[0])
+                            house_num = streetandhouse[idx:idx2 + len(nums2[0])]
                     else:
                         try:
                             if streetandhouse[idx + len(house_num) + 1:

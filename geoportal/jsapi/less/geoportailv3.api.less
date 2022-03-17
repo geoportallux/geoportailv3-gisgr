@@ -1,7 +1,7 @@
-@import (inline) '/app/apiv3/node_modules/mapbox-gl/dist/mapbox-gl.css';
-@import (inline) '/app/apiv3/node_modules/openlayers/css/ol.css';
-@import (inline) '/app/apiv3/node_modules/js-autocomplete/auto-complete.css';
-@import "/app/apiv3/node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import (inline) '/etc/apiv3/node_modules/mapbox-gl/dist/mapbox-gl.css';
+@import (inline) '/etc/apiv3/node_modules/openlayers/css/ol.css';
+@import (inline) '/etc/apiv3/node_modules/js-autocomplete/auto-complete.css';
+@import "/etc/apiv3/node_modules/bootstrap/less/mixins/vendor-prefixes.less";
 
 @bg: #fff;
 @border: 1px solid #8394a0;
@@ -90,6 +90,11 @@
       border-radius: 0 0 @border-radius @border-radius;
     }
   }
+  .ol-zoom-extent {
+      border-radius: @border-radius @border-radius 0 0;
+      left: 0.3em;
+      top: 84px;
+  }
   .lux-bg-selector {
     background-color: @bg;
     border-radius: @border-radius;
@@ -133,6 +138,14 @@
   }
   .ol-overlay-container > div:hover {
     cursor: pointer;
+  }
+  .ol-scale-line {
+    background: rgba(0,60,136,1);
+    border-radius: 4px;
+    bottom: 8px;
+    left: 8px;
+    padding: 2px;
+    position: absolute;
   }
 }
 
