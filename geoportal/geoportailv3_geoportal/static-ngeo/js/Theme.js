@@ -23,7 +23,7 @@ const exports = function($window, ngeoLocation, appThemes) {
    */
   this.piwikSiteIdLookup_ = {
     'transport': 24,
-    'main': 24
+    'main': 24,
     'eau': 6,
     'tourisme': 7,
     'emwelt': 8,

@@ -59,28 +59,7 @@ RUN mkdir /etc/static-ngeo/Cesium && cp -r /usr/lib/node_modules/cesium/Build/Ce
 ENTRYPOINT [ "/usr/bin/eval-templates" ]
 CMD [ "webpack-dev-server", "--mode=development", "--debug", "--watch", "--progress", "--no-inline" ]
 
-<<<<<<< HEAD
-COPY package.json /app
-RUN npm install --no-optional && npm cache clear --force
-
-
-# jsapi generation
-RUN mkdir /app/apiv3
-WORKDIR /app/apiv3
-RUN mkdir -p /app/apiv3/.build/externs
-RUN wget -O /app/apiv3/.build/externs/angular-1.6.js https://raw.githubusercontent.com/google/closure-compiler/master/contrib/externs/angular-1.6.js
-
-
-RUN wget -O /app/apiv3/.build/externs/angular-1.6-q_templated.js https://raw.githubusercontent.com/google/closure-compiler/master/contrib/externs/angular-1.6-q_templated.js
-
-
-RUN wget -O /app/apiv3/.build/externs/angular-1.6-http-promise_templated.js https://raw.githubusercontent.com/google/closure-compiler/master/contrib/externs/angular-1.6-http-promise_templated.js
-
-
-RUN wget -O /app/apiv3/.build/externs/jquery-1.9.js https://raw.githubusercontent.com/google/closure-compiler/master/contrib/externs/jquery-1.9.js
-COPY ./jsapi/package.json /app/apiv3/
-RUN npm install --no-optional && npm cache clear --force
-
+###############################################################################
 
 FROM camptocamp/geomapfish:2.5 as runner
 
@@ -146,20 +125,10 @@ COPY ./bin/eval-templates /usr/bin/
 ARG GIT_HASH
 RUN c2cwsgiutils_genversion.py ${GIT_HASH}
 
-<<<<<<< HEAD
-RUN pip install --disable-pip-version-check --no-cache-dir --editable=/app/ && \
-    python -m compileall -q /app/geoportailv3_geoportal -x /app/geoportailv3_geoportal/static.* && \
-    c2cwsgiutils_genversion.py $GIT_HASH
+ARG PGSCHEMA
+ENV PGSCHEMA=${PGSCHEMA}
 
-COPY ./tools/ /app/tools
-RUN ln -s . geoportal
-
-WORKDIR /app/apiv3
-ADD ./jsapi /app/apiv3/jsapi
-RUN /app/apiv3/jsapi/rebuild_api.sh
-WORKDIR /app
-ENTRYPOINT ["/usr/bin/eval-templates" ]
-
+ENTRYPOINT [ "/usr/bin/eval-templates" ]
 CMD ["c2cwsgiutils_run"]
 RUN ln -s . geoportal
 ENV VISIBLE_ENTRY_POINT=/ \

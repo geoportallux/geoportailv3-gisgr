@@ -13,20 +13,17 @@ def get_built_filenames(pattern):
 
 
 def get_urls(request):
-    main_js_url = UNUSED + get_built_filenames('main*.js')[0]
-    main_css_url = UNUSED + get_built_filenames('main*.css')[0]
-    gov_light_url = UNUSED + get_built_filenames('gov-light*.png')[0]
-
     urls = [
         '/',
         '/dynamic.json?interface=main',
         '/getuserinfo',
         '/themes?version=2&background=background&interface=main&catalogue=true&min_levels=1',
         request.static_path('geoportailv3_geoportal:static-ngeo/images/arrow.png'),
-        main_js_url,
-        main_css_url,
-        gov_light_url
     ]
+    for elem in ['main*.js', 'main*.css', 'gov-light*.png']:
+        url = get_built_filenames(elem)
+        if len(url) > 0:
+            urls.append(UNUSED + url[0])
 
     if 'dev' in request.params:
         urls.append('/dev/main.html')
