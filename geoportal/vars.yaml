@@ -146,7 +146,7 @@ vars:
       constants:
         appAuthtktCookieName: auth_tkt_geoportailv3
         appExcludeThemeLayerSearch: []
-        appOverviewMapBaseLayer: basemap_2015_global
+        appOverviewMapBaseLayer: topogg
         appOverviewMapShow: true
         showAnfLink: false
         showAgeLink: '{AGE_SHOW_LINK}'

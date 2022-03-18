@@ -32,7 +32,7 @@ function getDefaultMapBoxStyleXYZ(label) {
 
 function getKeywordForLayer(label) {
     return {
-    'basemap_2015_global': 'roadmap',
+    'basemap_2015_global': 'gisgr_roadmap',
     'topogr_global': 'topomap',
     'topo_bw_jpeg': 'topomap_gray'
     }[label];
