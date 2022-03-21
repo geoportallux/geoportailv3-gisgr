@@ -438,12 +438,14 @@ const exports = function($sce, $timeout, $scope, $http,
             }
           }
           if (!found) {
-            var deltaX = Math.abs(this.startPixel_[0] - this.stopPixel_[0]);
-            var deltaY = Math.abs(this.startPixel_[1] - this.stopPixel_[1]);
-            if (deltaX + deltaY < 6) {
-              this.singleclickEvent_.apply(this, [evt, !isQueryMymaps]);
-              this.startPixel_ = null;
-              this.stopPixel_ = null;
+            if (this.startPixel_ !== null) {
+              var deltaX = Math.abs(this.startPixel_[0] - this.stopPixel_[0]);
+              var deltaY = Math.abs(this.startPixel_[1] - this.stopPixel_[1]);
+              if (deltaX + deltaY < 6) {
+                this.singleclickEvent_.apply(this, [evt, !isQueryMymaps]);
+                this.startPixel_ = null;
+                this.stopPixel_ = null;
+              }
             }
           }
         }.bind(this), 500, false);

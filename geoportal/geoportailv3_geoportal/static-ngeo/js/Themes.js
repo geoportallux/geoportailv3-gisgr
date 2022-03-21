@@ -137,6 +137,52 @@ class Themes extends olEventsEventTarget {
 
 
   /**
+   * Get background layers for overview map.
+   * @return {Promise<any[]>} Promise.
+   */
+  getBgLayersForOverview(map) {
+    console.assert(this.promise_);
+    console.assert(map);
+    if (!this.getBgLayersForOverviewPromise_) {
+      this.getBgLayersForOverviewPromise_ = this.promise_.then(
+        /**
+         * @param {app.ThemesResponse} data The "themes" web service response.
+         * @return {Array.<Object>} Array of background layer objects.
+         */
+        data => {
+          var bgLayers = data['background_layers'].map(item => {
+            var hasRetina = !!item['metadata']['hasRetina'] && this.isHiDpi_;
+            console.assert('name' in item);
+            console.assert('imageType' in item);
+            var layer = this.getWmtsLayer_(
+              item['name'], item['imageType'], hasRetina
+            );
+            layer.set('metadata', item['metadata']);
+            if ('attribution' in item['metadata']) {
+              var source = layer.getSource();
+              source.setAttributions(
+                item['metadata']['attribution']
+              );
+            }
+            return layer;
+          });
+
+          // add MVT layer
+          const bothPromises = Promise.all([
+            onFirstTargetChange(map),
+            this.appMvtStylingService_.getBgStyle()
+          ]);
+          return bothPromises.then(([target, styleConfigs]) => {
+            replaceWithMVTLayer(bgLayers, target, styleConfigs);
+            return bgLayers;
+          });
+        });
+    }
+    return this.getBgLayersForOverviewPromise_;
+  };
+
+
+  /**
    * Get background layers.
    * @return {Promise<any[]>} Promise.
    */

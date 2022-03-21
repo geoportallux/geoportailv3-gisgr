@@ -205,8 +205,7 @@ exports.prototype.setThemeZooms = function(tree) {
 
     map.setView(new olView({
       maxZoom: maxZoom,
-      minZoom: 7,
-      extent: this.maxExtent_,
+      minZoom: 5,
       center: currentView.getCenter(),
       enableRotation: true,
       zoom: currentView.getZoom(),

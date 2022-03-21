@@ -42,6 +42,8 @@ import {toRadians} from 'ol/math.js';
 import {listen} from 'ol/events.js';
 import {isValidSerial} from '../utils.js';
 import MaskLayer from 'ngeo/print/Mask.js';
+import olLayerTile from 'ol/layer/Tile.js';
+import TileSource from 'ol/source/Tile';
 
 import bootstrapApp from './bootstrap.js';
 
@@ -1048,7 +1050,9 @@ const MainController = function(
     this.appThemes_.getBgLayers(this.map_).then(
           bgLayers => {
             this.initCesium3D_(this.cesiumURL, this.$rootScope_, $scope);
-
+          });
+    this.appThemes_.getBgLayersForOverview(this.map_).then(
+          bgLayers => {
             if (appOverviewMapShow) {
               var layer = /** @type {ol.layer.Base} */
                 (bgLayers.find(layer => {
@@ -1056,7 +1060,8 @@ const MainController = function(
                 }));
               this.map_.addControl(
                 new olControlOverviewMap(
-                  {layers: [layer],
+                  {
+                    layers: [layer],
                     collapseLabel: '\u00BB',
                     label: '\u00AB'}));
             }
@@ -1392,9 +1397,8 @@ MainController.prototype.createMap_ = function() {
     loadTilesWhileAnimating: true,
     view: new olView({
       maxZoom: 19,
-      minZoom: 8,
+      minZoom: 5,
       enableRotation: true,
-      extent: this.maxExtent_,
       constrainResolution: true,
       rotation,
     })
