@@ -90,7 +90,7 @@ OUTPUT_DIR = geoportal/geoportailv3_geoportal/static/build
 
 .PHONY: update-translations
 update-translations:
-	tx push --source
+	tx push --skip --source
 	tx pull --force
 	tx pull -s --force
 
