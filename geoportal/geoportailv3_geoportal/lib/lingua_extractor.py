@@ -55,15 +55,15 @@ log = logging.getLogger(__name__)
 def add_url_params(url, params):
     if len(params.items()) == 0:
         return url
-    return add_spliturl_params(urlparse.urlsplit(url), params)
+    return add_spliturl_params(urllib.parse.urlsplit(url), params)
 def add_spliturl_params(spliturl, params):
-    query = dict([(k, v[-1]) for k, v in urlparse.parse_qs(_encode(spliturl.query)).items()])
+    query = dict([(k, v[-1]) for k, v in urllib.parse.parse_qs(spliturl.query).items()])
     for key, value in params.items():
-        query[_encode(key)] = _encode(value)
+        query[key] = value
 
-    return urlparse.urlunsplit((
+    return urllib.parse.urlunsplit((
         spliturl.scheme, spliturl.netloc, spliturl.path,
-        urllib.urlencode(query), spliturl.fragment
+        urllib.parse.urlencode(query), spliturl.fragment
     ))
 def get_url2(name, url, request, errors) -> Optional[str]:
     url_split = urllib.parse.urlsplit(url)
