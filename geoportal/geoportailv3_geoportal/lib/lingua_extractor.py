@@ -1194,7 +1194,7 @@ class LuxembourgTooltipsExtractor(LuxembourgExtractor):  # pragma: no cover
                   filter(LuxGetfeatureDefinition.remote_template == False).\
                   filter(
                       LuxGetfeatureDefinition.template.in_
-                      (['default.html', 'default_table.html', 'feedbackanf.html', 'default_attachment.html', 'automatic_sols']))  # noqa
+                      (['default_gisgr.html', 'default.html', 'default_table.html', 'feedbackanf.html', 'default_attachment.html', 'automatic_sols']))  # noqa
 
         print("%d results" % results.count())
         for result in results:
