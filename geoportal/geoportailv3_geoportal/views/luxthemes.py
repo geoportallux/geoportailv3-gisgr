@@ -18,9 +18,11 @@ invalidate_region()
 # the theme tree for ngeo time functions
 class LuxThemes(Theme):
     async def _wms_getcap(self, ogc_server, preload=False):
+        errors = set()
         if preload:
             return None, set()
-        return None, set()
+
+        return {"layers": []}, set()
 
     def _layer(self, layer, time_=None, dim=None, mixed=True):
         errors: Set[str] = set()
@@ -88,10 +90,6 @@ class LuxThemes(Theme):
         layers = {}
         for i, layer in enumerate(DBSession.query(LuxLayerInternalWMS)):
             for sublayer in layer.layers.split(","):
-                if layer.id == 2133:
-                    log.error(layer.id)
-                    log.error(layer.name)
-                    log.error(layer.name + '__' + sublayer)
                 layers[layer.name + '__' + sublayer] = {
                     "info": {
                         "name": layer.name + '__' + sublayer,
@@ -128,7 +126,17 @@ class LuxThemes(Theme):
                         )
                     )
         else:
-            return super()._fill_wms(layer_theme, layer, errors, mixed)
+            wms, wms_errors = self._wms_layers(layer.ogc_server)
+            errors |= wms_errors
+            if wms is None:
+                return
+            layer_theme["imageType"] = layer.ogc_server.image_type
+            if layer.style:  # pragma: no cover
+                layer_theme["style"] = layer.style
+
+            layer_theme["childLayers"] = []
+            if mixed:
+                layer_theme["ogcServer"] = layer.ogc_server.name
 
 
     @view_config(route_name="lux_themes", renderer="json")
@@ -139,4 +147,3 @@ class LuxThemes(Theme):
     @staticmethod
     def is_mixed(_):
         return True
-
