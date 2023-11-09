@@ -21,6 +21,7 @@ RUN apt-get update
 RUN apt-get -y upgrade
 RUN apt-get  install -y ca-certificates
 RUN mv /etc/apt/sources.list.d/nodesource.list.disabled /etc/apt/sources.list.d/nodesource.list
+RUN sed -i 's/apt.postgresql.org/apt-archive.postgresql.org/g' /etc/apt/sources.list.d/pgdg.list
 RUN apt update && apt-get install libgnutls30
 RUN apt update && apt install openjdk-8-jdk-headless git -y && apt-get dist-upgrade -y
 COPY package.json /app
