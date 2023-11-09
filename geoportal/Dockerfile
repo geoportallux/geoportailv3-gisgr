@@ -82,6 +82,7 @@ RUN apt-get update
 RUN apt-get -y upgrade
 RUN apt-get  install -y ca-certificates
 RUN mv /etc/apt/sources.list.d/nodesource.list.disabled /etc/apt/sources.list.d/nodesource.list
+RUN sed -i 's/apt.postgresql.org/apt-archive.postgresql.org/g' /etc/apt/sources.list.d/pgdg.list
 RUN apt update && apt install vim -y
 RUN apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes --no-install-recommends \
