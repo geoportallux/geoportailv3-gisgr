@@ -302,6 +302,11 @@ vars:
     - {name: start_x, type: float}
     - {name: start_y, type: float}
     - {name: start_zoom, type: float}
+    - {name: geocatalog_open_data_publish_flag, type: boolean}
+    - {name: geocatalog_open_data_update_frequency, type: string}
+    - {name: geocatalog_open_data_last_update_date, type: string}
+    - {name: geocatalog_open_data_uuid, type: string}
+    - {name: geocatalog_open_data_only_add_gpkg, type: boolean}
     layer_tree_max_nodes: 1000
     # Default values for the admin interface's maps.
     map:
