@@ -384,25 +384,52 @@ class Getfeatureinfo(object):
                                     additional_info_function)
 
                     if len(features) > 0:
-                        results.append(
-                            self.to_featureinfo(
-                                features,
-                                luxgetfeaturedefinition.layer,
-                                luxgetfeaturedefinition.template,
-                                is_ordered,
-                                luxgetfeaturedefinition.has_profile,
-                                luxgetfeaturedefinition.remote_template,
-                                rows_cnt))
+                        found = False
+                        cur_feature = self.to_featureinfo(
+                            features,
+                            luxgetfeaturedefinition.layer,
+                            luxgetfeaturedefinition.template,
+                            is_ordered,
+                            luxgetfeaturedefinition.has_profile,
+                            luxgetfeaturedefinition.remote_template,
+                            rows_cnt)
+                        for cur_result in results:
+                            if luxgetfeaturedefinition.layer == cur_result['layer'] and\
+                               luxgetfeaturedefinition.template == cur_result['template'] and\
+                               luxgetfeaturedefinition.remote_template == cur_result['remote_template'] and\
+                               luxgetfeaturedefinition.has_profile == cur_result['has_profile']:
+                                cur_result['features'].extend(cur_feature['features'])
+                                cur_result['total_features_count'] =  (cur_result['total_features_count'] if cur_result['total_features_count'] is not None else 0) + cur_feature['total_features_count']
+                                cur_result['features_count'] = len(cur_result['features'])
+
+                                found = True
+                                break
+                        if not found:
+                            results.append(
+                                cur_feature)
                     else:
-                        results.append(
-                            self.to_featureinfo(
-                                [],
-                                luxgetfeaturedefinition.layer,
-                                luxgetfeaturedefinition.template,
-                                False,
-                                luxgetfeaturedefinition.has_profile,
-                                luxgetfeaturedefinition.remote_template,
-                                rows_cnt))
+                        found = False
+                        cur_feature = self.to_featureinfo(
+                            [],
+                            luxgetfeaturedefinition.layer,
+                            luxgetfeaturedefinition.template,
+                            False,
+                            luxgetfeaturedefinition.has_profile,
+                            luxgetfeaturedefinition.remote_template,
+                            rows_cnt)
+                        for cur_result in results:
+                            if luxgetfeaturedefinition.layer == cur_result['layer'] and\
+                               luxgetfeaturedefinition.template == cur_result['template'] and\
+                               luxgetfeaturedefinition.remote_template == cur_result['remote_template'] and\
+                               luxgetfeaturedefinition.has_profile == cur_result['has_profile']:
+                                cur_result['features'].extend(cur_feature.features)
+                                cur_result['total_features_count'] =  (cur_result['total_features_count'] if cur_result['total_features_count'] is not None else 0) + cur_feature['total_features_count']
+                                cur_result['features_count'] = len(cur_result['features'])
+                                found = True
+                                break
+                        if not found:
+                            results.append(
+                                cur_feature)
                 else:
                     features = []
                     for row in rows:
@@ -426,8 +453,8 @@ class Getfeatureinfo(object):
                         features.append(f)
                     if len(features) > 0:
                         if fid is None:
-                            results.append(
-                                self.to_featureinfo(
+                            found = False
+                            cur_feature = self.to_featureinfo(
                                     self.remove_features_outside_tolerance(
                                         features, coordinates_small_box),
                                     luxgetfeaturedefinition.layer,
@@ -435,27 +462,70 @@ class Getfeatureinfo(object):
                                     is_ordered,
                                     luxgetfeaturedefinition.has_profile,
                                     luxgetfeaturedefinition.remote_template,
-                                    rows_cnt))
+                                    rows_cnt)
+                            for cur_result in results:
+                                if luxgetfeaturedefinition.layer == cur_result['layer'] and\
+                                   luxgetfeaturedefinition.template == cur_result['template'] and\
+                                   luxgetfeaturedefinition.remote_template == cur_result['remote_template'] and\
+                                   luxgetfeaturedefinition.has_profile == cur_result['has_profile']:
+                                    cur_result['features'].extend(cur_feature['features'])
+                                    cur_result['total_features_count'] = (cur_result['total_features_count'] if cur_result['total_features_count'] is not None else 0) + cur_feature['total_features_count']
+                                    cur_result['features_count'] = len(cur_result['features'])
+
+                                    found = True
+                                    break
+                            if not found:
+                                results.append(
+                                    cur_feature)
                         else:
-                            results.append(
-                                self.to_featureinfo(
+                            found = False
+                            cur_feature = self.to_featureinfo(
                                     features,
                                     luxgetfeaturedefinition.layer,
                                     luxgetfeaturedefinition.template,
                                     is_ordered,
                                     luxgetfeaturedefinition.has_profile,
                                     luxgetfeaturedefinition.remote_template,
-                                    rows_cnt))
+                                    rows_cnt)
+                            for cur_result in results:
+                                if luxgetfeaturedefinition.layer == cur_result['layer'] and\
+                                   luxgetfeaturedefinition.template == cur_result['template'] and\
+                                   luxgetfeaturedefinition.remote_template == cur_result['remote_template'] and\
+                                   luxgetfeaturedefinition.has_profile == cur_result['has_profile']:
+                                    cur_result['features'].extend(cur_feature['features'])
+                                    cur_result['total_features_count'] = (cur_result['total_features_count'] if cur_result['total_features_count'] is not None else 0) + cur_feature['total_features_count']
+                                    cur_result['features_count'] = len(cur_result['features'])
+
+                                    found = True
+                                    break
+                            if not found:
+                                results.append(
+                                    cur_feature)
+
                     else:
-                        results.append(
-                            self.to_featureinfo(
+                        found = False
+                        cur_feature = self.to_featureinfo(
                                 [],
                                 luxgetfeaturedefinition.layer,
                                 luxgetfeaturedefinition.template,
                                 False,
                                 luxgetfeaturedefinition.has_profile,
                                 luxgetfeaturedefinition.remote_template,
-                                rows_cnt))
+                                rows_cnt)
+                        for cur_result in results:
+                            if luxgetfeaturedefinition.layer == cur_result['layer'] and\
+                               luxgetfeaturedefinition.template == cur_result['template'] and\
+                               luxgetfeaturedefinition.remote_template == cur_result['remote_template'] and\
+                               luxgetfeaturedefinition.has_profile == cur_result['has_profile']:
+                                cur_result['features'].extend(cur_feature.features)
+                                cur_result['total_features_count'] =  (cur_result['total_features_count'] if cur_result['total_features_count'] is not None else 0) + cur_feature['total_features_count']
+                                cur_result['features_count'] = len(cur_result['features'])
+                                found = True
+                                break
+                        if not found:
+                            results.append(
+                                cur_feature)
+
             if (luxgetfeaturedefinition is not None and
                 (luxgetfeaturedefinition.rest_url is None or
                     len(luxgetfeaturedefinition.rest_url) == 0) and
@@ -491,23 +561,51 @@ class Getfeatureinfo(object):
                     is_ordered =\
                         luxgetfeaturedefinition.columns_order is not None\
                         and len(luxgetfeaturedefinition.columns_order) > 0
-                    results.append(
-                        self.to_featureinfo(
+                    found = False
+                    cur_feature = self.to_featureinfo(
                             features,
                             luxgetfeaturedefinition.layer,
                             luxgetfeaturedefinition.template,
                             is_ordered,
                             luxgetfeaturedefinition.has_profile,
-                            luxgetfeaturedefinition.remote_template))
+                            luxgetfeaturedefinition.remote_template)
+                    for cur_result in results:
+                        if luxgetfeaturedefinition.layer == cur_result['layer'] and\
+                           luxgetfeaturedefinition.template == cur_result['template'] and\
+                           luxgetfeaturedefinition.remote_template == cur_result['remote_template'] and\
+                           luxgetfeaturedefinition.has_profile == cur_result['has_profile']:
+                            cur_result['features'].extend(cur_feature['features'])
+                            cur_result['total_features_count'] =  (cur_result['total_features_count'] if cur_result['total_features_count'] is not None else 0) + cur_feature['total_features_count']
+                            cur_result['features_count'] = len(cur_result['features'])
+                            found = True
+                            break
+                    if not found:
+                        results.append(
+                            cur_feature)
+
                 else:
-                    results.append(
-                        self.to_featureinfo(
+                    found = False
+                    cur_feature = self.to_featureinfo(
                             [],
                             luxgetfeaturedefinition.layer,
                             luxgetfeaturedefinition.template,
                             False,
                             luxgetfeaturedefinition.has_profile,
-                            luxgetfeaturedefinition.remote_template))
+                            luxgetfeaturedefinition.remote_template)
+                    for cur_result in results:
+                        if luxgetfeaturedefinition.layer == cur_result['layer'] and\
+                           luxgetfeaturedefinition.template == cur_result['template'] and\
+                           luxgetfeaturedefinition.remote_template == cur_result['remote_template'] and\
+                           luxgetfeaturedefinition.has_profile == cur_result['has_profile']:
+                            cur_result['features'].extend(cur_feature['features'])
+                            cur_result['total_features_count'] =  (cur_result['total_features_count'] if cur_result['total_features_count'] is not None else 0) + cur_feature['total_features_count']
+                            cur_result['features_count'] = len(cur_result['features'])
+                            found = True
+                            break
+                    if not found:
+                        results.append(
+                            cur_feature)
+
             if (luxgetfeaturedefinition is not None and
                 luxgetfeaturedefinition.rest_url is not None and
                     len(luxgetfeaturedefinition.rest_url) > 0):
@@ -550,8 +648,8 @@ class Getfeatureinfo(object):
                         and len(luxgetfeaturedefinition.columns_order) > 0
                     features = self.remove_attributes_from_features(features, luxgetfeaturedefinition.attributes_to_remove)
                     if fid is None:
-                        results.append(
-                            self.to_featureinfo(
+                        found = False
+                        cur_feature = self.to_featureinfo(
                                 self.remove_features_outside_tolerance(
                                     features, coordinates_small_box),
                                 luxgetfeaturedefinition.layer,
@@ -559,27 +657,69 @@ class Getfeatureinfo(object):
                                 is_ordered,
                                 luxgetfeaturedefinition.has_profile,
                                 luxgetfeaturedefinition.remote_template,
-                                self.content_count))
+                                self.content_count)
+                        for cur_result in results:
+                            if luxgetfeaturedefinition.layer == cur_result['layer'] and\
+                               luxgetfeaturedefinition.template == cur_result['template'] and\
+                               luxgetfeaturedefinition.remote_template == cur_result['remote_template'] and\
+                               luxgetfeaturedefinition.has_profile == cur_result['has_profile']:
+                                cur_result['features'].extend(cur_feature['features'])
+                                cur_result['total_features_count'] =  (cur_result['total_features_count'] if cur_result['total_features_count'] is not None else 0) + cur_feature['total_features_count']
+                                cur_result['features_count'] = len(cur_result['features'])
+                                found = True
+                                break
+                        if not found:
+                            results.append(
+                                cur_feature)
+
                     else:
-                        results.append(
-                            self.to_featureinfo(
+                        found = False
+                        cur_feature = self.to_featureinfo(
                                 features,
                                 luxgetfeaturedefinition.layer,
                                 luxgetfeaturedefinition.template,
                                 is_ordered,
                                 luxgetfeaturedefinition.has_profile,
                                 luxgetfeaturedefinition.remote_template,
-                                self.content_count))
+                                self.content_count)
+                        for cur_result in results:
+                            if luxgetfeaturedefinition.layer == cur_result['layer'] and\
+                               luxgetfeaturedefinition.template == cur_result['template'] and\
+                               luxgetfeaturedefinition.remote_template == cur_result['remote_template'] and\
+                               luxgetfeaturedefinition.has_profile == cur_result['has_profile']:
+                                cur_result['features'].extend(cur_feature.features)
+                                cur_result['total_features_count'] =  (cur_result['total_features_count'] if cur_result['total_features_count'] is not None else 0) + cur_feature['total_features_count']
+                                cur_result['features_count'] = len(cur_result['features'])
+                                found = True
+                                break
+                        if not found:
+                            results.append(
+                                cur_feature)
+
                 else:
-                    results.append(
-                        self.to_featureinfo(
+                    found = False
+                    cur_feature = self.to_featureinfo(
                             [],
                             luxgetfeaturedefinition.layer,
                             luxgetfeaturedefinition.template,
                             False,
                             luxgetfeaturedefinition.has_profile,
                             luxgetfeaturedefinition.remote_template,
-                            self.content_count))
+                            self.content_count)
+                    for cur_result in results:
+                        if luxgetfeaturedefinition.layer == cur_result['layer'] and\
+                           luxgetfeaturedefinition.template == cur_result['template'] and\
+                           luxgetfeaturedefinition.remote_template == cur_result['remote_template'] and\
+                           luxgetfeaturedefinition.has_profile == cur_result['has_profile']:
+                            cur_result['features'].extend(cur_feature['features'])
+                            cur_result['total_features_count'] =  (cur_result['total_features_count'] if cur_result['total_features_count'] is not None else 0) + cur_feature['total_features_count']
+                            cur_result['features_count'] = len(cur_result['features'])
+                            found = True
+                            break
+                    if not found:
+                        results.append(
+                            cur_feature)
+
 
         if self.request.params.get('tooltip', None) is not None:
             path = 'templates/tooltip/'
