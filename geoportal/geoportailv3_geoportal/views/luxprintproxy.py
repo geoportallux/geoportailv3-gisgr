@@ -119,6 +119,7 @@ class LuxPrintProxy(PrintProxy):
         y = float(self.request.params.get('y', '6379501.028468124'))
         scale = float(self.request.params.get('scale', '77166.59993240683'))
         center = [x, y]
+
         spec = None
         if internal_wms is not None:
             if 'PROXYWMSURL' in os.environ:
@@ -379,10 +380,13 @@ class LuxPrintProxy(PrintProxy):
         log.info("Get legend from URL:\n%s." % url)
 
         legend_buffer = BytesIO()
-        weasyprint.HTML(url).write_pdf(
-            legend_buffer,
-            stylesheets=[css]
-        )
+        with urllib.request.urlopen(url) as response:
+            html = response.read()
+            if len(html) > 0:
+                weasyprint.HTML(url).write_pdf(
+                    legend_buffer,
+                    stylesheets=[css]
+                )
         return legend_buffer
 
     @cache_region.cache_on_arguments()
@@ -420,7 +424,7 @@ class LuxPrintProxy(PrintProxy):
             is_pdf = json.loads(job.spec)["format"] == "pdf"
             print_title = attributes.get("name")
             if print_title is None or len(print_title) == 0:
-                print_title = "map_gis_gr_eu"
+                print_title = "map_geoportal_lu"
             print_title = re.sub(r" ", "_", print_title)
             print_title = re.sub(r"[^a-zA-Z0-9\-\_]", "", print_title)
 
@@ -458,7 +462,9 @@ class LuxPrintProxy(PrintProxy):
 
                 for item in attributes["legend"]:
                     if "restUrl" in item and item["restUrl"] is not None:
-                        merger.append(self._create_legend_from_url(item["restUrl"]))
+                        legend_html  = self._create_legend_from_url(item["restUrl"])
+                        if len(legend_html.getvalue()) > 0:
+                            merger.append(legend_html)
                     elif "legendUrl" in item and item["legendUrl"] is not None:
                         legend_title = ""
                         if "legendTitle" in item and\
@@ -474,7 +480,10 @@ class LuxPrintProxy(PrintProxy):
                                 legend_title,
                                 access_constraints))
                     elif "name" in item and item["name"] is not None:
-                        merger.append(self._get_legend(item["name"], lang))
+                        try:
+                            merger.append(self._get_legend(item["name"], lang))
+                        except Exception as e:
+                            log.exception(e)
 
                 content = BytesIO()
                 merger.write(content)
