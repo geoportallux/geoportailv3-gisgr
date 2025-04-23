@@ -62,7 +62,7 @@ from pyramid.httpexceptions import HTTPUnauthorized, HTTPInternalServerError
 from pyramid.httpexceptions import HTTPNotFound
 from pyramid.response import Response
 
-from PyPDF2 import PdfFileMerger
+from PyPDF2 import PdfMerger
 import weasyprint
 
 from c2cgeoportal_commons.models import DBSession
@@ -434,7 +434,7 @@ class LuxPrintProxy(PrintProxy):
                 attributes["firstPagesUrls"].reverse()
                 for pageUrl in attributes["firstPagesUrls"]:
                     try:
-                        merger = PdfFileMerger(strict=False)
+                        merger = PdfMerger(strict=False)
                         if pageUrl['type'].lower() == 'pdf':
                             opener = urllib.request.build_opener(
                                 urllib.request.HTTPHandler())
@@ -455,7 +455,7 @@ class LuxPrintProxy(PrintProxy):
 
             if is_pdf and "legend" in attributes and\
                     attributes["legend"] is not None:
-                merger = PdfFileMerger(strict=False)
+                merger = PdfMerger(strict=False)
                 merger.append(BytesIO(content))
 
                 lang = attributes.get("lang")
@@ -529,7 +529,7 @@ class LuxPrintProxy(PrintProxy):
                            ".s-w {transform: rotate(135deg);} " +
                            ".s-e {transform: rotate(45deg);} "
                 )
-                merger = PdfFileMerger(strict=False)
+                merger = PdfMerger(strict=False)
                 merger.append(BytesIO(content))
                 query_results = BytesIO()
                 weasyprint.HTML(string=attributes["queryResults"]).write_pdf(
