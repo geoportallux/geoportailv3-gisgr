@@ -612,6 +612,17 @@ exports.prototype.toggleStreetview = function() {
   this.appActivetool_.streetviewActive = !this.appActivetool_.streetviewActive;
 };
 
+/**
+ * @return {string} The streetview url.
+ * @export
+ */
+exports.prototype.getStreetviewUrl = function() {
+  if (this.clickCoordinate4326_ !== undefined) {
+  return 'https://www.google.com/maps/@?' +
+  'api=1&map_action=pano&viewpoint='+this.clickCoordinate4326_[1]+','+this.clickCoordinate4326_[0]+'&heading=0&pitch=0&fov=90'
+  }
+  return undefined;
+};
 
 appModule.controller('AppLocationinfoController', exports);
 
